@@ -1,0 +1,36 @@
+{
+  "login": {
+    "url": "https://b2b-io--cpqpro.sandbox.my.salesforce.com/",
+    "username": "o.harliansyah@ioh.co.id.cpqpro",
+    "password": "QFbe3fqe1osXwA"
+  },
+  "tc001": {
+    "listViewName": "All my Lead",
+    "expectedColumns": ["Project Name", "Created By Alias"]
+  },
+  "tc002": {
+    "accountName": "petromas pertiwi",
+    "accountOption": "PETROMAS PERTIWI-LA CUST",
+    "rfsDateMonthsAhead": 2,
+    "rfsDateDay": "30",
+    "projectName": "Mantap bos",
+    "company": "Pertamax Bos",
+    "leadSource": "Indosat Vendor Data",
+    "description": "Created by Automation Testing",
+    "leadCurrency": "IDR - Indonesian Rupiah",
+    "primaryContactSearch": "test contact",
+    "primaryContactOption": "Test Contact TEST CREATE CA",
+    "lastName": "Agus",
+    "mobile": "0817456789",
+    "typeOfProduct": "Connectivity",
+    "function": "IT",
+    "budgetStatus": "Budget available",
+    "roleOfLeadSeniority": "Enterprise (Director / Vice",
+    "timeframe": "-3 Months",
+    "newRequirements": "Yes",
+    "existingCustomer": "Yes",
+    "leadType": "Customer/End User",
+    "expectedLeadOwner": "OCKY HARLIANSYAH",
+    "expectedLeadStatus": "New"
+  }
+}
