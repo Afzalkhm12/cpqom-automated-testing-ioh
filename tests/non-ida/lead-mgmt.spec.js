@@ -3,8 +3,74 @@ import * as allure from "allure-js-commons";
 import data from "../../test-data/lead-mgmt.json" assert { type: "json" };
 
 const counter = data.counter;
+let instanceUrl;
+let accessToken;
+let leadId;
+let opportunityId;
+let leadPageUrl;
 
-test('Lead Management', async ({ page }) => {
+/**
+ * Fetches the Status field of a Lead via Salesforce REST API.
+ * @param {import('@playwright/test').APIRequestContext} request
+ * @param {string} instanceUrl  - e.g. https://your-org.my.salesforce.com
+ * @param {string} accessToken  - Bearer token from OAuth
+ * @param {string} leadId       - Salesforce Lead record ID
+ * @param {string} [expectedStatus] - If provided, asserts the status matches
+ * @returns {Promise<string>} The Lead Status value
+ */
+async function getLeadStatus(request, instanceUrl, accessToken, leadId, expectedStatus) {
+    const url = `${instanceUrl}/services/data/v65.0/sobjects/Lead/${leadId}?fields=Status`;
+
+    const response = await request.get(url, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    console.log('Lead API response:', (await response.body()).toString());
+    expect(response.ok()).toBeTruthy();
+
+    const leadStatus = (await response.json()).Status;
+    console.log('Lead status from API:', leadStatus);
+
+    if (expectedStatus !== undefined) {
+        expect(leadStatus).toBe(expectedStatus);
+    }
+
+    return leadStatus;
+}
+
+test('API Connection Test', async ({ request }) => {
+    const loginUrl = data.login.url+'/services/oauth2/token';
+
+    const grantType = 'client_credentials';
+    const clientId = data.login.clientId;
+    const clientSecret = data.login.clientSecret;
+
+  // Step 1: Authenticate and get access token
+    const loginResponse = await request.post(loginUrl, {
+      headers: {
+        'Content-Type' : 'application/x-www-form-urlencoded'
+      },
+      form: {
+        grant_type: grantType,
+        client_id: clientId,
+        client_secret: clientSecret
+      }
+    });
+
+    console.log('Login response is: ', (await (loginResponse).body()).toString());
+    expect((loginResponse).ok()).toBeTruthy();
+
+
+    const loginBody = await loginResponse.json();
+    accessToken = loginBody.access_token;
+    instanceUrl = loginBody.instance_url;
+
+    console.log('Access token is: ', accessToken);
+
+    console.log('Instance URL is: ', instanceUrl);
+});
+
+test('TC001_View All My Leads', async ({ page, request }) => {
     await allure.epic('Lead Management');
     await allure.feature('Manage My Leads');
 
@@ -35,12 +101,16 @@ test('Lead Management', async ({ page }) => {
         await expect(page.getByLabel(data.tc001.expectedColumns[0], { exact: true }).locator('lightning-primitive-header-factory')).toContainText(data.tc001.expectedColumns[0]);
         await expect(page.getByLabel(data.tc001.expectedColumns[1], { exact: true })).toContainText(data.tc001.expectedColumns[1]);
     });
+});
 
-
+test('TC002_Create New Lead', async ({ page, request }) => {
+    await allure.epic('Lead Management');
+    await allure.feature('Manage My Leads');
     await allure.story('Create New Lead');
     await allure.severity('critical');
 
     await test.step('TC002_S01 - Click the New button', async () => {
+        await page.goto(`${data.login.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: Create new lead screen is displayed
@@ -115,6 +185,9 @@ test('Lead Management', async ({ page }) => {
         await page.getByRole('button', { name: 'Save' }).click();
         await page.waitForURL('**/lightning/r/Lead/**');
 
+        leadId = page.url().match(/\/lightning\/r\/Lead\/([^/]+)\//)?.[1];
+        console.log(`[TC002] Lead ID: ${leadId}`);
+
         // Expected: Lead created successfully, status is New, lead owner is current user
         await expect(page.locator('div').filter({ hasText: 'Success notification.Lead "Mr' }).nth(3)).toBeVisible({ timeout: 10000 });
         await expect(page.locator('records-record-layout-item[field-label="Project Name"]')).toBeVisible();
@@ -126,4 +199,59 @@ test('Lead Management', async ({ page }) => {
         await expect(page.getByRole('tabpanel', { name: 'Details' }).getByText('Lead Status', { exact: true })).toBeVisible();
         await expect(page.locator('lightning-formatted-text').filter({ hasText: data.tc002.expectedLeadStatus })).toContainText(data.tc002.expectedLeadStatus);
     });
+
+    await test.step('TC002_S04 - Verify the lead status', async () => {
+        // Expected: Lead status is New
+        await getLeadStatus(request, instanceUrl, accessToken, leadId, data.tc002.expectedLeadStatus);
+    });
+});
+
+test('TC008_Update Lead Status', async ({ page, request }) => {
+    await allure.epic('Lead Management');
+    await allure.feature('Manage My Leads');
+    await allure.story('Update Lead Status');
+    await allure.severity('normal');
+
+    await test.step('TC008_S01 - Update lead status to New to Working', async () => {
+        await page.goto(`${data.login.url}lightning/r/Lead/${leadId}/view`);
+        await page.getByRole('button', { name: 'Show more actions' }).click();
+        await page.getByRole('menuitem', { name: 'Update Lead Status' }).first().click();
+        await page.getByRole('button', { name: 'Next' }).click();
+        await expect(page.locator('lightning-formatted-rich-text')).toContainText('New to Working');
+        await page.getByRole('button', { name: 'Next' }).click();
+        await page.getByRole('dialog', { name: 'Update Lead Status' }).waitFor({ state: 'hidden' });
+        // Expected: Lead status is Working
+        await getLeadStatus(request, instanceUrl, accessToken, leadId, 'Working');
+    });
+
+    await test.step('TC008_S02 - Update lead status to Working to Qualified', async () => {
+        await page.getByRole('button', { name: 'Show more actions' }).click();
+        await page.getByRole('menuitem', { name: 'Update Lead Status' }).first().click();
+        await page.getByRole('button', { name: 'Next' }).click();
+        await expect(page.locator('lightning-formatted-rich-text')).toContainText('Working to Qualify');
+        await page.getByRole('button', { name: 'Next' }).click();
+        await page.getByRole('dialog', { name: 'Update Lead Status' }).waitFor({ state: 'hidden' });
+        // Expected: Lead status is Qualified
+        await getLeadStatus(request, instanceUrl, accessToken, leadId, 'Qualified');
+    });
+});
+
+test('TC009_Convert Lead', async ({ page }) => {
+    await allure.epic('Lead Management');
+    await allure.feature('Manage My Leads');
+    await allure.story('Convert Lead');
+    await allure.severity('critical');
+
+    await test.step('TC009_S01 - Convert Lead', async () => {
+        await page.goto(`${data.login.url}lightning/r/Lead/${leadId}/view`);
+        await page.getByRole('button', { name: 'Convert' }).click();
+        await expect(page.locator('records-entity-label').filter({ hasText: 'Opportunity' })).toBeVisible();
+        opportunityId = page.url().match(/\/lightning\/r\/Opportunity\/([^/]+)\//)?.[1];
+        console.log(`[TC009] Opportunity ID: ${opportunityId}`);
+
+        await expect(page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2')).toContainText(data.tc002.accountOption);
+        await expect(page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2')).toContainText('Scoping');
+    
+    });
+    
 });

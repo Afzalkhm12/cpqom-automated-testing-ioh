@@ -51,6 +51,7 @@
     ]
   },
   "dependencies": {
+    "dotenv": "^17.4.2",
     "exceljs": "^4.4.0"
   }
 }

@@ -1,2 +1,6 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"","21991","Account Management","chromium","2026-04-13","passed","2026-04-13","","non-ida/account-mgmt.spec.js","",""
+"","40140","TC009_Convert Lead","chromium","2026-04-14","broken","2026-04-14","","non-ida/lead-mgmt.spec.js","",""
+"","40122","TC008_Update Lead Status","chromium","2026-04-14","broken","2026-04-14","","non-ida/lead-mgmt.spec.js","",""
+"","201","API Connection Test","chromium","2026-04-14","passed","2026-04-14","","non-ida/lead-mgmt.spec.js","",""
+"","7522","TC001_View All My Leads","chromium","2026-04-14","passed","2026-04-14","","non-ida/lead-mgmt.spec.js","",""
+"","40076","TC002_Create New Lead","chromium","2026-04-14","broken","2026-04-14","","non-ida/lead-mgmt.spec.js","",""

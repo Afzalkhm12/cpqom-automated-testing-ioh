@@ -4,7 +4,7 @@ import data from "../../test-data/non-ida-account-mgmt.json" assert { type: "jso
 
 const counter = data.counter;
 
-test.only('Account Management', async ({ page }) => {
+test('Account Management', async ({ page }) => {
     await allure.epic('Account Management');
     await allure.feature('Manage CCA and CA Records');
     await allure.story('Create Customer Corporate Account');
