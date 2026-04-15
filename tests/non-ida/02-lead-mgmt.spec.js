@@ -1,5 +1,6 @@
 import { test, expect, chromium } from "@playwright/test";
 import * as allure from "allure-js-commons";
+import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import data from "../../test-data/lead-mgmt.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
@@ -25,14 +26,18 @@ test.beforeAll(async () => {
     });
     page = await context.newPage();
 
-    await page.goto(data.login.url);
-    await page.getByRole('textbox', { name: 'Username' }).fill(data.login.username);
+    await page.goto(dataAuth.sysadmin.url);
+    await page.getByRole('textbox', { name: 'Username' }).fill(dataAuth.sysadmin.username);
     await page.getByRole('textbox', { name: 'Password' }).click();
-    await page.getByRole('textbox', { name: 'Password' }).fill(data.login.password);
+    await page.getByRole('textbox', { name: 'Password' }).fill(dataAuth.sysadmin.password);
     await page.getByRole('button', { name: 'Log In to Sandbox' }).click();
 
     await page.waitForURL('**/lightning/**', { timeout: 60000 });
     await context.storageState({ path: '.sf-profile/sf-state.json' });
+});
+
+test.afterAll(async () => {
+    await context.close();
 });
 
 /**
@@ -65,11 +70,11 @@ async function getLeadStatus(request, instanceUrl, accessToken, leadId, expected
 }
 
 test('API Connection Test', async ({ request }) => {
-    const loginUrl = data.login.url+'/services/oauth2/token';
+    const loginUrl = dataAuth.sysadmin.url+'/services/oauth2/token';
 
     const grantType = 'client_credentials';
-    const clientId = data.login.clientId;
-    const clientSecret = data.login.clientSecret;
+    const clientId = dataAuth.sysadmin.clientId;
+    const clientSecret = dataAuth.sysadmin.clientSecret;
 
   // Step 1: Authenticate and get access token
     const loginResponse = await request.post(loginUrl, {
@@ -105,8 +110,7 @@ test('TC001_View All My Leads', async () => {
     await allure.label('pre-requisite', '1.1 User has logged into Salesforce as Sales profile');
 
     await test.step('TC001_S01 - Open Leads list view', async () => {
-        
-        await page.goto(`${data.login.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
+        await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
 
         // Expected: Leads list view is displayed
         await expect(page.getByRole('button', { name: 'Select a List View: Leads' })).toBeVisible();
@@ -132,7 +136,7 @@ test('TC002_Create New Lead', async ({ request }) => {
     await allure.severity('critical');
 
     await test.step('TC002_S01 - Click the New button', async () => {
-        await page.goto(`${data.login.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
+        await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: Create new lead screen is displayed
@@ -265,7 +269,7 @@ test('TC009_Convert Lead', async () => {
     await allure.severity('critical');
 
     await test.step('TC009_S01 - Convert Lead', async () => {
-        await page.goto(`${data.login.url}lightning/r/Lead/${leadId}/view`);
+        await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Lead/${leadId}/view`);
         await page.getByRole('button', { name: 'Convert' }).click();
         await page.waitForURL('**/lightning/r/Opportunity/**', { timeout: 10000 });
         

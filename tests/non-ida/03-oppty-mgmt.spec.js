@@ -1,5 +1,6 @@
 import { test, expect, chromium } from "@playwright/test";
 import * as allure from "allure-js-commons";
+import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import data from "../../test-data/non-ida-oppty.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
@@ -23,14 +24,18 @@ test.beforeAll(async () => {
     });
     page = await context.newPage();
 
-    await page.goto(data.login.url);
-    await page.getByRole('textbox', { name: 'Username' }).fill(data.login.username);
+    await page.goto(dataAuth.sysadmin.url);
+    await page.getByRole('textbox', { name: 'Username' }).fill(dataAuth.sysadmin.username);
     await page.getByRole('textbox', { name: 'Password' }).click();
-    await page.getByRole('textbox', { name: 'Password' }).fill(data.login.password);
+    await page.getByRole('textbox', { name: 'Password' }).fill(dataAuth.sysadmin.password);
     await page.getByRole('button', { name: 'Log In to Sandbox' }).click();
 
     await page.waitForURL('**/lightning/**', { timeout: 60000 });
     await context.storageState({ path: '.sf-profile/sf-state.json' });
+});
+
+test.afterAll(async () => {
+    await context.close();
 });
 
 /**
@@ -73,11 +78,11 @@ async function deleteOpportunityLineItems(request, instanceUrl, accessToken) {
 }
 
 test('API Connection Test', async ({ request }) => {
-    const loginUrl = data.login.url+'/services/oauth2/token';
+    const loginUrl = dataAuth.sysadmin.url+'/services/oauth2/token';
 
     const grantType = 'client_credentials';
-    const clientId = data.login.clientId;
-    const clientSecret = data.login.clientSecret;
+    const clientId = dataAuth.sysadmin.clientId;
+    const clientSecret = dataAuth.sysadmin.clientSecret;
 
   // Step 1: Authenticate and get access token
     const loginResponse = await request.post(loginUrl, {
@@ -133,7 +138,7 @@ test('TC010_Managing my opportunity', async () => {
     await allure.story('Add Products to Opportunity and Update Sales Scenario');
     await allure.severity('critical');
 
-    await page.goto(`${data.login.afterLoginUrl}lightning/r/Opportunity/${opportunityId}/view`);
+    await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Opportunity/${opportunityId}/view`);
     
     await page.getByRole('button', { name: 'Show actions for Products' }).click();
     await page.getByRole('menuitem', { name: 'Add Products' }).click();

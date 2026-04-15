@@ -1,5 +1,5 @@
 {
-  "counter": 22,
+  "counter": 24,
   "login": {
     "url": "https://b2b-io--cpqpro.sandbox.my.salesforce.com/",
     "afterLoginUrl": "https://b2b-io--cpqpro.sandbox.lightning.force.com/",
@@ -10,11 +10,14 @@
   },
   "tc001": {
     "listViewName": "All my Lead",
-    "expectedColumns": ["Project Name", "Created By Alias"]
+    "expectedColumns": [
+      "Project Name",
+      "Created By Alias"
+    ]
   },
   "tc002": {
-    "accountName": "petromas pertiwi",
-    "accountOption": "PETROMAS PERTIWI-LA CUST",
+    "accountName": "TEST CA 16",
+    "accountOption": "TEST CA 16",
     "rfsDateMonthsAhead": 2,
     "rfsDateDay": "30",
     "projectName": "Mantap bos",
@@ -37,7 +40,5 @@
     "expectedLeadOwner": "OCKY HARLIANSYAH",
     "expectedLeadStatus": "New"
   },
-  "tc008": {
-
-  }
+  "tc008": {}
 }
