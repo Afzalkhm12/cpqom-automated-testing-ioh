@@ -5,12 +5,15 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { getRuntimeState, getTestParams, setRuntimeState, closeDb } from "../../utils/db.js";
 import quoteData from "../../test-data/non-ida-05-quote.json" assert { type: "json" };
+import { request } from "http";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let instanceUrl;
 let accessToken;
 let opportunityId;
+let sysAdminUserId;
+let cartId;
 
 const userDataDirectory = path.resolve(__dirname, '../../.sf-profile');
 let context;
@@ -71,6 +74,42 @@ async function patchMissingScoreCard(request, instanceUrl, accessToken) {
     expect(patchResponse.status(), 'Patch should be successful').toBe(204);
 }
 
+async function getQuoteLastModifiedBy(request, instanceUrl, accessToken, quoteId) {
+    const query = `SELECT+LastModifiedById,LastModifiedBy.Name+FROM+Quote+WHERE+Id='${quoteId}'+LIMIT+1`;
+    const response = await request.get(`${instanceUrl}/services/data/v65.0/query?q=${query}`, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        },
+    });
+
+    expect(response.ok(), 'Get Quote LastModifiedBy should succeed').toBeTruthy();
+    const body = await response.json();
+    const record = body.records?.[0];
+    expect(record, 'Quote record not found').toBeTruthy();
+
+    const result = { id: record.LastModifiedById, name: record.LastModifiedBy?.Name };
+    console.log('Quote last modified by:', result);
+    return result;
+}
+
+async function patchQuoteApprover(request, instanceUrl, accessToken, quoteId, approverId) {
+    const patchUrl = `${instanceUrl}/services/data/v65.0/sobjects/Quote/${quoteId}`;
+    const patchResponse = await request.patch(patchUrl, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+        },
+        data: { 
+            Approver_Line_1__c: approverId, 
+            CPQ_Tier_Product__c: 'T1' 
+        },
+    });
+
+    console.log('Patch Quote Approver response: ' + patchResponse.status());
+    expect(patchResponse.status(), 'Patch Quote Approver_Line_1__c should be successful').toBe(204);
+}
+
 test('API Connection Test', async ({ request }) => {
     const loginUrl = dataAuth.sysadmin.url+'/services/oauth2/token';
 
@@ -101,6 +140,14 @@ test('API Connection Test', async ({ request }) => {
     console.log('Access token is: ', accessToken);
 
     console.log('Instance URL is: ', instanceUrl);
+
+    // Step 2: Get the current user's ID
+    const userInfoResponse = await request.get(`${instanceUrl}/services/oauth2/userinfo`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    expect(userInfoResponse.ok(), 'User info request should succeed').toBeTruthy();
+    const userInfoBody = await userInfoResponse.json();
+    sysAdminUserId = userInfoBody.user_id;
 
     await patchMissingScoreCard(request, instanceUrl, accessToken);
 });
@@ -151,7 +198,6 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
     
     test.setTimeout(300_000);
 
-    let cartId;
     let priceListId;
     let recordTypeId;
 
@@ -362,4 +408,160 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
     console.log(`Quote Line Items count: ${count}`);
     expect(count, 'Expected at least 1 Quote Line Item').toBeGreaterThanOrEqual(1);
+});
+
+test('TC028: Upload file MLD', async() => {
+    await allure.epic('Quote Management');
+    await allure.feature('Enterprise Quote');
+
+    await allure.story('Upload MLD file');
+    await allure.severity('normal');
+
+    // ── Pre-req: Open the quote and navigate to Details tab ───────────────
+    await page.getByRole('tab', { name: 'Details' }).click();
+    await page.waitForTimeout(3000);
+
+    // ── Pre-req: Change Catalist Quote Status → Solution Design ───────────
+    // Save status alone first. Changing the controlling picklist in the same
+    // edit as Sub Status triggers a dependency reset that clears Sub Status
+    // before the save reaches the server.
+    await page.getByRole('button', { name: 'Edit Catalist Quote Status' }).click();
+    await page.getByRole('combobox', { name: 'Catalist Quote Status' }).click();
+    await page.getByRole('option', { name: 'Solution Design', exact: true }).nth(1).click();
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.waitForTimeout(2_000);
+
+    // ── Pre-req: Change Sub Status → Solution Document ────────────────────
+    // Separate inline edit opened after status is committed — no dependency
+    // reset occurs and Sub Status value is preserved on save.
+    await page.locator('button[title="Edit Sub Status"]').click();
+    await page.getByRole('combobox', { name: 'Sub Status' }).click();
+    await page.getByRole('option', { name: 'Solution Document', exact: true }).click();
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await page.waitForTimeout(2_000);
+
+    await expect(
+        page.getByRole('button', { name: 'Upload Document' }),
+        'Upload Document button should be visible on the Quote page'
+    ).toBeVisible({ timeout: 15_000 });
+
+    // ── Step 1: Click Upload Document — modal should open ─────────────────
+    await page.getByRole('button', { name: 'Upload Document' }).click();
+    await expect(
+        page.getByText('Document Upload'),
+        'Document Upload pop-up screen should be displayed'
+    ).toBeVisible({ timeout: 15_000 });
+
+    // ── Step 2: Select Document Type = MLD ────────────────────────────────
+    await page.locator('text=Select type').click();
+    await page.locator('span[title="MLD"]').click();
+
+    // ── Step 3 & 4: Select file from local storage ───────────────────────
+    // "Upload Files" is a <span> inside a <label>, not a real <button>, and the
+    // <input type="file"> is already in the DOM (just hidden via slds-assistive-text).
+    // setInputFiles targets it directly and dispatches the change/input events
+    // the LWC component needs — no label click or filechooser event required.
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.waitFor({ state: 'attached', timeout: 10_000 });
+    await fileInput.setInputFiles(path.resolve(__dirname, '../../test-data/file-upload-1.doc'));
+    await expect(
+        page.getByText('file-upload-1.doc'),
+        'MLD file should be attached to the uploader field'
+    ).toBeVisible({ timeout: 10_000 });
+
+    // ── Step 5: Click Upload ───────────────────────────────────────────────
+    await page.getByRole('button', { name: 'Upload', exact: true }).click();
+    // Wait for the server response — error toasts appear almost immediately on
+    // failure. Without this pause, not.toBeVisible() passes on its first poll
+    // before the toast has had a chance to render.
+    await page.waitForTimeout(5_000);
+
+    // Verify no upload error notification appears.
+    await expect(page.locator('div').filter({ hasText: 'Error notification.' }).nth(3)).not.toBeVisible();
+
+    // ── Step 6: Navigate to Related tab → Links section ───────────────────
+    await page.getByRole('tab', { name: 'Related' }).click();
+    await page.waitForTimeout(3000);
+
+    const linksHeader = page.getByRole('link', { name: /Links \(\d+\)/ });
+    await expect(linksHeader, 'Links related list should be displayed').toBeVisible({ timeout: 15_000 });
+
+    // ── Step 7: Verify document link in Links section ─────────────────────
+    const linksText = await linksHeader.textContent();
+    const linksMatch = linksText?.match(/\((\d+)\)/);
+    const linksCount = linksMatch ? parseInt(linksMatch[1], 10) : 0;
+    console.log(`Links count: ${linksCount}`);
+    expect(linksCount, 'Expected at least 1 document link in the Links section').toBeGreaterThanOrEqual(1);
+});
+
+test('TC029: Generate Business Case', async() => {
+    await allure.epic('Quote Management');
+    await allure.feature('Enterprise Quote');
+
+    await allure.story('Generate Business Case');
+    await allure.severity('normal');
+
+    // ── Pre-req: Open the quote and navigate to Details tab ───────────────
+    await page.getByRole('tab', { name: 'Details' }).click();
+    await page.waitForTimeout(3000);
+
+    await page.getByRole('button', { name: 'Edit Sub Status' }).click();
+    await page.getByRole('combobox', { name: 'Sub Status' }).click();
+    await page.getByRole('option', { name: 'Business Case' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
+    await expect(page.getByRole('button', { name: 'BC Template' })).toBeVisible();
+    await page.getByRole('button', { name: 'BC Template' }).click();
+    await expect(page.getByText('Error loading Quote Line Items')).not.toBeVisible();
+});
+
+test('TC035: Quote Clossure', async() => {
+    await patchQuoteApprover(request, instanceUrl, accessToken, cartId, sysAdminUserId);
+
+    await expect(page.getByRole('button', { name: 'Submit for Approval' })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Submit for Approval' }).click();
+    await page.getByRole('textbox', { name: 'Comments' }).click();
+    await page.getByRole('textbox', { name: 'Comments' }).fill('please approve');
+    await page.getByRole('button', { name: 'Submit' }).click();
+    await expect(page.locator('div').filter({ hasText: 'Success notification.Quote' }).nth(3)).toBeVisible();
+
+    await page.waitForTimeout(3_000);
+
+    const lastModifiedBy = await getQuoteLastModifiedBy(request, instanceUrl, accessToken, cartId);
+
+    await page.getByRole('button', { name: 'Notifications' }).click();
+    await page.getByRole('link', { name: `${lastModifiedBy.Name} is` }).click();
+    await expect(page.getByRole('button', { name: 'Approve' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Reject' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Reassign' })).toBeVisible();
+    await page.getByRole('button', { name: 'Approve' }).click();
+    await page.getByRole('textbox', { name: 'Comments' }).click();
+    await page.getByRole('textbox', { name: 'Comments' }).fill('approve');
+    await page.getByRole('button', { name: 'Approve' }).click();
+    await expect(page.getByText('Approved')).toBeVisible();
+    await page.locator('#brandBand_2').getByRole('link', { name: 'API Test Quote' }).click();
+    await page.getByTitle('Closed').click();
+    await page.getByRole('button', { name: 'Show more actions' }).click();
+    await page.getByRole('menuitem', { name: 'Close Stage' }).click();
+    await page.getByRole('combobox', { name: 'Sub Status' }).click();
+    await page.getByRole('option', { name: 'Closed/Win' }).click();
+    await page.getByRole('combobox', { name: 'Select Document Type' }).click();
+    await page.getByRole('option', { name: 'MLD' }).click();
+    // await page.getByText('Upload Files').click();
+    // await page.getByRole('button', { name: 'Select a file Upload Files Or' }).setInputFiles([]);
+
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.waitFor({ state: 'attached', timeout: 10_000 });
+    await fileInput.setInputFiles(path.resolve(__dirname, '../../test-data/chat_transcript.pdf'));
+    await expect(
+        page.getByText('chat_transcript.pdf'),
+        'MLD file should be attached to the uploader field'
+    ).toBeVisible({ timeout: 10_000 });
+
+    // await page.getByRole('button', { name: 'Select a file Upload Files Or' }).setInputFiles('chat_transcript.pdf');
+    await page.getByRole('button', { name: 'Upload', exact: true }).click();
+    await expect(page.locator('div').filter({ hasText: 'Success notification.' }).nth(3)).toBeVisible();
+    await page.getByRole('button', { name: 'Done' }).click();
+    await expect(page.locator('div').filter({ hasText: 'Success notification.' }).nth(3)).toBeVisible();
+    // await page.getByTitle('Related').click();
 });

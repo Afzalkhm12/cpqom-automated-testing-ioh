@@ -58,7 +58,7 @@ async function patchStageQuoting(request, instanceUrl, accessToken) {
     });
 
     // Salesforce returns 204 No Content on a successful PATCH
-    expect(patchResponse.status()).toBe(204);
+    expect(patchResponse.status(), "Patch StageName to 'Quoting' should return 204 No Content").toBe(204);
     console.log(`StageName set to Quoting on Opportunity ${opportunityId}`);
 }
 
@@ -82,7 +82,7 @@ test('API Connection Test', async ({ request }) => {
     });
 
     console.log('Login response is: ', (await (loginResponse).body()).toString());
-    expect((loginResponse).ok()).toBeTruthy();
+    expect((loginResponse).ok(), 'OAuth login should succeed').toBeTruthy();
 
 
     const loginBody = await loginResponse.json();
@@ -106,66 +106,135 @@ test('TC021_TC022_Update Score Card', async () => {
     await page.getByRole('tab', { name: 'Score Card' }).click();
 
     // assert sales team cannot edit
-    await expect(page.getByRole('button', { name: 'Edit Has Incumbent' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit RFP Influence' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Implementation Risk' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Partnership Tier with' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Customer Favor' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Customer Budget' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Project Timeline' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Customer Relationship' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Core Product' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Deal Registered' })).not.toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit Internal Capabilities' })).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Has Incumbent' }),
+        'Sales team edit button for Has Incumbent should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit RFP Influence' }),
+        'Sales team edit button for RFP Influence should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Implementation Risk' }),
+        'Sales team edit button for Implementation Risk should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Partnership Tier with' }),
+        'Sales team edit button for Partnership Tier should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Customer Favor' }),
+        'Sales team edit button for Customer Favor should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Customer Budget' }),
+        'Sales team edit button for Customer Budget should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Project Timeline' }),
+        'Sales team edit button for Project Timeline should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Customer Relationship' }),
+        'Sales team edit button for Customer Relationship should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Core Product' }),
+        'Sales team edit button for Core Product should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Deal Registered' }),
+        'Sales team edit button for Deal Registered should not be visible to ES user'
+    ).not.toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit Internal Capabilities' }),
+        'Sales team edit button for Internal Capabilities should not be visible to ES user'
+    ).not.toBeVisible();
 
     // assert ES team can edit
-    await expect(page.getByRole('button', { name: 'Edit (ES) Has Incumbent' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) RFP Influence' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Implementation Risk' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Partnership Tier' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Customer Favor' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Customer Budget' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Project Timeline' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Customer Relationship' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Core Product' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Deal Registered' })).toBeVisible();
-    await expect(page.getByRole('button', { name: 'Edit (ES) Internal' })).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Has Incumbent' }),
+        'ES team should be able to edit Has Incumbent'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) RFP Influence' }),
+        'ES team should be able to edit RFP Influence'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Implementation Risk' }),
+        'ES team should be able to edit Implementation Risk'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Partnership Tier' }),
+        'ES team should be able to edit Partnership Tier'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Customer Favor' }),
+        'ES team should be able to edit Customer Favor'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Customer Budget' }),
+        'ES team should be able to edit Customer Budget'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Project Timeline' }),
+        'ES team should be able to edit Project Timeline'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Customer Relationship' }),
+        'ES team should be able to edit Customer Relationship'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Core Product' }),
+        'ES team should be able to edit Core Product'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Deal Registered' }),
+        'ES team should be able to edit Deal Registered'
+    ).toBeVisible();
+    await expect(
+        page.getByRole('button', { name: 'Edit (ES) Internal' }),
+        'ES team should be able to edit Internal Capabilities'
+    ).toBeVisible();
 
     await page.getByRole('button', { name: '(ES) Customer Budget' }).click();
     await page.getByRole('combobox', { name: '(ES) Customer Budget' }).click();
     await page.getByRole('option', { name: 'Budget available' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Project Timeline' }).click();
     await page.getByRole('option', { name: '<3 Months' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Has Incumbent' }).click();
     await page.getByRole('option', { name: 'Yes' }).click();
 
     await page.getByLabel('(ES) Customer Relationship').getByText('IT Head', { exact: true }).click();
     await page.getByLabel('(ES) Customer Relationship').getByRole('option', { name: 'IT Head' }).click();
     await page.getByLabel('(ES) Customer Relationship').getByRole('button', { name: 'Move selection to Chosen' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Implementation Risk' }).click();
     await page.getByRole('option', { name: 'High' }).click();
-    
+
     // await page.getByRole('combobox', { name: '(ES) Partnership Tier with' }).click();
     // await page.getByRole('option', { name: 'Highest Partnership' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Customer Favor' }).click();
     await page.getByRole('option', { name: 'Customer preferred IOH' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Core Product' }).click();
     await page.getByRole('option', { name: 'Yes, Fully IOH Product' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Deal Registered' }).click();
     await page.getByRole('option', { name: 'Yes' }).click();
-    
+
     await page.getByRole('combobox', { name: '(ES) Internal Capabilities' }).click();
     await page.getByRole('option', { name: 'Has full internal capability' }).click();
-    
+
     await page.getByRole('button', { name: 'Save' }).click();
     await page.waitForTimeout(3000);
     // await expect(page.locator('div').filter({ hasText: /^Red Warning Triangle$/ })).toBeVisible();
-    await expect(page.locator('span').filter({ hasText: 'Red Warning Triangle' }).first()).toBeVisible();
-    
+    await expect(
+        page.locator('span').filter({ hasText: 'Red Warning Triangle' }).first(),
+        "Score Card should show 'Red Warning Triangle' indicator after saving"
+    ).toBeVisible();
+
 });

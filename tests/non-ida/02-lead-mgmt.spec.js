@@ -64,13 +64,13 @@ async function getLeadStatus(request, instanceUrl, accessToken, leadId, expected
     });
 
     console.log('Lead API response:', (await response.body()).toString());
-    expect(response.ok()).toBeTruthy();
+    expect(response.ok(), 'Lead status API request should succeed').toBeTruthy();
 
     const leadStatus = (await response.json()).Status;
     console.log('Lead status from API:', leadStatus);
 
     if (expectedStatus !== undefined) {
-        expect(leadStatus).toBe(expectedStatus);
+        expect(leadStatus, `Lead status should be '${expectedStatus}'`).toBe(expectedStatus);
     }
 
     return leadStatus;
@@ -96,7 +96,7 @@ test('API Connection Test', async ({ request }) => {
     });
 
     console.log('Login response is: ', (await (loginResponse).body()).toString());
-    expect((loginResponse).ok()).toBeTruthy();
+    expect((loginResponse).ok(), 'OAuth login should succeed').toBeTruthy();
 
 
     const loginBody = await loginResponse.json();
@@ -112,7 +112,10 @@ test('TC001_Navigate to IOS ESM app', async () => {
     await page.getByRole('button', { name: 'App Launcher' }).click();
     await page.getByRole('combobox', { name: 'Search apps and items...' }).fill('IOH ESM');
     await page.getByLabel('Apps', { exact: true }).waitFor({ state: 'visible' });
-    await expect(page.getByLabel('Apps', { exact: true }).getByText('IOH ESM')).toBeVisible();
+    await expect(
+        page.getByLabel('Apps', { exact: true }).getByText('IOH ESM'),
+        'IOH ESM app should appear in the Apps search results'
+    ).toBeVisible();
 });
 
 test('TC001_View All My Leads', async () => {
@@ -127,7 +130,10 @@ test('TC001_View All My Leads', async () => {
         await page.goto(`${dataAuth.salesOperation.afterLoginUrl}lightning/o/Lead/list?filterName=__Recent`);
 
         // Expected: Leads list view is displayed
-        await expect(page.getByRole('button', { name: 'Select a List View: Leads' })).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Select a List View: Leads' }),
+            'Leads list view should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC001_S02 - Select All my Leads', async () => {
@@ -135,11 +141,26 @@ test('TC001_View All My Leads', async () => {
         await page.getByText(tc001.listViewName).click();
 
         // Expected: All leads owned by the user displayed with Project Name and Created By fields
-        await expect(page.getByText(tc001.listViewName)).toBeVisible();
-        await expect(page.getByRole('button', { name: `Sort by: ${tc001.expectedColumns[0]}` })).toBeVisible();
-        await expect(page.getByRole('button', { name: `Sort by: ${tc001.expectedColumns[1]}` })).toBeVisible();
-        await expect(page.getByLabel(tc001.expectedColumns[0], { exact: true }).locator('lightning-primitive-header-factory')).toContainText(tc001.expectedColumns[0]);
-        await expect(page.getByLabel(tc001.expectedColumns[1], { exact: true })).toContainText(tc001.expectedColumns[1]);
+        await expect(
+            page.getByText(tc001.listViewName),
+            `List view '${tc001.listViewName}' should be selected and displayed`
+        ).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: `Sort by: ${tc001.expectedColumns[0]}` }),
+            `Column '${tc001.expectedColumns[0]}' should be present in the list view`
+        ).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: `Sort by: ${tc001.expectedColumns[1]}` }),
+            `Column '${tc001.expectedColumns[1]}' should be present in the list view`
+        ).toBeVisible();
+        await expect(
+            page.getByLabel(tc001.expectedColumns[0], { exact: true }).locator('lightning-primitive-header-factory'),
+            `Column header '${tc001.expectedColumns[0]}' should display correct label`
+        ).toContainText(tc001.expectedColumns[0]);
+        await expect(
+            page.getByLabel(tc001.expectedColumns[1], { exact: true }),
+            `Column header '${tc001.expectedColumns[1]}' should display correct label`
+        ).toContainText(tc001.expectedColumns[1]);
     });
 });
 
@@ -154,7 +175,10 @@ test('TC002_Create New Lead', async ({ request }) => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: Create new lead screen is displayed
-        await expect(page.getByRole('heading', { name: 'New Lead' })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { name: 'New Lead' }),
+            'New Lead creation form should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC002_S02 - Fill all mandatory fields', async () => {
@@ -218,7 +242,10 @@ test('TC002_Create New Lead', async ({ request }) => {
         await page.getByTitle(tc002.leadType).click();
 
         // Expected: All mandatory fields are filled
-        await expect(page.getByRole('textbox', { name: 'Project Name' })).toHaveValue(`${tc002.projectName} ${counter}`);
+        await expect(
+            page.getByRole('textbox', { name: 'Project Name' }),
+            'Project Name field should reflect the entered value'
+        ).toHaveValue(`${tc002.projectName} ${counter}`);
     });
 
     await test.step('TC002_S03 - Click Save', async () => {
@@ -229,15 +256,42 @@ test('TC002_Create New Lead', async ({ request }) => {
         console.log(`[TC002] Lead ID: ${leadId}`);
 
         // Expected: Lead created successfully, status is New, lead owner is current user
-        await expect(page.locator('div').filter({ hasText: 'Success notification.Lead "Mr' }).nth(3)).toBeVisible({ timeout: 10000 });
-        await expect(page.locator('records-record-layout-item[field-label="Project Name"]')).toBeVisible();
-        await expect(page.locator('records-record-layout-block')).toContainText(`${tc002.projectName} ${counter}`);
-        await expect(page.locator('lightning-formatted-text').filter({ hasText: `${tc002.projectName} ${counter}` })).toBeVisible();
-        await expect(page.locator('.slds-form-element.slds-hint-parent.test-id__output-root > .slds-form-element__control').first()).toBeVisible();
-        await expect(page.locator('force-owner-lookup')).toBeVisible();
-        await expect(page.locator('force-owner-lookup')).toContainText(tc002.expectedLeadOwner);
-        await expect(page.getByRole('tabpanel', { name: 'Details' }).getByText('Lead Status', { exact: true })).toBeVisible();
-        await expect(page.locator('lightning-formatted-text').filter({ hasText: tc002.expectedLeadStatus })).toContainText(tc002.expectedLeadStatus);
+        await expect(
+            page.locator('div').filter({ hasText: 'Success notification.Lead "Mr' }).nth(3),
+            'Success notification should appear after saving the lead'
+        ).toBeVisible({ timeout: 10000 });
+        await expect(
+            page.locator('records-record-layout-item[field-label="Project Name"]'),
+            'Project Name field should be visible on the lead detail page'
+        ).toBeVisible();
+        await expect(
+            page.locator('records-record-layout-block'),
+            'Lead detail page should display the entered Project Name'
+        ).toContainText(`${tc002.projectName} ${counter}`);
+        await expect(
+            page.locator('lightning-formatted-text').filter({ hasText: `${tc002.projectName} ${counter}` }),
+            'Project Name value should be visible in formatted text'
+        ).toBeVisible();
+        await expect(
+            page.locator('.slds-form-element.slds-hint-parent.test-id__output-root > .slds-form-element__control').first(),
+            'Lead status field should be visible on the detail page'
+        ).toBeVisible();
+        await expect(
+            page.locator('force-owner-lookup'),
+            'Lead Owner field should be visible'
+        ).toBeVisible();
+        await expect(
+            page.locator('force-owner-lookup'),
+            `Lead Owner should be '${tc002.expectedLeadOwner}'`
+        ).toContainText(tc002.expectedLeadOwner);
+        await expect(
+            page.getByRole('tabpanel', { name: 'Details' }).getByText('Lead Status', { exact: true }),
+            'Lead Status label should be visible in the Details tab'
+        ).toBeVisible();
+        await expect(
+            page.locator('lightning-formatted-text').filter({ hasText: tc002.expectedLeadStatus }),
+            `Lead Status should be '${tc002.expectedLeadStatus}'`
+        ).toContainText(tc002.expectedLeadStatus);
     });
 
     await test.step('TC002_S04 - Verify the lead status', async () => {
@@ -257,7 +311,10 @@ test('TC008_Update Lead Status', async ({ request }) => {
         await page.getByRole('button', { name: 'Show more actions' }).click();
         await page.getByRole('menuitem', { name: 'Update Lead Status' }).first().click();
         await page.getByRole('button', { name: 'Next' }).click();
-        await expect(page.locator('lightning-formatted-rich-text')).toContainText('New to Working');
+        await expect(
+            page.locator('lightning-formatted-rich-text'),
+            'Status update dialog should show the New to Working transition'
+        ).toContainText('New to Working');
         await page.getByRole('button', { name: 'Next' }).click();
         await page.getByRole('dialog', { name: 'Update Lead Status' }).waitFor({ state: 'hidden' });
         // Expected: Lead status is Working
@@ -268,7 +325,10 @@ test('TC008_Update Lead Status', async ({ request }) => {
         await page.getByRole('button', { name: 'Show more actions' }).click();
         await page.getByRole('menuitem', { name: 'Update Lead Status' }).first().click();
         await page.getByRole('button', { name: 'Next' }).click();
-        await expect(page.locator('lightning-formatted-rich-text')).toContainText('Working to Qualify');
+        await expect(
+            page.locator('lightning-formatted-rich-text'),
+            'Status update dialog should show the Working to Qualify transition'
+        ).toContainText('Working to Qualify');
         await page.getByRole('button', { name: 'Next' }).click();
         await page.getByRole('dialog', { name: 'Update Lead Status' }).waitFor({ state: 'hidden' });
         // Expected: Lead status is Qualified
@@ -286,17 +346,26 @@ test('TC009_Convert Lead', async () => {
         await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Lead/${leadId}/view`);
         await page.getByRole('button', { name: 'Convert' }).click();
         await page.waitForURL('**/lightning/r/Opportunity/**', { timeout: 10000 });
-        
-        await expect(page.locator('records-entity-label').filter({ hasText: 'Opportunity' })).toBeVisible();
+
+        await expect(
+            page.locator('records-entity-label').filter({ hasText: 'Opportunity' }),
+            'Page should show an Opportunity record after lead conversion'
+        ).toBeVisible();
         opportunityId = page.url().match(/\/lightning\/r\/Opportunity\/([^/]+)\//)?.[1];
         console.log(`[TC009] Opportunity ID: ${opportunityId}`);
 
         await setRuntimeState('opportunityId', opportunityId);
         console.log(`[TC009] Updated opportunityId in runtime_state: ${opportunityId}`);
 
-        await expect(page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2')).toContainText(tc002.accountOption);
-        await expect(page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2')).toContainText('Scoping');
-    
+        await expect(
+            page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2'),
+            `Opportunity should be linked to account '${tc002.accountOption}'`
+        ).toContainText(tc002.accountOption);
+        await expect(
+            page.locator('forcegenerated-highlightspanel_opportunity___012ms000000haxkyao___compact___view___recordlayout2'),
+            "Opportunity stage should be 'Scoping' after lead conversion"
+        ).toContainText('Scoping');
+
     });
-    
+
 });

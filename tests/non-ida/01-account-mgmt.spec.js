@@ -65,7 +65,7 @@ test('API Connection Test', async ({ request }) => {
     });
 
     console.log('Login response is: ', (await (loginResponse).body()).toString());
-    expect((loginResponse).ok()).toBeTruthy();
+    expect((loginResponse).ok(), 'OAuth login should succeed').toBeTruthy();
 
 
     const loginBody = await loginResponse.json();
@@ -81,7 +81,7 @@ test('TC004_Navigate to IOS ESM app', async () => {
     await page.getByRole('button', { name: 'App Launcher' }).click();
     await page.getByRole('combobox', { name: 'Search apps and items...' }).fill('IOH ESM');
     await page.getByLabel('Apps', { exact: true }).waitFor({ state: 'visible' });
-    await expect(page.getByLabel('Apps', { exact: true }).getByText('IOH ESM')).toBeVisible();
+    await expect(page.getByLabel('Apps', { exact: true }).getByText('IOH ESM'), 'IOH ESM app should appear in the Apps search results').toBeVisible();
 });
 
 test('TC004_Create CCA', async () => {
@@ -95,14 +95,21 @@ test('TC004_Create CCA', async () => {
         await page.goto(`${dataAuth.marketing.afterLoginUrl}lightning/o/Account/list?filterName=__Recent`);
 
         // Expected: The Accounts list page is displayed
-        await expect(page.getByRole('button', { name: 'Select a List View: Accounts' })).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Select a List View: Accounts' }),
+            'Accounts list view should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC004_S02 - Click the New button', async () => {
+        await expect(page.getByRole('button', { name: 'New' }), 'New button should appears').toBeVisible();
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
-        await expect(page.getByLabel('New Account')).toBeVisible();
+        await expect(
+            page.getByLabel('New Account'),
+            'New Account record type selection dialog should appear'
+        ).toBeVisible();
     });
 
     await test.step('TC004_S03 - Select Business record type', async () => {
@@ -110,7 +117,10 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('button', { name: 'Next' }).click();
 
         // Expected: The CCA creation form (layout for Customer Corporate Account) is displayed
-        await expect(page.getByRole('heading', { name: 'New Account: Customer Corporate Account' })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { name: 'New Account: Customer Corporate Account' }),
+            'Customer Corporate Account creation form should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC004_S04 - Fill in all mandatory fields', async () => {
@@ -160,7 +170,10 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('button', { name: 'Move selection to Chosen' }).click();
 
         // Expected: All required fields are populated and no validation errors appear
-        await expect(page.getByRole('textbox', { name: 'Account Name' })).toHaveValue(tc001.accountName + ' ' + counter);
+        await expect(
+            page.getByRole('textbox', { name: 'Account Name' }),
+            'Account Name field should reflect the entered value'
+        ).toHaveValue(tc001.accountName + ' ' + counter);
     });
 
     await test.step('TC004_S05 - Click Save', async () => {
@@ -168,7 +181,10 @@ test('TC004_Create CCA', async () => {
         await page.waitForURL('**/lightning/r/Account/**');
 
         // Expected: A new Customer Corporate Account record is successfully created and the record detail page is displayed
-        await expect(page.locator('div').filter({ hasText: 'Success notification.Account' }).nth(3)).toBeVisible();
+        await expect(
+            page.locator('div').filter({ hasText: 'Success notification.Account' }).nth(3),
+            'Success notification should appear after saving the CCA record'
+        ).toBeVisible();
     });
 });
 
@@ -184,14 +200,20 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('link', { name: 'Accounts' }).click();
 
         // Expected: The Accounts list page is displayed
-        await expect(page.getByRole('button', { name: 'Select a List View: Accounts' })).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Select a List View: Accounts' }),
+            'Accounts list view should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC005_S02 - Click the New button', async () => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
-        await expect(page.getByLabel('New Account')).toBeVisible();
+        await expect(
+            page.getByLabel('New Account'),
+            'New Account record type selection dialog should appear'
+        ).toBeVisible();
     });
 
     await test.step('TC005_S03 - Select Business record type', async () => {
@@ -199,7 +221,10 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('button', { name: 'Next' }).click();
 
         // Expected: The CA creation form (layout for Customer Account) is displayed
-        await expect(page.getByRole('heading', { name: 'New Account: Customer Account' })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { name: 'New Account: Customer Account' }),
+            'Customer Account creation form should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC005_S04 - Fill in all mandatory fields', async () => {
@@ -280,7 +305,10 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('button', { name: 'Move selection to Chosen' }).click();
 
         // Expected: All required fields are populated and no validation errors appear
-        await expect(page.getByRole('textbox', { name: 'Account Name' })).toHaveValue(tc002.accountName + ' ' + counter);
+        await expect(
+            page.getByRole('textbox', { name: 'Account Name' }),
+            'Account Name field should reflect the entered value'
+        ).toHaveValue(tc002.accountName + ' ' + counter);
     });
 
     await test.step('TC005_S05 - Select the appropriate Level 1 Customer Account in the Parent Account field', async () => {
@@ -292,7 +320,10 @@ test('TC005_Create CA under CCA', async () => {
         .click();
 
         // Expected: The Parent Account field displays the selected Level 1 CA
-        await expect(page.getByRole('combobox', { name: 'Parent Account' })).toHaveValue(tc001.accountName.toUpperCase() + ' ' + counter);
+        await expect(
+            page.getByRole('combobox', { name: 'Parent Account' }),
+            'Parent Account field should display the selected CCA'
+        ).toHaveValue(tc001.accountName.toUpperCase() + ' ' + counter);
     });
 
     await test.step('TC005_S06 - Click Save', async () => {
@@ -300,7 +331,10 @@ test('TC005_Create CA under CCA', async () => {
         await page.waitForURL('**/lightning/r/Account/**');
 
         // Expected: A new Customer Account record is successfully created and the record detail page is displayed
-        await expect(page.locator('div').filter({ hasText: 'Success notification.Account' }).nth(3)).toBeVisible();
+        await expect(
+            page.locator('div').filter({ hasText: 'Success notification.Account' }).nth(3),
+            'Success notification should appear after saving the CA record'
+        ).toBeVisible();
 
         const newAccountName = (tc002.accountName + ' ' + counter).toUpperCase();
         await updateTestParams('lead_mgmt', 'tc002', { accountName: newAccountName, accountOption: newAccountName });
@@ -319,14 +353,20 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('link', { name: 'Accounts' }).click();
 
         // Expected: The Accounts list page is displayed
-        await expect(page.getByRole('button', { name: 'Select a List View: Accounts' })).toBeVisible();
+        await expect(
+            page.getByRole('button', { name: 'Select a List View: Accounts' }),
+            'Accounts list view should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC007_S02 - Click the New button', async () => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
-        await expect(page.getByLabel('New Account')).toBeVisible();
+        await expect(
+            page.getByLabel('New Account'),
+            'New Account record type selection dialog should appear'
+        ).toBeVisible();
     });
 
     await test.step('TC007_S03 - Select Customer Account record type', async () => {
@@ -334,7 +374,10 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('button', { name: 'Next' }).click();
 
         // Expected: The CA creation form (layout for Customer Account) is displayed
-        await expect(page.getByRole('heading', { name: 'New Account: Customer Account' })).toBeVisible();
+        await expect(
+            page.getByRole('heading', { name: 'New Account: Customer Account' }),
+            'Customer Account creation form should be displayed'
+        ).toBeVisible();
     });
 
     await test.step('TC007_S04 - Fill in all mandatory fields', async () => {
@@ -415,7 +458,10 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('button', { name: 'Move selection to Chosen' }).click();
 
         // Expected: All required fields are populated and no validation errors appear
-        await expect(page.getByRole('textbox', { name: 'Account Name' })).toHaveValue(tc002.accountName + ' ' + counter);
+        await expect(
+            page.getByRole('textbox', { name: 'Account Name' }),
+            'Account Name field should reflect the entered value'
+        ).toHaveValue(tc002.accountName + ' ' + counter);
     });
 
     await test.step('TC007_S05 - Select the appropriate Level 1 Customer Account in the Parent Account field', async () => {
@@ -427,7 +473,10 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         .click();
 
         // Expected: The Parent Account field displays the selected Level 1 CA
-        await expect(page.getByRole('combobox', { name: 'Parent Account' })).toHaveValue(tc001.accountName.toUpperCase() + ' ' + counter);
+        await expect(
+            page.getByRole('combobox', { name: 'Parent Account' }),
+            'Parent Account field should display the selected CCA'
+        ).toHaveValue(tc001.accountName.toUpperCase() + ' ' + counter);
     });
 
     await test.step('TC007_S06 - Click Save', async () => {
@@ -435,7 +484,13 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.waitForURL('**/lightning/r/Account/**');
 
         // Expected: A new Customer Account record is successfully created and the record detail page is displayed
-        await expect(page.locator('div').filter({ hasText: 'Info notification.It looks as' }).nth(3)).toBeVisible();
-        await expect(page.getByText('We found 1 potential duplicate of this Account.View Duplicates', { exact: true })).toBeVisible();
+        await expect(
+            page.locator('div').filter({ hasText: 'Info notification.It looks as' }).nth(3),
+            'Info notification about potential duplicates should appear'
+        ).toBeVisible();
+        await expect(
+            page.getByText('We found 1 potential duplicate of this Account.View Duplicates', { exact: true }),
+            'Duplicate warning message should be displayed'
+        ).toBeVisible();
     });
 });
