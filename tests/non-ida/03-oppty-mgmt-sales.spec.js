@@ -390,7 +390,7 @@ test('TC017_TC018_Update Score Card', async () => {
     await page.getByRole('option', { name: 'Budget available' }).click();
 
     await page.getByRole('combobox', { name: 'Project Timeline', exact: true }).click();
-    await page.getByRole('option', { name: '<3 Months' }).click();
+    await page.getByRole('option', { name: '<1 Month' }).click();
 
     await page.getByLabel('Customer Relationship', { exact: true }).getByRole('option', { name: 'IT Head' }).click();
     await page.getByLabel('Customer Relationship', { exact: true }).getByRole('option', { name: 'IT Head' }).click();
