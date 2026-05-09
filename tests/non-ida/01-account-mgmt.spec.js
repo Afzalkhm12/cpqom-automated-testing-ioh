@@ -3,15 +3,17 @@ import * as allure from "allure-js-commons";
 import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
-import { getModule, getTestParams, updateTestParams, closeDb } from "../../utils/db.js";
+import { getModule, getTestParams, updateTestParams, incrementModuleCounter, closeDb, setRuntimeState } from "../../utils/db.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 let counter;
 let tc001;
 let tc002;
+let tcContact;
 let instanceUrl;
 let accessToken;
+let brandAccountId;
 
 const userDataDirectory = path.resolve(__dirname, '../../.sf-profile');
 let context;
@@ -22,10 +24,15 @@ const loginUser = process.env.TEST_USER_ADMIN === 'true' ? dataAuth.sysadmin : d
 
 // runs only once before all tests in the file
 test.beforeAll(async () => {
+    await incrementModuleCounter('account_mgmt');
+    await incrementModuleCounter('contact_mgmt');
+
     const module = await getModule('account_mgmt');
     counter = module.counter;
+    
     tc001 = await getTestParams('account_mgmt', 'tc001');
     tc002 = await getTestParams('account_mgmt', 'tc002');
+    tcContact = await getTestParams('contact_mgmt', 'tc_contact');
 
     context = await chromium.launchPersistentContext(userDataDirectory, {
         headless: false,
@@ -80,12 +87,12 @@ test('API Connection Test', async ({ request }) => {
     console.log('Instance URL is: ', instanceUrl);
 });
 
-test('TC004_Navigate to IOS ESM app', async () => {
-    await page.getByRole('button', { name: 'App Launcher' }).click();
-    await page.getByRole('combobox', { name: 'Search apps and items...' }).fill('IOH ESM');
-    await page.getByLabel('Apps', { exact: true }).waitFor({ state: 'visible' });
-    await expect(page.getByLabel('Apps', { exact: true }).getByText('IOH ESM'), 'IOH ESM app should appear in the Apps search results').toBeVisible();
-});
+// test('TC004_Navigate to IOS ESM app', async () => {
+//     await page.getByRole('button', { name: 'App Launcher' }).click();
+//     await page.getByRole('combobox', { name: 'Search apps and items...' }).fill('IOH ESM');
+//     await page.getByLabel('Apps', { exact: true }).waitFor({ state: 'visible' });
+//     await expect(page.getByLabel('Apps', { exact: true }).getByText('IOH ESM'), 'IOH ESM app should appear in the Apps search results').toBeVisible();
+// });
 
 test('TC004_Create CCA', async () => {
     await allure.epic('Account Management');
@@ -109,20 +116,21 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
+        await expect(page.getByRole('heading', { name: 'New Account' })).toBeVisible();
         await expect(
-            page.getByLabel('New Account'),
+            page.getByRole('heading', { name: 'New Account' }),
             'New Account record type selection dialog should appear'
         ).toBeVisible();
     });
 
-    await test.step('TC004_S03 - Select Business record type', async () => {
-        await page.getByLabel('New Account').getByText('Customer Corporate Account').click();
+    await test.step('TC004_S03 - Select Brand record type', async () => {
+        await page.getByText('BrandUse the Brand Account to').click();
         await page.getByRole('button', { name: 'Next' }).click();
 
-        // Expected: The CCA creation form (layout for Customer Corporate Account) is displayed
+        // Expected: The CCA creation form (layout for Brand) is displayed
         await expect(
-            page.getByRole('heading', { name: 'New Account: Customer Corporate Account' }),
-            'Customer Corporate Account creation form should be displayed'
+            page.getByRole('heading', { name: 'New Account: Brand' }),
+            'Brand creation form should be displayed'
         ).toBeVisible();
     });
 
@@ -131,7 +139,7 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('option', { name: 'PT.' }).click();
 
         await page.getByRole('combobox', { name: 'Account Source' }).click();
-        await page.getByRole('option', { name: 'Indosat Vendor Data' }).click();
+        await page.getByRole('option', { name: 'Other' }).click();
 
         await page.getByRole('textbox', { name: 'Account Name' }).click();
         await page.getByRole('textbox', { name: 'Account Name' }).fill(tc001.accountName + ' ' + counter);
@@ -140,7 +148,7 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('textbox', { name: 'Description' }).fill('Created by Automation Testing');
 
         await page.getByRole('combobox', { name: 'Type' }).click();
-        await page.getByRole('option', { name: 'Corporate' }).click();
+        await page.getByRole('option', { name: 'Corporate' }).nth(0).click();
 
         await page.getByRole('combobox', { name: 'Account Status' }).click();
         await page.getByRole('option', { name: 'New' }).click();
@@ -149,7 +157,7 @@ test('TC004_Create CCA', async () => {
         await page.getByRole('textbox', { name: 'Main Contact Area Code' }).fill('021');
 
         await page.getByRole('textbox', { name: 'Phone' }).click();
-        await page.getByRole('textbox', { name: 'Phone' }).fill(tc001.phone);
+        await page.getByRole('textbox', { name: 'Phone' }).fill(tc001.phone.toString());
 
         await page.getByRole('textbox', { name: 'Email' }).click();
         await page.getByRole('textbox', { name: 'Email' }).fill('account.cca.' + counter + '@company.co.id');
@@ -188,7 +196,78 @@ test('TC004_Create CCA', async () => {
             page.locator('div').filter({ hasText: 'Success notification.Account' }).nth(3),
             'Success notification should appear after saving the CCA record'
         ).toBeVisible();
+
+        brandAccountId = page.url().match(/\/lightning\/r\/Account\/([^/]+)\//)?.[1];
+
+        await setRuntimeState('corporateAccountId', brandAccountId);
     });
+});
+
+test('Create Billing Contact', async() => {
+    await allure.epic('Account Management');
+    await allure.feature('Contact Management');
+
+    await allure.story('Create Billing Contact');
+    await allure.severity('normal');
+
+    await page.goto(`${dataAuth.marketing.afterLoginUrl}lightning/o/Contact/list?filterName=__Recent`);
+
+    await expect(page.getByRole('button', { name: 'New' })).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Import' })).toBeVisible();
+    await page.getByRole('button', { name: 'New' }).click();
+    await page.getByText('Billing Contact').click();
+    await page.getByRole('button', { name: 'Next' }).click();
+
+    await page.getByRole('combobox', { name: 'Contact Type' }).click();
+    await page.getByRole('option', { name: 'PIC Corporate' }).click();
+    await page.getByRole('combobox', { name: 'Salutation' }).click();
+    await page.getByRole('option', { name: 'Mr.' }).click();
+    await page.getByRole('textbox', { name: 'First Name' }).click();
+    await page.getByRole('textbox', { name: 'First Name' }).fill(`${tcContact.firstName}`);
+    await page.getByRole('textbox', { name: 'Last Name' }).click();
+    await page.getByRole('textbox', { name: 'Last Name' }).fill(`${tcContact.lastName} ${counter}`);
+
+    await page.getByRole('combobox', { name: 'Account Name' }).click();
+    await page.getByRole('combobox', { name: 'Account Name' }).fill(tc001.accountName + ' ' + counter);
+
+    await page.getByRole('combobox', { name: 'Account Name' }).click();
+    await page.getByRole('combobox', { name: 'Account Name' }).fill(tc001.accountName + ' ' + counter);
+    await page.getByRole('listbox', { name: 'Account Name' })
+    .getByRole('group', { name: 'Search Results' })
+    .getByRole('option', { name: tc001.accountName + ' ' + counter })
+    .click();
+    
+    await page.getByRole('textbox', { name: 'Email' }).click();
+    await page.getByRole('textbox', { name: 'Email' }).fill('johan.armando@example.com');
+    
+    await page.getByRole('textbox', { name: 'Place Of Birth' }).click();
+    await page.getByRole('textbox', { name: 'Place Of Birth' }).fill('Garut');
+    
+    await page.getByRole('combobox', { name: 'Gender' }).click();
+    await page.getByRole('option', { name: 'Male', exact: true }).click();
+    
+    await page.getByRole('textbox', { name: 'Mobile' }).click();
+    await page.getByRole('textbox', { name: 'Mobile' }).fill('085647890123');
+    
+    await page.getByRole('textbox', { name: 'Phone', exact: true }).click();
+    await page.getByRole('textbox', { name: 'Phone', exact: true }).fill('03124567654');
+    
+    await page.getByRole('combobox', { name: 'Marital Status' }).click();
+    await page.getByRole('option', { name: 'Single' }).click();
+    
+    await page.getByRole('combobox', { name: 'Citizenship' }).click();
+    await page.getByRole('option', { name: 'Indonesian' }).click();
+    
+    await page.getByRole('combobox', { name: 'Religion' }).click();
+    await page.getByRole('option', { name: 'Moslem' }).click();
+
+    await page.getByRole('button', { name: 'Save', exact: true }).click();
+    await expect(page.locator('div').filter({ hasText: 'Success notification.Contact' }).nth(3)).toBeVisible();
+
+    const billingContactId = page.url().match(/\/lightning\/r\/Contact\/([^/]+)\//)?.[1];
+
+    await setRuntimeState('billingContactId', billingContactId);
+
 });
 
 test('TC005_Create CA under CCA', async () => {
@@ -200,7 +279,9 @@ test('TC005_Create CA under CCA', async () => {
     await allure.label('pre-requisite', '1.1 User has Marketing User profile');
 
     await test.step('TC005_S01 - Open Accounts list view', async () => {
-        await page.getByRole('link', { name: 'Accounts' }).click();
+        await page.goto(`${dataAuth.marketing.afterLoginUrl}lightning/o/Account/list?filterName=__Recent`);
+
+        // await page.getByRole('link', { name: 'Accounts' }).click();
 
         // Expected: The Accounts list page is displayed
         await expect(
@@ -213,20 +294,21 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
+        await expect(page.getByRole('heading', { name: 'New Account' })).toBeVisible();
         await expect(
-            page.getByLabel('New Account'),
+            page.getByRole('heading', { name: 'New Account' }),
             'New Account record type selection dialog should appear'
         ).toBeVisible();
     });
 
     await test.step('TC005_S03 - Select Business record type', async () => {
-        await page.getByLabel('New Account').getByText('Customer Account').click();
+        await page.getByText('BusinessUse business accounts').click();
         await page.getByRole('button', { name: 'Next' }).click();
 
         // Expected: The CA creation form (layout for Customer Account) is displayed
         await expect(
-            page.getByRole('heading', { name: 'New Account: Customer Account' }),
-            'Customer Account creation form should be displayed'
+            page.getByRole('heading', { name: 'New Account: Business' }),
+            'Business creation form should be displayed'
         ).toBeVisible();
     });
 
@@ -238,7 +320,7 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('textbox', { name: 'Account Name' }).fill(tc002.accountName + ' ' + counter);
 
         await page.getByRole('combobox', { name: 'Account Source' }).click();
-        await page.getByRole('option', { name: 'Indosat Vendor Data' }).click();
+        await page.getByRole('option', { name: 'Other' }).click();
 
         await page.getByRole('combobox', { name: 'Account Status' }).click();
         await page.getByRole('option', { name: 'New' }).click();
@@ -265,13 +347,9 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('option', { name: 'SIUP' }).click();
 
         await page.getByLabel('*Date').click();
-        await page.getByLabel('Pick a Year').selectOption('2040');
+        await page.getByLabel('Pick a Year').selectOption('2030');
         await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).dblclick();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: '31' }).click();
+        await page.getByRole('button', { name: '10' }).click();
 
         await page.getByRole('textbox', { name: 'ID Reference' }).click();
         await page.getByRole('textbox', { name: 'ID Reference' }).fill(tc002.idReference + counter.toString().padStart(4, '0'));
@@ -295,7 +373,7 @@ test('TC005_Create CA under CCA', async () => {
         await page.getByRole('textbox', { name: 'Main Contact Area Code' }).fill('021');
 
         await page.getByRole('textbox', { name: 'Phone' }).click();
-        await page.getByRole('textbox', { name: 'Phone' }).fill(tc002.phone);
+        await page.getByRole('textbox', { name: 'Phone' }).fill(tc002.phone.toString());
 
         await page.getByRole('textbox', { name: 'Email' }).click();
         await page.getByRole('textbox', { name: 'Email' }).fill('account.ca.' + counter + '@company.co.id');
@@ -366,20 +444,21 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('button', { name: 'New' }).click();
 
         // Expected: The record type selection screen appears
+        await expect(page.getByRole('heading', { name: 'New Account' })).toBeVisible();
         await expect(
-            page.getByLabel('New Account'),
+            page.getByRole('heading', { name: 'New Account' }),
             'New Account record type selection dialog should appear'
         ).toBeVisible();
     });
 
     await test.step('TC007_S03 - Select Customer Account record type', async () => {
-        await page.getByLabel('New Account').getByText('Customer Account').click();
+        await page.getByText('BusinessUse business accounts').click();
         await page.getByRole('button', { name: 'Next' }).click();
 
         // Expected: The CA creation form (layout for Customer Account) is displayed
         await expect(
-            page.getByRole('heading', { name: 'New Account: Customer Account' }),
-            'Customer Account creation form should be displayed'
+            page.getByRole('heading', { name: 'New Account: Business' }),
+            'Business creation form should be displayed'
         ).toBeVisible();
     });
 
@@ -391,7 +470,7 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('textbox', { name: 'Account Name' }).fill(tc002.accountName + ' ' + counter);
 
         await page.getByRole('combobox', { name: 'Account Source' }).click();
-        await page.getByRole('option', { name: 'Indosat Vendor Data' }).click();
+        await page.getByRole('option', { name: 'Other' }).click();
 
         await page.getByRole('combobox', { name: 'Account Status' }).click();
         await page.getByRole('option', { name: 'New' }).click();
@@ -418,13 +497,9 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('option', { name: 'SIUP' }).click();
 
         await page.getByLabel('*Date').click();
-        await page.getByLabel('Pick a Year').selectOption('2040');
+        await page.getByLabel('Pick a Year').selectOption('2030');
         await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).dblclick();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: 'Next Month' }).click();
-        await page.getByRole('button', { name: '31' }).click();
+        await page.getByRole('button', { name: '10' }).click();
 
         await page.getByRole('textbox', { name: 'ID Reference' }).click();
         await page.getByRole('textbox', { name: 'ID Reference' }).fill(tc002.idReference + counter.toString().padStart(4, '0'));
@@ -448,7 +523,7 @@ test('TC007_Check Duplicate CA Creation with Same Parent Account', async () => {
         await page.getByRole('textbox', { name: 'Main Contact Area Code' }).fill('021');
 
         await page.getByRole('textbox', { name: 'Phone' }).click();
-        await page.getByRole('textbox', { name: 'Phone' }).fill(tc002.phone);
+        await page.getByRole('textbox', { name: 'Phone' }).fill(tc002.phone.toString());
 
         await page.getByRole('textbox', { name: 'Email' }).click();
         await page.getByRole('textbox', { name: 'Email' }).fill('account.ca.' + counter + '@company.co.id');

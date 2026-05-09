@@ -280,6 +280,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
             ?? null;
         expect(cartId, 'cartId missing from createCart response').toBeTruthy();
         await setRuntimeState('cartId', cartId);
+        await setRuntimeState('quoteId', cartId);
         console.log('Cart (Quote) Id:', cartId);
     });
 

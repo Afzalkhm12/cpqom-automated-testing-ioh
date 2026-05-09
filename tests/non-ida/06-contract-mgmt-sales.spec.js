@@ -1,0 +1,466 @@
+import { test, expect, chromium } from "@playwright/test";
+import * as allure from "allure-js-commons";
+import dataAuth from "../../test-data/auth.json" assert { type: "json" };
+import path from "path";
+import { fileURLToPath } from "url";
+import { getRuntimeState, getTestParams, setRuntimeState, closeDb } from "../../utils/db.js";
+import { request } from "http";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+let instanceUrl;
+let accessToken;
+let opportunityId;
+let sysAdminUserId;
+let cartId;
+let contractId;
+let createdOrderId;
+
+const userDataDirectory = path.resolve(__dirname, '../../.sf-profile');
+let context;
+let page;
+let testParams;
+
+// Resolve login user: sysadmin when TEST_USER_ADMIN=true, otherwise enterpriseSolution
+const loginUser = process.env.TEST_USER_ADMIN === 'true' ? dataAuth.sysadmin : dataAuth.salesOperation;
+
+// runs only once before all tests in the file
+test.beforeAll(async () => {
+    opportunityId = await getRuntimeState('opportunityId');
+    testParams = await getTestParams('quote_mgmt', 'tc_quote');
+    console.log('Opportunity ID: '+opportunityId);
+
+    context = await chromium.launchPersistentContext(userDataDirectory, {
+        headless: false,
+        args: ['--start-maximized'],
+    });
+    page = await context.newPage();
+
+    await page.goto(loginUser.url);
+    await page.getByRole('textbox', { name: 'Username' }).fill(loginUser.username);
+    await page.getByRole('textbox', { name: 'Password' }).click();
+    await page.getByRole('textbox', { name: 'Password' }).fill(loginUser.password);
+    await page.getByRole('button', { name: 'Log In to Sandbox' }).click();
+
+    await page.waitForURL('**/lightning/**', { timeout: 60000 });
+    await context.storageState({ path: '.sf-profile/sf-state.json' });
+});
+
+test.afterAll(async () => {
+    await closeDb();
+    if (context) await context.close();
+});
+
+test('API Connection Test', async ({ request }) => {
+    const loginUrl = dataAuth.sysadmin.url+'/services/oauth2/token';
+
+    const grantType = 'client_credentials';
+    const clientId = dataAuth.sysadmin.clientId;
+    const clientSecret = dataAuth.sysadmin.clientSecret;
+
+  // Step 1: Authenticate and get access token
+    const loginResponse = await request.post(loginUrl, {
+      headers: {
+        'Content-Type' : 'application/x-www-form-urlencoded'
+      },
+      form: {
+        grant_type: grantType,
+        client_id: clientId,
+        client_secret: clientSecret
+      }
+    });
+
+    console.log('Login response is: ', (await (loginResponse).body()).toString());
+    expect((loginResponse).ok()).toBeTruthy();
+
+
+    const loginBody = await loginResponse.json();
+    accessToken = loginBody.access_token;
+    instanceUrl = loginBody.instance_url;
+
+    console.log('Access token is: ', accessToken);
+
+    console.log('Instance URL is: ', instanceUrl);
+
+    // Step 2: Get the current user's ID
+    const userInfoResponse = await request.get(`${instanceUrl}/services/oauth2/userinfo`, {
+        headers: { 'Authorization': `Bearer ${accessToken}` }
+    });
+    expect(userInfoResponse.ok(), 'User info request should succeed').toBeTruthy();
+    const userInfoBody = await userInfoResponse.json();
+    sysAdminUserId = userInfoBody.user_id;
+
+    // await patchMissingScoreCard(request, instanceUrl, accessToken);
+});
+
+/**
+ * Executes a Salesforce REST request and throws on HTTP errors or embedded
+ * Vlocity error bodies (HTTP 200 with { "error": "..." }).
+ * @returns {Promise<object|string>}
+ */
+async function sfRequest(request, method, url, { headers, data } = {}) {
+    const opts = { headers };
+    if (data !== undefined) opts.data = data;
+
+    const response = await request[method](url, opts);
+
+    let body;
+    try {
+        body = await response.json();
+    } catch {
+        body = await response.text();
+    }
+
+    if (!response.ok()) {
+        const err = new Error(`HTTP ${response.status()} ${method.toUpperCase()} ${url}`);
+        err.body = body;
+        throw err;
+    }
+
+    // Some Vlocity endpoints return HTTP 200 with an embedded error
+    if (body && typeof body === 'object') {
+        const errField = body.error ?? body.errorCode;
+        if (errField && !body.cartId && !body.records) {
+            const err = new Error(`Salesforce error: ${errField} — ${body.message ?? ''}`);
+            err.body = body;
+            throw err;
+        }
+    }
+
+    return body;
+}
+
+async function getDocumentTemplateId(request) {
+    const q = encodeURIComponent(
+        "SELECT id, name, vlocity_cmt__VersionNumber__c, vlocity_cmt__IsActive__c FROM vlocity_cmt__DocumentTemplate__c WHERE name LIKE 'IOH FAB Document%' AND vlocity_cmt__IsActive__c = true"
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+    const record = body.records?.[0];
+    if (!record) throw new Error('No active IOH FAB Document template found');
+    console.log('DocumentTemplate found:', record.Name, record.Id);
+    return record.Id;
+}
+
+async function createContractVersion(request) {
+    const documentTemplateId = await getDocumentTemplateId(request);
+    const body = await sfRequest(request, 'post',
+        `${instanceUrl}/services/data/v65.0/sobjects/vlocity_cmt__ContractVersion__c`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            data: {
+                vlocity_cmt__ContractId__c: contractId,
+                vlocity_cmt__Status__c: 'Active',
+                vlocity_cmt__DocumentTemplateId__c: documentTemplateId,
+            },
+        }
+    );
+    console.log('ContractVersion created:', body.id);
+    return body.id;
+}
+
+async function patchContract(request) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startDate = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD
+
+    await sfRequest(request, 'patch',
+        `${instanceUrl}/services/data/v65.0/sobjects/Contract/${contractId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            data: {
+                StartDate: startDate,
+                ContractTerm: 12,
+            },
+        }
+    );
+    console.log('Contract patched — StartDate:', startDate, 'ContractTerm: 12');
+}
+
+async function patchContractStatusSigned(request) {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const startDate = tomorrow.toISOString().split('T')[0]; // YYYY-MM-DD
+
+    await sfRequest(request, 'patch',
+        `${instanceUrl}/services/data/v65.0/sobjects/Contract/${contractId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            data: {
+                Status: 'Signed'
+            },
+        }
+    );
+}
+
+async function getContractRecord(request) {
+    const q = encodeURIComponent(`SELECT Id, ContractNumber, vlocity_cmt__QuoteId__r.Name, AccountId FROM Contract WHERE Id = '${contractId}' LIMIT 1`);
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+    const record = body.records?.[0];
+    if (!record) throw new Error(`Contract ${contractId} not found`);
+    const contractRecord = {
+        contractNumber: record.ContractNumber,
+        quoteName: record.vlocity_cmt__QuoteId__r?.Name,
+        accountId: record.AccountId
+    }
+    return contractRecord;
+}
+
+async function patchAccount(request, accountId) {
+    await sfRequest(request, 'patch',
+        `${instanceUrl}/services/data/v65.0/sobjects/Account/${accountId}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json',
+                Accept: 'application/json',
+            },
+            data: {
+                CPQ_Collection_Status__c: 'CLEARED',
+                CPQ_Collection_Status_Date__c: new Date().toISOString(),
+            },
+        }
+    );
+    console.log('Account patched — CPQ_Collection_Status__c: CLEARED');
+}
+
+async function getChildOrders(request, parentOrderId) {
+    const q = encodeURIComponent(
+        `SELECT Id, Name, OrderNumber, Status, vlocity_cmt__ParentOrderId__c FROM Order WHERE vlocity_cmt__ParentOrderId__c = '${parentOrderId}' AND Status = 'Draft'`
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+    console.log(`Child orders found: ${body.totalSize}`);
+    return body.records;
+}
+
+async function getOrchestrationPlans(request, orders) {
+    const ids = typeof orders === 'string'
+        ? `'${orders}'`
+        : orders.map(o => `'${o.Id}'`).join(',');
+    const q = encodeURIComponent(
+        `SELECT Id, vlocity_cmt__OrderId__c, Name, vlocity_cmt__OrderId__r.OrderNumber, CreatedDate FROM vlocity_cmt__OrchestrationPlan__c WHERE vlocity_cmt__OrderId__c IN (${ids}) ORDER BY CreatedDate DESC`
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+    console.log(`OrchestrationPlans found: ${body.totalSize}`);
+    return body.records;
+}
+
+async function assertOrchestrationItemsCompleted(request, orchestrationPlans) {
+    const planIds = orchestrationPlans.map(p => `'${p.Id}'`).join(',');
+    const targetNames = ['Start Order', 'Create FSL Work Order'];
+    const namesClause = targetNames.map(n => `'${n}'`).join(',');
+
+    const q = encodeURIComponent(
+        `SELECT Id, Name, vlocity_cmt__State__c, vlocity_cmt__OrchestrationPlanId__c FROM vlocity_cmt__OrchestrationItem__c WHERE vlocity_cmt__OrchestrationPlanId__c IN (${planIds}) AND Name IN (${namesClause})`
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+
+    for (const name of targetNames) {
+        const item = body.records.find(r => r.Name === name);
+        expect(item, `OrchestrationItem '${name}' not found`).toBeTruthy();
+        expect(item.vlocity_cmt__State__c, `OrchestrationItem '${name}' should be Completed`).toBe('Completed');
+        console.log(`OrchestrationItem '${name}' — State: ${item.vlocity_cmt__State__c} ✓`);
+    }
+}
+
+async function getOrderRecType(request, orderId) {
+    const q = encodeURIComponent(
+        `SELECT Id, RecordType.DeveloperName FROM Order WHERE Id = '${orderId}' LIMIT 1`
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+    const record = body.records?.[0];
+    expect(record, `Order ${orderId} not found`).toBeTruthy();
+    return record.RecordType?.DeveloperName;
+}
+
+test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) => {
+    await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/Quote/0Q0MR000001PXg90AG/view');
+    await expect(page.getByRole('button', { name: 'Create Contract' })).toBeVisible();
+    await page.getByRole('button', { name: 'Create Contract' }).click();
+
+    await page.waitForURL('**/lightning/r/Contract/**', { timeout: 10000 });
+    contractId = page.url().match(/\/lightning\/r\/Contract\/([^/]+)\//)?.[1];
+    const contractVersionId = await createContractVersion(request);
+
+    await patchContract(request);
+
+    await page.reload();
+
+    // await page.waitForTimeout(3_000);
+    
+    await page.getByRole('button', { name: 'Current Status: Draft' }).click();
+    await page.getByRole('button', { name: 'Execute Transition' }).click();
+
+    await page.reload();
+    await expect(page.getByRole('button', { name: 'Upload Document' })).toBeVisible();
+    await page.getByRole('button', { name: 'Upload Document' }).click();
+    await page.getByRole('combobox', { name: 'Select Document Type' }).click();
+    await page.getByRole('option', { name: 'FAB' }).click();
+    // await page.getByText('Upload Files').click();
+    // await page.getByRole('button', { name: 'Select a file Upload Files Or' }).setInputFiles('chat_transcript.pdf');
+    // await page.getByRole('button', { name: 'Upload', exact: true }).click();
+
+    const fileInput = page.locator('input[type="file"]');
+    await fileInput.waitFor({ state: 'attached', timeout: 10_000 });
+    await fileInput.setInputFiles(path.resolve(__dirname, '../../test-data/chat_transcript.pdf'));
+    await expect(
+        page.getByText('chat_transcript.pdf'),
+        'MLD file should be attached to the uploader field'
+    ).toBeVisible({ timeout: 10_000 });
+    await page.getByRole('button', { name: 'Upload', exact: true }).click();
+    
+    await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Contract/${contractId}/view`);
+
+    await page.getByRole('button', { name: 'Current Status: Negotiating' }).click();
+    await page.getByRole('button', { name: 'Execute Transition' }).click();
+    
+    await page.reload();
+
+    const contractRecord = await getContractRecord(request);
+
+    // await expect(page.getByRole('button', { name: 'Submit for Approval' })).toBeVisible();
+    // await page.getByRole('button', { name: 'Submit for Approval' }).click();
+    // await page.getByRole('button', { name: 'Submit' }).click();
+    
+    await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Contract/${contractId}/view`);
+
+    await patchContractStatusSigned(request);
+
+    // await page.getByRole('button', { name: 'Current Status: Customer Assessment' }).click();
+    // await page.getByRole('combobox', { name: 'Target State' }).click();
+    // await page.getByRole('option', { name: 'Signed' }).click();
+    // await page.getByRole('button', { name: 'Execute Transition' }).click();
+
+    await page.reload();
+    
+    // sebelum check eligibility harus update account fields:
+    // CPQ_Collection_Status__c = CLEARED
+    // CPQ_Collection_Status_Date__c <= 24 jam
+    await patchAccount(request, contractRecord.accountId);
+
+    await expect(page.getByRole('button', { name: 'Check Eligiblity', exact: true })).toBeVisible();
+    await page.getByRole('button', { name: 'Check Eligiblity', exact: true }).click();
+
+    // await page.getByRole('button', { name: 'Check Eligiblity' }).click();
+    await page.getByRole('button', { name: 'Check Eligibility' }).click();
+    await expect(page.locator('div').filter({ hasText: 'Success notification.' }).nth(3)).toBeVisible();
+    await page.locator('#action button').filter({ hasText: 'Show menu' }).click();
+    // await page.locator('li').filter({ hasText: 'Activate' }).click();
+    // await page.locator('li').filter({ hasText: 'Activate' }).click();
+    await page.locator('a').filter({ hasText: 'Activate' }).click();
+
+    // berhasil di-activate
+
+    // mulai create order
+    await page.locator('button').filter({ hasText: 'Create Order' }).click();
+    await page.waitForURL('**/lightning/r/Order/**', { timeout: 10000 });
+    createdOrderId = page.url().match(/\/lightning\/r\/Order\/([^/]+)\//)?.[1];
+
+    console.log('Created order ID: '+createdOrderId);
+
+    // butuh di cek apakah record type order ini adalah sub order atau bukan
+    const orderRecordTypeName = await getOrderRecType(request, createdOrderId);
+    console.log('Order record type name: '+orderRecordTypeName);
+    if(orderRecordTypeName == 'MasterOrder') {
+        // get sub orders
+        const subOrders = await getChildOrders(request, createdOrderId);
+        const orchestrationPlans = await getOrchestrationPlans(request, subOrders);
+        await assertOrchestrationItemsCompleted(request, orchestrationPlans);
+    } else if(orderRecordTypeName == 'SubOrder') {
+        await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Order/${createdOrderId}/view`);
+        await expect(page.getByRole('button', { name: 'Submit Order' })).toBeVisible();
+        await page.getByRole('button', { name: 'Submit Order' }).click();
+        await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/vlocity_cmt__OrchestrationPlan__c/a67MR0000000IOLYA2/view');
+
+        const orchestrationPlans = await getOrchestrationPlans(request, createdOrderId);
+        await assertOrchestrationItemsCompleted(request, orchestrationPlans);
+    }
+    
+
+    // await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/Order/801MR00000BbPsSYAV/view');
+
+    // cek ke related ke sub order
+    // ubah status ke Ready to Submit
+    // await page.goto('https://b2b-io--cpqsitdelo.sandbox.my.salesforce.com/?ec=302&startURL=%2Fvisualforce%2Fsession%3Furl%3Dhttps%253A%252F%252Fb2b-io--cpqsitdelo.sandbox.lightning.force.com%252Flightning%252Fr%252FOrder%252F801MR00000BbPsSYAV%252Fview');
+    
+    // automate using API only
+    // await page.getByRole('tab', { name: 'Related' }).click();
+    // await expect(page.getByRole('heading', { name: 'Orders (1)' })).toBeVisible();
+    // await page.getByRole('link', { name: '00094725' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('rowheader', { name: 'Open 00094725 Preview' }).click();
+    // await page.getByRole('rowheader', { name: 'Open 00094725 Preview' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Close' }).click();
+    // await page.getByRole('button', { name: 'Show Actions' }).click();
+    // await page.locator('span').filter({ hasText: '00094725Open 00094725 Preview' }).click();
+    // await page.getByRole('link', { name: '00094725' }).click();
+    // await page.getByLabel('Orders').getByRole('link', { name: '00094725' }).click();
+    // await expect(page.getByRole('button', { name: 'Submit Order' })).toBeVisible();
+    // await page.getByRole('button', { name: 'Submit Order' }).click();
+    // await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/vlocity_cmt__OrchestrationPlan__c/a67MR0000000IOLYA2/view');
+    // await expect(page.locator('records-entity-label').filter({ hasText: 'Orchestration Plan' })).toBeVisible();
+});

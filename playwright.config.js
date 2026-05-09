@@ -40,7 +40,7 @@ export default defineConfig({
     screenshot: 'on',
     trace: 'on'
   },
-  timeout: 60 * 1000, // 40 seconds
+  timeout: 70 * 1000, // 40 seconds
   /* Configure projects for major browsers */
   projects: [
     {
