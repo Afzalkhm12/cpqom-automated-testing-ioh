@@ -56,6 +56,17 @@ export async function updateTestParams(moduleKey, testCaseId, params) {
     );
 }
 
+export async function incrementModuleCounter(moduleKey) {
+    const { rows } = await pool.query(
+        `UPDATE test_modules
+         SET counter = counter + 1
+         WHERE module_key = $1
+         RETURNING counter`,
+        [moduleKey]
+    );
+    return rows[0]?.counter ?? null;
+}
+
 export async function closeDb() {
     await pool.end();
 }
