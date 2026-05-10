@@ -13,6 +13,7 @@ let accessToken;
 let opportunityId;
 let sysAdminUserId;
 let cartId;
+let createdQuoteId;
 
 const userDataDirectory = path.resolve(__dirname, '../../.sf-profile');
 let context;
@@ -191,6 +192,29 @@ async function sfRequest(request, method, url, { headers, data } = {}) {
     return body;
 }
 
+function extractId(item) {
+    if (item.Id !== undefined) {
+        return (item.Id !== null && typeof item.Id === 'object') ? (item.Id.value ?? '') : item.Id;
+    }
+    return item.id ?? item.itemId ?? '';
+}
+
+function extractRandomAttributes(item) {
+    const attrs = {};
+    for (const cat of item.attributeCategories?.records ?? []) {
+        for (const attr of cat.productAttributes?.records ?? []) {
+            if (attr.disabled || attr.hidden) continue;
+            const key = attr.code ?? attr.label ?? null;
+            const values = attr.values ?? [];
+            if (attr.inputType === 'dropdown' && values.length > 0 && key) {
+                const pick = values[Math.floor(Math.random() * values.length)];
+                attrs[key] = (pick !== null && typeof pick === 'object') ? (pick.value ?? '') : pick;
+            }
+        }
+    }
+    return attrs;
+}
+
 test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) => {
     await allure.epic('Quote Management');
     await allure.feature('Enterprise Quote');
@@ -202,6 +226,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
     let priceListId;
     let recordTypeId;
+    let childItems = [];
 
     // Reuse the accessToken / instanceUrl set by the preceding 'API Connection Test'
     const hdrs = () => ({
@@ -367,8 +392,60 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
         expect(records.length, 'Cart line items empty after polling — product may not have been added').toBeGreaterThan(0);
 
-        const childCount = records.reduce((sum, r) => sum + (r.lineItems?.records?.length ?? 0), 0);
+        childItems = records.flatMap(r => r.lineItems?.records ?? []);
+        const childCount = childItems.length;
         console.log(`Cart: ${records.length} root line item(s), ${childCount} child item(s)`);
+    });
+
+    // ── STEP 4a — Randomize attributes on child line items ───────────────────
+    await test.step('Step 4a: Randomize attributes on child line items', async () => {
+        if (!testParams.randomize_attributes || childItems.length === 0) {
+            console.log('Step 4a skipped — randomize_attributes not enabled or no child items');
+            return;
+        }
+
+        let patched = 0;
+        for (const child of childItems) {
+            const childId = extractId(child);
+            const attrs = extractRandomAttributes(child);
+
+            if (Object.keys(attrs).length === 0) continue;
+
+            await sfRequest(request, 'patch',
+                `${instanceUrl}/services/data/v66.0/sobjects/QuoteLineItem/${childId}`,
+                { headers: hdrs(), data: { vlocity_cmt__AttributeSelectedValues__c: JSON.stringify(attrs) } }
+            );
+            console.log(`Randomized attrs on child ${childId}:`, JSON.stringify(attrs));
+            patched++;
+        }
+
+        if (patched === 0) {
+            console.log('Step 4a: No eligible dropdown attributes found on any child item');
+        }
+    });
+
+    // ── STEP 4b — Override pricing on child line items ───────────────────────
+    await test.step('Step 4b: Override pricing on child line items', async () => {
+        const otc = testParams.otc_override != null ? parseFloat(testParams.otc_override) : null;
+        const rc  = testParams.rc_override  != null ? parseFloat(testParams.rc_override)  : null;
+
+        if (!testParams.override_pricing || childItems.length === 0 || (otc === null && rc === null)) {
+            console.log('Step 4b skipped — override_pricing not enabled, no child items, or no overrides configured');
+            return;
+        }
+
+        for (const child of childItems) {
+            const childId = extractId(child);
+            const payload = {};
+            if (otc !== null) payload.AdditionalOneTimeCharge__c   = otc;
+            if (rc  !== null) payload.AdditionalRecurringCharge__c = rc;
+
+            await sfRequest(request, 'patch',
+                `${instanceUrl}/services/data/v66.0/sobjects/QuoteLineItem/${childId}`,
+                { headers: hdrs(), data: payload }
+            );
+            console.log(`Override pricing on child ${childId}:`, JSON.stringify(payload));
+        }
     });
 
     // ── STEP 5 — Recalculate / price the quote ────────────────────────────────
@@ -387,6 +464,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
     // Verify Quote Line Items on Quote Record Page
     const quoteId = await getRuntimeState('cartId');
+    createdQuoteId = quoteId;
     expect(quoteId, 'cartId not found in runtime state').toBeTruthy();
 
     const quoteUrl = `${dataAuth.enterpriseSolution.afterLoginUrl}lightning/r/Quote/${quoteId}/view`;
@@ -517,30 +595,32 @@ test('TC029: Generate Business Case', async() => {
     await expect(page.getByText('Error loading Quote Line Items')).not.toBeVisible();
 });
 
-test('TC035: Quote Clossure', async() => {
+test('TC035: Quote Clossure', async({ request }) => {
     await patchQuoteApprover(request, instanceUrl, accessToken, cartId, sysAdminUserId);
+
+    await page.goto(`${dataAuth.enterpriseSolution.afterLoginUrl}lightning/r/Quote/${createdQuoteId}/view`);
 
     await expect(page.getByRole('button', { name: 'Submit for Approval' })).toBeVisible();
 
     await page.getByRole('button', { name: 'Submit for Approval' }).click();
     await page.getByRole('textbox', { name: 'Comments' }).click();
     await page.getByRole('textbox', { name: 'Comments' }).fill('please approve');
-    await page.getByRole('button', { name: 'Submit' }).click();
+    await page.getByRole('button', { name: 'Submit' }).nth(0).click();
     await expect(page.locator('div').filter({ hasText: 'Success notification.Quote' }).nth(3)).toBeVisible();
 
     await page.waitForTimeout(3_000);
 
-    const lastModifiedBy = await getQuoteLastModifiedBy(request, instanceUrl, accessToken, cartId);
+    const lastModifiedBy = await getQuoteLastModifiedBy(request, instanceUrl, accessToken, createdQuoteId);
 
     await page.getByRole('button', { name: 'Notifications' }).click();
-    await page.getByRole('link', { name: `${lastModifiedBy.Name} is` }).click();
+    await page.getByRole('link', { name: `${lastModifiedBy.name} is` }).nth(0).click();
     await expect(page.getByRole('button', { name: 'Approve' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Reject' })).toBeVisible();
     await expect(page.getByRole('button', { name: 'Reassign' })).toBeVisible();
     await page.getByRole('button', { name: 'Approve' }).click();
     await page.getByRole('textbox', { name: 'Comments' }).click();
     await page.getByRole('textbox', { name: 'Comments' }).fill('approve');
-    await page.getByRole('button', { name: 'Approve' }).click();
+    await page.getByRole('button', { name: 'Approve' }).nth(0).click();
     await expect(page.getByText('Approved')).toBeVisible();
     await page.locator('#brandBand_2').getByRole('link', { name: 'API Test Quote' }).click();
     await page.getByTitle('Closed').click();
