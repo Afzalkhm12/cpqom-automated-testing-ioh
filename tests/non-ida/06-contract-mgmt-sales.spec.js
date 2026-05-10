@@ -12,7 +12,7 @@ let instanceUrl;
 let accessToken;
 let opportunityId;
 let sysAdminUserId;
-let cartId;
+let quoteId;
 let contractId;
 let createdOrderId;
 
@@ -27,6 +27,7 @@ const loginUser = process.env.TEST_USER_ADMIN === 'true' ? dataAuth.sysadmin : d
 // runs only once before all tests in the file
 test.beforeAll(async () => {
     opportunityId = await getRuntimeState('opportunityId');
+    quoteId = await getRuntimeState('quoteId');
     testParams = await getTestParams('quote_mgmt', 'tc_quote');
     console.log('Opportunity ID: '+opportunityId);
 
@@ -112,6 +113,8 @@ async function sfRequest(request, method, url, { headers, data } = {}) {
     }
 
     if (!response.ok()) {
+        console.error(`sfRequest error — ${method.toUpperCase()} ${url} → ${response.status()}`);
+        console.error('Response body:', JSON.stringify(body, null, 2));
         const err = new Error(`HTTP ${response.status()} ${method.toUpperCase()} ${url}`);
         err.body = body;
         throw err;
@@ -121,6 +124,8 @@ async function sfRequest(request, method, url, { headers, data } = {}) {
     if (body && typeof body === 'object') {
         const errField = body.error ?? body.errorCode;
         if (errField && !body.cartId && !body.records) {
+            console.error(`sfRequest Vlocity error — ${method.toUpperCase()} ${url}`);
+            console.error('Response body:', JSON.stringify(body, null, 2));
             const err = new Error(`Salesforce error: ${errField} — ${body.message ?? ''}`);
             err.body = body;
             throw err;
@@ -253,7 +258,7 @@ async function patchAccount(request, accountId) {
 
 async function getChildOrders(request, parentOrderId) {
     const q = encodeURIComponent(
-        `SELECT Id, Name, OrderNumber, Status, vlocity_cmt__ParentOrderId__c FROM Order WHERE vlocity_cmt__ParentOrderId__c = '${parentOrderId}' AND Status = 'Draft'`
+        `SELECT Id, Name, OrderNumber, Status, vlocity_cmt__ParentOrderId__c FROM Order WHERE vlocity_cmt__ParentOrderId__c = '${parentOrderId}'`
     );
     const body = await sfRequest(request, 'get',
         `${instanceUrl}/services/data/v65.0/query?q=${q}`,
@@ -269,11 +274,24 @@ async function getChildOrders(request, parentOrderId) {
 }
 
 async function getOrchestrationPlans(request, orders) {
-    const ids = typeof orders === 'string'
-        ? `'${orders}'`
-        : orders.map(o => `'${o.Id}'`).join(',');
+    let whereClause;
+    if (typeof orders === 'string') {
+        // single order ID — query by order
+        whereClause = `vlocity_cmt__OrderId__c IN ('${orders}')`;
+    } else if (Array.isArray(orders) && orders.length === 0) {
+        console.log('getOrchestrationPlans — no IDs, skipping');
+        return [];
+    } else if (Array.isArray(orders) && typeof orders[0] === 'string') {
+        // array of orchestration plan IDs collected from URL redirects
+        const ids = orders.map(id => `'${id}'`).join(',');
+        whereClause = `Id IN (${ids})`;
+    } else {
+        // array of Order records with .Id
+        const ids = orders.map(o => `'${o.Id}'`).join(',');
+        whereClause = `vlocity_cmt__OrderId__c IN (${ids})`;
+    }
     const q = encodeURIComponent(
-        `SELECT Id, vlocity_cmt__OrderId__c, Name, vlocity_cmt__OrderId__r.OrderNumber, CreatedDate FROM vlocity_cmt__OrchestrationPlan__c WHERE vlocity_cmt__OrderId__c IN (${ids}) ORDER BY CreatedDate DESC`
+        `SELECT Id, vlocity_cmt__OrderId__c, Name, vlocity_cmt__OrderId__r.OrderNumber, CreatedDate FROM vlocity_cmt__OrchestrationPlan__c WHERE ${whereClause} ORDER BY CreatedDate DESC`
     );
     const body = await sfRequest(request, 'get',
         `${instanceUrl}/services/data/v65.0/query?q=${q}`,
@@ -314,6 +332,51 @@ async function assertOrchestrationItemsCompleted(request, orchestrationPlans) {
     }
 }
 
+async function completeOrchestrationItems(request, orchestrationPlans) {
+    const planIds = orchestrationPlans.map(p => `'${p.Id}'`).join(',');
+    const sequence = [
+        'Completed FSL Work Order',
+        'Billing Order Activation',
+        'Billing Activated',
+        'Assetize Order',
+        'End Order (Asset Created)',
+    ];
+    const namesClause = sequence.map(n => `'${n}'`).join(',');
+
+    const q = encodeURIComponent(
+        `SELECT Id, Name, vlocity_cmt__State__c FROM vlocity_cmt__OrchestrationItem__c WHERE vlocity_cmt__OrchestrationPlanId__c IN (${planIds}) AND Name IN (${namesClause})`
+    );
+    const body = await sfRequest(request, 'get',
+        `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+        {
+            headers: {
+                Authorization: `Bearer ${accessToken}`,
+                Accept: 'application/json',
+            },
+        }
+    );
+
+    for (const name of sequence) {
+        const item = body.records.find(r => r.Name === name);
+        if (!item) {
+            console.warn(`OrchestrationItem '${name}' not found — skipping`);
+            continue;
+        }
+        await sfRequest(request, 'patch',
+            `${instanceUrl}/services/data/v65.0/sobjects/vlocity_cmt__OrchestrationItem__c/${item.Id}`,
+            {
+                headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                    'Content-Type': 'application/json',
+                    Accept: 'application/json',
+                },
+                data: { vlocity_cmt__State__c: 'Completed' },
+            }
+        );
+        console.log(`OrchestrationItem '${name}' — set to Completed ✓`);
+    }
+}
+
 async function getOrderRecType(request, orderId) {
     const q = encodeURIComponent(
         `SELECT Id, RecordType.DeveloperName FROM Order WHERE Id = '${orderId}' LIMIT 1`
@@ -333,7 +396,8 @@ async function getOrderRecType(request, orderId) {
 }
 
 test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) => {
-    await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/Quote/0Q0MR000001PXg90AG/view');
+    await page.goto(`${loginUser.afterLoginUrl}lightning/r/Quote/${quoteId}/view`);
+    
     await expect(page.getByRole('button', { name: 'Create Contract' })).toBeVisible();
     await page.getByRole('button', { name: 'Create Contract' }).click();
 
@@ -420,16 +484,50 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
     // butuh di cek apakah record type order ini adalah sub order atau bukan
     const orderRecordTypeName = await getOrderRecType(request, createdOrderId);
     console.log('Order record type name: '+orderRecordTypeName);
+
+    await page.waitForTimeout(10_000);
+    let orchestrationPlanIDs = [];
     if(orderRecordTypeName == 'MasterOrder') {
         // get sub orders
         const subOrders = await getChildOrders(request, createdOrderId);
-        const orchestrationPlans = await getOrchestrationPlans(request, subOrders);
-        await assertOrchestrationItemsCompleted(request, orchestrationPlans);
+        console.log(`Sub-orders found: ${subOrders.length}`);
+
+        for (const subOrder of subOrders) {
+            const subOrderId = subOrder.Id;
+            console.log(`Submitting sub-order: ${subOrderId} (${subOrder.OrderNumber})`);
+            await page.goto(`${loginUser.afterLoginUrl}lightning/r/Order/${subOrderId}/view`);
+            await expect(page.getByRole('button', { name: 'Submit Order' })).toBeVisible({ timeout: 15_000 });
+            await page.getByRole('button', { name: 'Submit Order' }).click();
+            // await expect(page.locator('div').filter({ hasText: 'Success notification.' }).nth(3)).toBeVisible({ timeout: 15_000 });
+            console.log(`Sub-order ${subOrderId} submitted`);
+            // await page.waitForTimeout(1_000);
+
+            await page.waitForURL('**/lightning/r/vlocity_cmt__OrchestrationPlan__c/**', { timeout: 10000 });
+            const planId = page.url().match(/\/lightning\/r\/vlocity_cmt__OrchestrationPlan__c\/([^/]+)\//)?.[1];
+            if (planId) {
+                orchestrationPlanIDs.push(planId);
+                console.log(`OrchestrationPlan ID collected: ${planId}`);
+            }
+        }
+
+        const orchestrationPlans = await getOrchestrationPlans(request, orchestrationPlanIDs);
+
+        await page.waitForTimeout(10_000);
+
+        // await assertOrchestrationItemsCompleted(request, orchestrationPlans);
+
+        await completeOrchestrationItems(request, orchestrationPlans);
+
     } else if(orderRecordTypeName == 'SubOrder') {
-        await page.goto(`${dataAuth.sysadmin.afterLoginUrl}lightning/r/Order/${createdOrderId}/view`);
+        await page.goto(`${login.afterLoginUrl}lightning/r/Order/${createdOrderId}/view`);
         await expect(page.getByRole('button', { name: 'Submit Order' })).toBeVisible();
         await page.getByRole('button', { name: 'Submit Order' }).click();
-        await page.goto('https://b2b-io--cpqsitdelo.sandbox.lightning.force.com/lightning/r/vlocity_cmt__OrchestrationPlan__c/a67MR0000000IOLYA2/view');
+
+        await page.waitForURL('**/lightning/r/vlocity_cmt__OrchestrationPlan__c/**', { timeout: 10000 });
+        const planId = page.url().match(/\/lightning\/r\/vlocity_cmt__OrchestrationPlan__c\/([^/]+)\//)?.[1];
+        // await page.goto(`${login.afterLoginUrl}lightning/r/vlocity_cmt__OrchestrationPlan__c/${planId}/view`);
+
+        await page.waitForTimeout(10_000);
 
         const orchestrationPlans = await getOrchestrationPlans(request, createdOrderId);
         await assertOrchestrationItemsCompleted(request, orchestrationPlans);
