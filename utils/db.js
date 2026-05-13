@@ -67,6 +67,25 @@ export async function incrementModuleCounter(moduleKey) {
     return rows[0]?.counter ?? null;
 }
 
+/**
+ * Updates a product_test_runs row.
+ * Only the fields present in payload are written; others are left unchanged.
+ * Pass finished_at: new Date() (or true) to stamp the current time.
+ */
+export async function updateRun(runId, { status, log, created_ids, finished_at } = {}) {
+    if (!runId) return;
+    const setParts = [];
+    const values = [];
+    let i = 1;
+    if (status !== undefined)      { setParts.push(`status = $${i++}`);      values.push(status); }
+    if (log !== undefined)         { setParts.push(`log = $${i++}`);         values.push(log); }
+    if (created_ids !== undefined) { setParts.push(`created_ids = $${i++}`); values.push(JSON.stringify(created_ids)); }
+    if (finished_at !== undefined) { setParts.push(`finished_at = $${i++}`); values.push(finished_at === true ? new Date() : finished_at); }
+    if (setParts.length === 0) return;
+    values.push(runId);
+    await pool.query(`UPDATE product_test_runs SET ${setParts.join(', ')} WHERE id = $${i}`, values);
+}
+
 export async function closeDb() {
     await pool.end();
 }

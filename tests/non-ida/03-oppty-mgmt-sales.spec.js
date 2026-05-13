@@ -3,11 +3,14 @@ import * as allure from "allure-js-commons";
 import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
-import { getModule, getTestParams, getRuntimeState, closeDb } from "../../utils/db.js";
+import { getModule, getTestParams, getRuntimeState, closeDb, updateRun } from "../../utils/db.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-let counter;
+const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+let runError = null;
+
+// let counter;
 let tc010;
 let instanceUrl;
 let accessToken;
@@ -22,9 +25,9 @@ const loginUser = process.env.TEST_USER_ADMIN === 'true' ? dataAuth.sysadmin : d
 
 // runs only once before all tests in the file
 test.beforeAll(async () => {
-    const module = await getModule('oppty_mgmt');
-    counter = module.counter;
-    tc010 = await getTestParams('oppty_mgmt', 'tc010');
+    const module = await getModule('oppty_mgmt_sales');
+    // counter = module.counter;
+    tc010 = await getTestParams('oppty_mgmt_sales', 'tc010');
     opportunityId = await getRuntimeState('opportunityId');
 
     context = await chromium.launchPersistentContext(userDataDirectory, {
@@ -43,7 +46,24 @@ test.beforeAll(async () => {
     await context.storageState({ path: '.sf-profile/sf-state.json' });
 });
 
+test.afterEach(async ({}, testInfo) => {
+    if ((testInfo.status === 'failed' || testInfo.status === 'timedOut') && !runError) {
+        runError = testInfo.error?.message ?? `${testInfo.title} failed`;
+    }
+});
+
 test.afterAll(async () => {
+    if (runId) {
+        if (runError) {
+            await updateRun(runId, { status: 'error', log: runError, finished_at: new Date() });
+        } else {
+            await updateRun(runId, {
+                status: 'success',
+                created_ids: { createdOpportunityId: opportunityId },
+                finished_at: new Date(),
+            });
+        }
+    }
     await closeDb();
     if (context) await context.close();
 });

@@ -3,9 +3,12 @@ import * as allure from "allure-js-commons";
 import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
-import { getRuntimeState, closeDb } from "../../utils/db.js";
+import { getRuntimeState, closeDb, updateRun } from "../../utils/db.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+let runError = null;
 
 let instanceUrl;
 let accessToken;
@@ -38,7 +41,24 @@ test.beforeAll(async () => {
     await context.storageState({ path: '.sf-profile/sf-state.json' });
 });
 
+test.afterEach(async ({}, testInfo) => {
+    if ((testInfo.status === 'failed' || testInfo.status === 'timedOut') && !runError) {
+        runError = testInfo.error?.message ?? `${testInfo.title} failed`;
+    }
+});
+
 test.afterAll(async () => {
+    if (runId) {
+        if (runError) {
+            await updateRun(runId, { status: 'error', log: runError, finished_at: new Date() });
+        } else {
+            await updateRun(runId, {
+                status: 'success',
+                created_ids: { createdOpportunityId: opportunityId },
+                finished_at: new Date(),
+            });
+        }
+    }
     await closeDb();
     if (context) await context.close();
 });

@@ -10,10 +10,12 @@ const PORT = process.env.TRIGGER_PORT ?? 3333;
 
 const MODULE_FILES = {
     account_mgmt:      'tests/non-ida/01-account-mgmt.spec.js',
+    account_mgmt_v2:   'tests/non-ida/01-account-mgmt-api.spec.js',
     lead_mgmt:         'tests/non-ida/02-lead-mgmt.spec.js',
     oppty_mgmt_sales:  'tests/non-ida/03-oppty-mgmt-sales.spec.js',
     oppty_mgmt_es:     'tests/non-ida/04-oppty-mgmt-es.spec.js',
     quote_mgmt_es:     'tests/non-ida/05-quote-mgmt-es.spec.js',
+    contract_order_sd:     'tests/non-ida/06-contract-mgmt-sales.spec.js',
 };
 
 // In-memory run store: runId → { runId, status, output, exitCode, startedAt, modules }
@@ -42,14 +44,16 @@ function parseBody(req) {
 
 // ─── run management ────────────────────────────────────────────────────────
 
-function startRun(modules = []) {
+function startRun(modules = [], productRunId = null) {
     const runId = randomUUID();
-    const specFiles = modules.length > 0
+    const relativeFiles = modules.length > 0
         ? modules.map(m => MODULE_FILES[m]).filter(Boolean)
         : Object.values(MODULE_FILES);
+    const specFiles = relativeFiles.map(f => path.resolve(ROOT_DIR, f));
 
     const run = {
         runId,
+        productRunId,
         status:    'running',
         output:    '',
         exitCode:  null,
@@ -59,9 +63,12 @@ function startRun(modules = []) {
     runs.set(runId, run);
     activeRunId = runId;
 
+    const env = { ...process.env };
+    if (productRunId != null) env.TEST_RUN_ID = String(productRunId);
+
     const child = spawn('npx', ['playwright', 'test', ...specFiles], {
         cwd: ROOT_DIR,
-        env: { ...process.env },
+        env,
     });
 
     child.stdout.on('data', d => { run.output += d.toString(); });
@@ -108,8 +115,9 @@ const server = http.createServer(async (req, res) => {
         }
         const body = await parseBody(req);
         const modules = Array.isArray(body.modules) ? body.modules : [];
-        const runId = startRun(modules);
-        sendJson(res, 202, { runId, status: 'running' });
+        const productRunId = body.run_id ?? null;
+        const runId = startRun(modules, productRunId);
+        sendJson(res, 202, { runId, productRunId, status: 'running' });
         return;
     }
 

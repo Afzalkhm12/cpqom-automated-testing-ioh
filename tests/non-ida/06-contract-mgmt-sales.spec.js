@@ -3,10 +3,13 @@ import * as allure from "allure-js-commons";
 import dataAuth from "../../test-data/auth.json" assert { type: "json" };
 import path from "path";
 import { fileURLToPath } from "url";
-import { getRuntimeState, getTestParams, setRuntimeState, closeDb } from "../../utils/db.js";
+import { getRuntimeState, getTestParams, setRuntimeState, closeDb, updateRun } from "../../utils/db.js";
 import { request } from "http";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+let runError = null;
 
 let instanceUrl;
 let accessToken;
@@ -15,6 +18,8 @@ let sysAdminUserId;
 let quoteId;
 let contractId;
 let createdOrderId;
+let moduleOrchestrationPlanIDs = [];
+let moduleAssetIDs = [];
 
 const userDataDirectory = path.resolve(__dirname, '../../.sf-profile');
 let context;
@@ -47,7 +52,29 @@ test.beforeAll(async () => {
     await context.storageState({ path: '.sf-profile/sf-state.json' });
 });
 
+test.afterEach(async ({}, testInfo) => {
+    if ((testInfo.status === 'failed' || testInfo.status === 'timedOut') && !runError) {
+        runError = testInfo.error?.message ?? `${testInfo.title} failed`;
+    }
+});
+
 test.afterAll(async () => {
+    if (runId) {
+        if (runError) {
+            await updateRun(runId, { status: 'error', log: runError, finished_at: new Date() });
+        } else {
+            await updateRun(runId, {
+                status: 'success',
+                created_ids: {
+                    createdContractId: contractId,
+                    createdOrderIDs: createdOrderId ? [createdOrderId] : [],
+                    createdOrchestrationPlanIDs: moduleOrchestrationPlanIDs,
+                    createdAssetIDs: moduleAssetIDs,
+                },
+                finished_at: new Date(),
+            });
+        }
+    }
     await closeDb();
     if (context) await context.close();
 });
@@ -487,7 +514,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
     await page.waitForTimeout(10_000);
     let orchestrationPlanIDs = [];
-    if(orderRecordTypeName == 'MasterOrder') {
+    if (orderRecordTypeName == 'MasterOrder') {
         // get sub orders
         const subOrders = await getChildOrders(request, createdOrderId);
         console.log(`Sub-orders found: ${subOrders.length}`);
@@ -506,6 +533,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
             const planId = page.url().match(/\/lightning\/r\/vlocity_cmt__OrchestrationPlan__c\/([^/]+)\//)?.[1];
             if (planId) {
                 orchestrationPlanIDs.push(planId);
+                moduleOrchestrationPlanIDs.push(planId);
                 console.log(`OrchestrationPlan ID collected: ${planId}`);
             }
         }
@@ -525,7 +553,7 @@ test('TC023: CPQ Enterprise Quote Flow — API', async ({ request }, testInfo) =
 
         await page.waitForURL('**/lightning/r/vlocity_cmt__OrchestrationPlan__c/**', { timeout: 10000 });
         const planId = page.url().match(/\/lightning\/r\/vlocity_cmt__OrchestrationPlan__c\/([^/]+)\//)?.[1];
-        // await page.goto(`${login.afterLoginUrl}lightning/r/vlocity_cmt__OrchestrationPlan__c/${planId}/view`);
+        if (planId) moduleOrchestrationPlanIDs.push(planId);
 
         await page.waitForTimeout(10_000);
 

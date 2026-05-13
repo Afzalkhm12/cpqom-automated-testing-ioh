@@ -1,7 +1,10 @@
 import { test, expect } from "@playwright/test";
 import * as allure from "allure-js-commons";
 import dataAuth from "../../test-data/auth.json" assert { type: "json" };
-import { getModule, getTestParams, updateTestParams, incrementModuleCounter, closeDb, setRuntimeState } from "../../utils/db.js";
+import { getModule, getTestParams, updateTestParams, incrementModuleCounter, closeDb, setRuntimeState, updateRun } from "../../utils/db.js";
+
+const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+let runError = null;
 
 let counter;
 let tc001;
@@ -10,6 +13,7 @@ let tcContact;
 let instanceUrl;
 let accessToken;
 let brandAccountId;
+let customerAccountId;
 let billingContactId;
 
 test.beforeAll(async () => {
@@ -24,7 +28,28 @@ test.beforeAll(async () => {
     tcContact = await getTestParams('contact_mgmt', 'tc_contact');
 });
 
+test.afterEach(async ({}, testInfo) => {
+    if ((testInfo.status === 'failed' || testInfo.status === 'timedOut') && !runError) {
+        runError = testInfo.error?.message ?? `${testInfo.title} failed`;
+    }
+});
+
 test.afterAll(async () => {
+    if (runId) {
+        if (runError) {
+            await updateRun(runId, { status: 'error', log: runError, finished_at: new Date() });
+        } else {
+            await updateRun(runId, {
+                status: 'success',
+                created_ids: {
+                    corporateCustomerId: brandAccountId,
+                    customerAccountId,
+                    billingContactId,
+                },
+                finished_at: new Date(),
+            });
+        }
+    }
     await closeDb();
 });
 
@@ -244,7 +269,8 @@ test('TC005_Create CA under CCA', async ({ request }) => {
         );
 
         expect(body.success, 'Business Account creation should succeed').toBeTruthy();
-        console.log('Business Account created:', body.id);
+        customerAccountId = body.id;
+        console.log('Business Account created:', customerAccountId);
 
         const newAccountName = (tc002.accountName + ' ' + counter).toUpperCase();
         await updateTestParams('lead_mgmt', 'tc002', { accountName: newAccountName, accountOption: newAccountName });
