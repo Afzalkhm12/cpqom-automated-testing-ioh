@@ -1,13 +1,16 @@
 import pg from 'pg';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const { Pool } = pg;
 
 const pool = new Pool({
-    host: '127.0.0.1',
-    port: 5432,
-    database: 'sfdc_test_manager',
-    user: 'postgres',
-    password: 'enakmangan',
+    host:     process.env.DB_HOST     ?? '127.0.0.1',
+    port:     Number(process.env.DB_PORT ?? 5432),
+    database: process.env.DB_NAME     ?? 'sfdc_test_manager',
+    user:     process.env.DB_USER     ?? 'postgres',
+    password: process.env.DB_PASSWORD ?? 'enakmangan',
 });
 
 export async function getModule(moduleKey) {
