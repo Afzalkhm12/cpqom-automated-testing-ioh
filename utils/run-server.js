@@ -1,4 +1,5 @@
 import http from 'http';
+import fs from 'fs';
 import { spawn } from 'child_process';
 import { randomUUID } from 'crypto';
 import path from 'path';
@@ -76,11 +77,13 @@ function startRun(modules = [], productRunId = null, productCode = null) {
     child.stderr.on('data', d => { run.output += d.toString(); });
 
     child.on('close', code => {
-        run.exitCode = code;
-        run.status   = code === 0 ? 'passed' : 'failed';
+        run.exitCode   = code;
+        run.status     = code === 0 ? 'passed' : 'failed';
         run.finishedAt = new Date().toISOString();
+        run.reportUrl  = `http://localhost:${PORT}/report`;
         if (activeRunId === runId) activeRunId = null;
         console.log(`[run:${runId}] finished — exit code ${code}`);
+        console.log(`[run:${runId}] report: ${run.reportUrl}`);
     });
 
     console.log(`[run:${runId}] started — specs: ${specFiles.join(', ')}`);
@@ -145,6 +148,39 @@ const server = http.createServer(async (req, res) => {
         return;
     }
 
+    // GET /report or GET /report/* — serve the latest Playwright HTML report
+    if (req.method === 'GET' && url.pathname.startsWith('/report')) {
+        const reportDir = path.resolve(ROOT_DIR, 'playwright-report');
+        const relativePath = url.pathname.replace(/^\/report\/?/, '') || 'index.html';
+        const filePath = path.resolve(reportDir, relativePath);
+
+        // Prevent path traversal outside reportDir
+        if (!filePath.startsWith(reportDir)) {
+            res.writeHead(403); res.end('Forbidden'); return;
+        }
+
+        fs.readFile(filePath, (err, data) => {
+            if (err) {
+                if (err.code === 'ENOENT') {
+                    res.writeHead(404); res.end('Report not found — run the tests first');
+                } else {
+                    res.writeHead(500); res.end('Error reading report');
+                }
+                return;
+            }
+            const ext = path.extname(filePath).slice(1);
+            const mime = {
+                html: 'text/html', js: 'application/javascript',
+                css: 'text/css',   png: 'image/png',
+                svg: 'image/svg+xml', json: 'application/json',
+                woff2: 'font/woff2', woff: 'font/woff',
+            }[ext] ?? 'application/octet-stream';
+            res.writeHead(200, { 'Content-Type': mime, 'Access-Control-Allow-Origin': '*' });
+            res.end(data);
+        });
+        return;
+    }
+
     sendJson(res, 404, { error: 'Not found' });
 });
 
@@ -152,3 +188,4 @@ server.listen(PORT, () => {
     console.log(`Playwright trigger server listening on http://localhost:${PORT}`);
     console.log('Available modules:', Object.keys(MODULE_FILES).join(', '));
 });
+
