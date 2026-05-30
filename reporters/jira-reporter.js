@@ -7,8 +7,18 @@
  */
 
 import path from "path";
+import { updateRun, closeDb } from "../utils/db.js";
 
 class JiraReporter {
+  constructor() {
+    this._pending = [];
+  }
+
+  async onEnd() {
+    await Promise.allSettled(this._pending);
+    await closeDb();
+  }
+
   onTestEnd(test, result) {
     // Only act on final attempt (skip intermediate retries)
     if (result.retry < test.retries) return;
@@ -24,9 +34,10 @@ class JiraReporter {
     // Toggle guard — non-blocking async call
     if (process.env.JIRA_ENABLED !== "true") return;
 
-    this._createJiraTicket(test, result).catch((err) => {
+    const p = this._createJiraTicket(test, result).catch((err) => {
       console.error("[JiraReporter] Failed to create ticket:", err.message);
     });
+    this._pending.push(p);
   }
 
   async _createJiraTicket(test, result) {
@@ -142,8 +153,16 @@ class JiraReporter {
     }
 
     const data = await response.json();
-    const ticketUrl = `${JIRA_BASE_URL}/browse/${data.key}`;
+    const ticketKey = data.key;
+    const ticketUrl = `${JIRA_BASE_URL}/browse/${ticketKey}`;
     console.log(`[JiraReporter] Bug ticket created: ${ticketUrl}`);
+
+    const runId = process.env.TEST_RUN_ID
+      ? Number(process.env.TEST_RUN_ID)
+      : null;
+    if (runId) {
+      await updateRun(runId, { jira_ticket: ticketKey });
+    }
   }
 }
 

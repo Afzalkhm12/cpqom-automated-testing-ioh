@@ -16,6 +16,7 @@ import {
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+const userId = process.env.USER_ID ? Number(process.env.USER_ID) : null;
 let runError = null;
 
 let counter;
@@ -42,8 +43,8 @@ test.beforeAll(async () => {
 
   const module = await getModule("lead_mgmt");
   counter = module.counter;
-  tc001 = await getTestParams("lead_mgmt", "tc001");
-  tc002 = await getTestParams("lead_mgmt", "tc002");
+  tc001 = await getTestParams("lead_mgmt", "tc001", userId);
+  tc002 = await getTestParams("lead_mgmt", "tc002", userId);
 
   context = await chromium.launchPersistentContext(userDataDirectory, {
     headless: false,
