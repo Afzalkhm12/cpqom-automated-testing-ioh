@@ -331,6 +331,7 @@ test("TC002_Create New Lead", async ({ request }) => {
 
     leadId = page.url().match(/\/lightning\/r\/Lead\/([^/]+)\//)?.[1];
     console.log(`[TC002] Lead ID: ${leadId}`);
+    await setRuntimeState("lead_id", leadId, userId);
 
     // Expected: Lead created successfully, status is New, lead owner is current user
     await expect(
@@ -458,7 +459,7 @@ test("TC009_Convert Lead", async () => {
       .match(/\/lightning\/r\/Opportunity\/([^/]+)\//)?.[1];
     console.log(`[TC009] Opportunity ID: ${opportunityId}`);
 
-    await setRuntimeState("opportunityId", opportunityId);
+    await setRuntimeState("opportunityId", opportunityId, userId);
     console.log(
       `[TC009] Updated opportunityId in runtime_state: ${opportunityId}`
     );

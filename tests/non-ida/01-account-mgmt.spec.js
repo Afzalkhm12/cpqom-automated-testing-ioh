@@ -250,7 +250,7 @@ test("TC004_Create CCA", async () => {
       .url()
       .match(/\/lightning\/r\/Account\/([^/]+)\//)?.[1];
 
-    await setRuntimeState("corporateAccountId", brandAccountId);
+    await setRuntimeState("corporateAccountId", brandAccountId, userId);
   });
 });
 
@@ -339,7 +339,7 @@ test("Create Billing Contact", async () => {
     .url()
     .match(/\/lightning\/r\/Contact\/([^/]+)\//)?.[1];
 
-  await setRuntimeState("billingContactId", billingContactId);
+  await setRuntimeState("billingContactId", billingContactId, userId);
 });
 
 test("TC005_Create CA under CCA", async () => {

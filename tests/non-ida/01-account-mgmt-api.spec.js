@@ -185,7 +185,7 @@ test("TC004_Create CCA", async ({ request }) => {
     brandAccountId = body.id;
     console.log("Brand Account created:", brandAccountId);
 
-    await setRuntimeState("corporateAccountId", brandAccountId);
+    await setRuntimeState("corporateAccountId", brandAccountId, userId);
   });
 });
 
@@ -239,7 +239,7 @@ test("Create Billing Contact", async ({ request }) => {
     billingContactId = body.id;
     console.log("Billing Contact created:", billingContactId);
 
-    await setRuntimeState("billingContactId", billingContactId);
+    await setRuntimeState("billingContactId", billingContactId, userId);
   });
 });
 
@@ -316,6 +316,6 @@ test("TC005_Create CA under CCA", async ({ request }) => {
       `[TC005] Updated tc002.accountName and tc002.accountOption to: ${newAccountName}`
     );
 
-    await setRuntimeState("customerAccountId", body.id);
+    await setRuntimeState("customerAccountId", body.id, userId);
   });
 });

@@ -13,6 +13,7 @@ import { sfOAuthLogin } from "../../utils/sf-auth.js";
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
+const userId = process.env.USER_ID ? Number(process.env.USER_ID) : null;
 let runError = null;
 
 let instanceUrl;
@@ -36,7 +37,7 @@ test.beforeAll(async ({ request }) => {
       ? sysadmin
       : await getSfEnvironment(loginPersona);
 
-  opportunityId = await getRuntimeState("opportunityId");
+  opportunityId = await getRuntimeState("opportunityId", userId);
 
   context = await chromium.launchPersistentContext(userDataDirectory, {
     headless: process.env.HEADLESS === "true" || process.env.CI === "true",

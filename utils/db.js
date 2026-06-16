@@ -41,20 +41,20 @@ export async function getTestParams(moduleKey, testCaseId, userId) {
   return rows[0]?.parameters ?? {};
 }
 
-export async function getRuntimeState(stateKey) {
+export async function getRuntimeState(stateKey, userId) {
   const { rows } = await pool.query(
-    "SELECT state_value FROM runtime_state WHERE state_key = $1",
-    [stateKey]
+    "SELECT state_value FROM runtime_state WHERE state_key = $1 AND user_id = $2",
+    [stateKey, userId]
   );
   return rows[0]?.state_value ?? null;
 }
 
-export async function setRuntimeState(stateKey, stateValue) {
+export async function setRuntimeState(stateKey, stateValue, userId) {
   await pool.query(
     `UPDATE runtime_state
          SET state_value = $1, last_updated_at = NOW()
-         WHERE state_key = $2`,
-    [stateValue, stateKey]
+         WHERE state_key = $2 AND user_id = $3`,
+    [stateValue, stateKey, userId]
   );
 }
 

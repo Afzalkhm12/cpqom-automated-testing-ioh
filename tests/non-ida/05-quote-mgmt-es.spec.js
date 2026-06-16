@@ -44,7 +44,7 @@ test.beforeAll(async ({ request }) => {
       ? sysadmin
       : await getSfEnvironment(loginPersona);
 
-  opportunityId = await getRuntimeState("opportunityId");
+  opportunityId = await getRuntimeState("opportunityId", userId);
   testParams = await getTestParams("quote_mgmt", "tc_quote", userId);
   console.log("Opportunity ID: " + opportunityId);
 
@@ -375,8 +375,8 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     }
     cartId = body.cartId ?? body.records?.[0]?.Id ?? body.Id ?? null;
     expect(cartId, "cartId missing from createCart response").toBeTruthy();
-    await setRuntimeState("cartId", cartId);
-    await setRuntimeState("quoteId", cartId);
+    await setRuntimeState("cartId", cartId, userId);
+    await setRuntimeState("quoteId", cartId, userId);
     console.log("Cart (Quote) Id:", cartId);
   });
 
@@ -609,7 +609,7 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
   });
 
   // Verify Quote Line Items on Quote Record Page
-  const quoteId = await getRuntimeState("cartId");
+  const quoteId = await getRuntimeState("cartId", userId);
   createdQuoteId = quoteId;
   expect(quoteId, "cartId not found in runtime state").toBeTruthy();
 

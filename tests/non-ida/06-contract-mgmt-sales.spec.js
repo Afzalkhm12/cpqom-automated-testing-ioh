@@ -46,8 +46,8 @@ test.beforeAll(async ({ request }) => {
       ? sysadmin
       : await getSfEnvironment(loginPersona);
 
-  opportunityId = await getRuntimeState("opportunityId");
-  quoteId = await getRuntimeState("quoteId");
+  opportunityId = await getRuntimeState("opportunityId", userId);
+  quoteId = await getRuntimeState("quoteId", userId);
   testParams = await getTestParams("quote_mgmt", "tc_quote", userId);
   console.log("Opportunity ID: " + opportunityId);
 

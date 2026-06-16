@@ -44,7 +44,7 @@ test.beforeAll(async ({ request }) => {
   const module = await getModule("oppty_mgmt_sales");
   // counter = module.counter;
   tc010 = await getTestParams("oppty_mgmt_sales", "tc010", userId);
-  opportunityId = await getRuntimeState("opportunityId");
+  opportunityId = await getRuntimeState("opportunityId", userId);
 
   context = await chromium.launchPersistentContext(userDataDirectory, {
     headless: process.env.HEADLESS === "true" || process.env.CI === "true",
@@ -213,10 +213,10 @@ test("API Connection Test", async ({ request }) => {
     ).toBeTruthy();
 
     const userInfo = await userInfoResponse.json();
-    let userId = userInfo.user_id;
+    const sfUserId = userInfo.user_id;
 
     const opportunityResponse = await request.get(
-      `${instanceUrl}/services/data/v65.0/query?q=SELECT+Id,Name+FROM+Opportunity+WHERE+OwnerId='${userId}'+AND+StageName='Scoping'+ORDER+BY+CreatedDate+DESC+LIMIT+1`,
+      `${instanceUrl}/services/data/v65.0/query?q=SELECT+Id,Name+FROM+Opportunity+WHERE+OwnerId='${sfUserId}'+AND+StageName='Scoping'+ORDER+BY+CreatedDate+DESC+LIMIT+1`,
       {
         headers: { Authorization: `Bearer ${accessToken}` }
       }
