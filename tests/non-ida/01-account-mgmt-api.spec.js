@@ -27,7 +27,7 @@ let brandAccountId;
 let customerAccountId;
 let billingContactId;
 
-test.beforeAll(async () => {
+test.beforeAll(async ({ request }) => {
   sysadmin = await getSfEnvironment("sysadmin");
 
   await incrementModuleCounter("account_mgmt");
@@ -39,6 +39,27 @@ test.beforeAll(async () => {
   tc001 = await getTestParams("account_mgmt", "tc001", userId);
   tc002 = await getTestParams("account_mgmt", "tc002", userId);
   tcContact = await getTestParams("contact_mgmt", "tc_contact", userId);
+
+  const loginResponse = await request.post(
+    `${sysadmin.url}/services/oauth2/token`,
+    {
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      form: {
+        grant_type: "client_credentials",
+        client_id: sysadmin.clientId,
+        client_secret: sysadmin.clientSecret
+      }
+    }
+  );
+  if (!loginResponse.ok()) {
+    throw new Error(
+      `OAuth login failed: HTTP ${loginResponse.status()} — check clientId/clientSecret in sf_environments`
+    );
+  }
+  const loginBody = await loginResponse.json();
+  accessToken = loginBody.access_token;
+  instanceUrl = loginBody.instance_url;
+  console.log("Instance URL:", instanceUrl);
 });
 
 test.afterEach(async ({}, testInfo) => {
@@ -132,26 +153,9 @@ async function getRecordTypeId(request, sobjectType, developerName) {
   return id;
 }
 
-test("API Connection Test", async ({ request }) => {
-  const loginResponse = await request.post(
-    `${sysadmin.url}/services/oauth2/token`,
-    {
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      form: {
-        grant_type: "client_credentials",
-        client_id: sysadmin.clientId,
-        client_secret: sysadmin.clientSecret
-      }
-    }
-  );
-
-  expect(loginResponse.ok(), "OAuth login should succeed").toBeTruthy();
-
-  const loginBody = await loginResponse.json();
-  accessToken = loginBody.access_token;
-  instanceUrl = loginBody.instance_url;
-
-  console.log("Instance URL:", instanceUrl);
+test("API Connection Test", async () => {
+  expect(instanceUrl, "instanceUrl should be set by beforeAll").toBeTruthy();
+  expect(accessToken, "accessToken should be set by beforeAll").toBeTruthy();
 });
 
 test("TC004_Create CCA", async ({ request }) => {
