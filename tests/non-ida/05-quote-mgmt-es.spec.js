@@ -661,6 +661,10 @@ test("TC028: Upload file MLD", async () => {
   // edit as Sub Status triggers a dependency reset that clears Sub Status
   // before the save reaches the server.
   await page
+    .getByText("Catalist Quote Status", { exact: true })
+    .first()
+    .hover();
+  await page
     .getByRole("button", { name: "Edit Catalist Quote Status" })
     .click();
   await page.getByRole("combobox", { name: "Catalist Quote Status" }).click();
@@ -674,6 +678,7 @@ test("TC028: Upload file MLD", async () => {
   // ── Pre-req: Change Sub Status → Solution Document ────────────────────
   // Separate inline edit opened after status is committed — no dependency
   // reset occurs and Sub Status value is preserved on save.
+  await page.getByText("Sub Status", { exact: true }).first().hover();
   await page.locator('button[title="Edit Sub Status"]').click();
   await page.getByRole("combobox", { name: "Sub Status" }).click();
   await page
