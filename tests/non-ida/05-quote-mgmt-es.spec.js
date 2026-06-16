@@ -199,6 +199,7 @@ test("API Connection Test", async ({ request }) => {
   ).toBeTruthy();
   const userInfoBody = await userInfoResponse.json();
   sysAdminUserId = userInfoBody.user_id;
+  console.log("sysAdminUserId:", sysAdminUserId);
 
   await patchMissingScoreCard(request, instanceUrl, accessToken);
 });
@@ -826,6 +827,11 @@ test("TC035: Quote Clossure", async ({ request }) => {
   await page.getByRole("button", { name: "Show more actions" }).click();
   await page.getByRole("menuitem", { name: "Close Stage" }).click();
   await page.getByRole("combobox", { name: "Sub Status" }).click();
+
+  await expect(
+    page.getByRole("option", { name: "Closed/Win" }),
+    "Closed/Win option should be visible"
+  ).toBeVisible();
   await page.getByRole("option", { name: "Closed/Win" }).click();
   await page.getByRole("combobox", { name: "Select Document Type" }).click();
   await page.getByRole("option", { name: "MLD" }).click();
