@@ -40,7 +40,7 @@ export default defineConfig({
     screenshot: "on",
     trace: "on"
   },
-  timeout: 40 * 1000, // 40 seconds
+  timeout: Number(process.env.PW_TIMEOUT ?? 40) * 1000,
   /* Configure projects for major browsers */
   projects: [
     {
