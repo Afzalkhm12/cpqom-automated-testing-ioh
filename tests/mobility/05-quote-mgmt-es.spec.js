@@ -14,27 +14,21 @@ import { sfOAuthLogin } from "../../utils/sf-auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+// Runtime config — injected by run-server or CI environment
 const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
 const userId = process.env.USER_ID ? Number(process.env.USER_ID) : null;
-const productCode = process.env.PRODUCT_CODE ?? null; // injected by run-server; overrides DB value
+const productCode = process.env.PRODUCT_CODE ?? null;
 let runError = null;
 
-let instanceUrl;
-let accessToken;
-let opportunityId;
-let sysAdminUserId;
-let cartId;
-let createdQuoteId;
+// Shared state across tests in this file
+let instanceUrl, accessToken;
+let opportunityId, cartId, createdQuoteId, sysAdminUserId;
+let context, page, testParams;
+let sysadmin, loginUser;
 
 const userDataDirectory = path.resolve(__dirname, "../../.sf-profile");
-let context;
-let page;
-let testParams;
 
-let sysadmin;
-let loginUser;
-
-// runs only once before all tests in the file
+// Loads SF credentials, opens persistent browser context, and performs login
 test.beforeAll(async ({ request }) => {
   sysadmin = await getSfEnvironment("sysadmin");
   const loginPersona =
@@ -46,8 +40,10 @@ test.beforeAll(async ({ request }) => {
 
   opportunityId = await getRuntimeState("opportunityId", userId);
   testParams = await getTestParams("quote_mgmt", "tc_quote", userId);
-  console.log("Opportunity ID: " + opportunityId);
+  console.log("Opportunity ID:", opportunityId);
 
+  // Persistent context reuses Chrome profile data (cookies, local storage)
+  // so the session survives across multiple test files.
   context = await chromium.launchPersistentContext(userDataDirectory, {
     headless: process.env.HEADLESS === "true" || process.env.CI === "true",
     args: ["--start-maximized"]
@@ -81,31 +77,22 @@ test.afterEach(async ({}, testInfo) => {
 
 test.afterAll(async () => {
   if (runId) {
-    if (runError) {
-      await updateRun(runId, {
-        status: "error",
-        log: runError,
-        finished_at: new Date()
-      });
-    } else {
-      await updateRun(runId, {
-        status: "success",
-        created_ids: { createdQuoteId: cartId },
-        finished_at: new Date()
-      });
-    }
+    await updateRun(
+      runId,
+      runError
+        ? { status: "error", log: runError, finished_at: new Date() }
+        : {
+            status: "success",
+            created_ids: { createdQuoteId: cartId },
+            finished_at: new Date()
+          }
+    );
   }
   await closeDb();
   if (context) await context.close();
 });
 
-/**
- * Updates the StageName field of an Opportunity via Salesforce REST API.
- * @param {import('@playwright/test').APIRequestContext} request
- * @param {string} instanceUrl  - e.g. https://your-org.my.salesforce.com
- * @param {string} accessToken  - Bearer token from OAuth
- * @returns {Promise<void>} Resolves when the PATCH is successful
- */
+// Patches the Opportunity with scorecard fields required before quote creation
 async function patchMissingScoreCard(request, instanceUrl, accessToken) {
   const patchUrl = `${instanceUrl}/services/data/v65.0/sobjects/Opportunity/${opportunityId}`;
   const patchResponse = await request.patch(patchUrl, {
@@ -120,9 +107,7 @@ async function patchMissingScoreCard(request, instanceUrl, accessToken) {
       CPQ_ES_Deal_Registered__c: "Yes"
     }
   });
-
   // Salesforce returns 204 No Content on a successful PATCH
-  console.log("Patch response: " + patchResponse);
   expect(patchResponse.status(), "Patch should be successful").toBe(204);
 }
 
@@ -142,18 +127,11 @@ async function getQuoteLastModifiedBy(
       }
     }
   );
-
   expect(response.ok(), "Get Quote LastModifiedBy should succeed").toBeTruthy();
   const body = await response.json();
   const record = body.records?.[0];
   expect(record, "Quote record not found").toBeTruthy();
-
-  const result = {
-    id: record.LastModifiedById,
-    name: record.LastModifiedBy?.Name
-  };
-  console.log("Quote last modified by:", result);
-  return result;
+  return { id: record.LastModifiedById, name: record.LastModifiedBy?.Name };
 }
 
 async function patchQuoteApprover(
@@ -169,13 +147,8 @@ async function patchQuoteApprover(
       Authorization: `Bearer ${accessToken}`,
       "Content-Type": "application/json"
     },
-    data: {
-      Approver_Line_1__c: approverId,
-      CPQ_Tier_Product__c: "T1"
-    }
+    data: { Approver_Line_1__c: approverId, CPQ_Tier_Product__c: "T1" }
   });
-
-  console.log("Patch Quote Approver response: " + patchResponse.status());
   expect(
     patchResponse.status(),
     "Patch Quote Approver_Line_1__c should be successful"
@@ -186,12 +159,9 @@ test("API Connection Test", async ({ request }) => {
   expect(instanceUrl, "instanceUrl should be set by beforeAll").toBeTruthy();
   expect(accessToken, "accessToken should be set by beforeAll").toBeTruthy();
 
-  // Get the current user's ID
   const userInfoResponse = await request.get(
     `${instanceUrl}/services/oauth2/userinfo`,
-    {
-      headers: { Authorization: `Bearer ${accessToken}` }
-    }
+    { headers: { Authorization: `Bearer ${accessToken}` } }
   );
   expect(
     userInfoResponse.ok(),
@@ -204,17 +174,13 @@ test("API Connection Test", async ({ request }) => {
   await patchMissingScoreCard(request, instanceUrl, accessToken);
 });
 
-/**
- * Executes a Salesforce REST request and throws on HTTP errors or embedded
- * Vlocity error bodies (HTTP 200 with { "error": "..." }).
- * @returns {Promise<object|string>}
- */
+// Executes a Salesforce REST request; throws on HTTP errors or embedded Vlocity error bodies
+// (HTTP 200 with { "error": "..." } — common in older Vlocity endpoints)
 async function sfRequest(request, method, url, { headers, data } = {}) {
   const opts = { headers };
   if (data !== undefined) opts.data = data;
 
   const response = await request[method](url, opts);
-
   let body;
   try {
     body = await response.json();
@@ -245,6 +211,7 @@ async function sfRequest(request, method, url, { headers, data } = {}) {
   return body;
 }
 
+// "Id" may arrive as a compound object { value: "...", displayValue: null }
 function extractId(item) {
   if (item.Id !== undefined) {
     return item.Id !== null && typeof item.Id === "object"
@@ -254,6 +221,7 @@ function extractId(item) {
   return item.id ?? item.itemId ?? "";
 }
 
+// Picks a random value for each visible dropdown attribute on a cart line item
 function extractRandomAttributes(item) {
   const attrs = {};
   for (const cat of item.attributeCategories?.records ?? []) {
@@ -276,17 +244,13 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
 }, testInfo) => {
   await allure.epic("Quote Management");
   await allure.feature("Enterprise Quote");
-
   await allure.story("Create an Enterprise Quote as ES Team");
   await allure.severity("normal");
-
   test.setTimeout(300_000);
 
-  let priceListId;
-  let recordTypeId;
+  let priceListId, recordTypeId;
   let childItems = [];
 
-  // Reuse the accessToken / instanceUrl set by the preceding 'API Connection Test'
   const hdrs = () => ({
     Authorization: `Bearer ${accessToken}`,
     "Content-Type": "application/json",
@@ -314,7 +278,6 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     }
     recordTypeId = body.records?.[0]?.Id ?? process.env.SF_RECORD_TYPE_ID;
     expect(recordTypeId, "EnterpriseQuote RecordType not found").toBeTruthy();
-    console.log("RecordType Id:", recordTypeId);
   });
 
   // ── STEP 1b — Look up B2B Pricelist Id ───────────────────────────────────
@@ -338,7 +301,6 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     }
     priceListId = body.records?.[0]?.Id ?? process.env.SF_PRICE_LIST_ID;
     expect(priceListId, "B2B Pricelist not found").toBeTruthy();
-    console.log("PriceList Id:", priceListId);
   });
 
   // ── STEP 1 — Create Quote (cart) ──────────────────────────────────────────
@@ -407,14 +369,10 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
       "No products returned from B2B price list"
     ).toBeGreaterThan(0);
 
-    // product_code injected at runtime via env var takes precedence over DB value
+    // productCode env var takes precedence over DB value at runtime
     const targetProduct = productCode ?? testParams.productCode ?? null;
-    console.log(
-      "Matching product code: " +
-        targetProduct +
-        (productCode ? " (from env)" : " (from DB)")
-    );
-    // ProductCode is a compound object { label: "...", value: "O_AI_CONTACT_CENTER" }
+
+    // ProductCode may be a compound object { label: "...", value: "O_AI_CONTACT_CENTER" }
     const getProductCode = (p) => {
       const raw = p.ProductCode;
       return raw && typeof raw === "object" ? raw.value : (raw ?? "");
@@ -423,17 +381,14 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     const match = targetProduct
       ? records.find((p) => getProductCode(p).includes(targetProduct))
       : null;
-
     const chosen = match ?? records[0];
-    // "Id" may be a compound field object { "value": "01t...", "displayValue": null }
     productId = typeof chosen.Id === "object" ? chosen.Id.value : chosen.Id;
-    const chosenName = getProductCode(chosen) || productId;
 
     expect(
       productId,
       "Could not resolve a product Id from the catalog"
     ).toBeTruthy();
-    console.log(`Product selected: "${chosenName}" (${productId})`);
+    console.log(`Product selected: "${getProductCode(chosen)}" (${productId})`);
   });
 
   // ── STEP 3 — Add product to cart ──────────────────────────────────────────
@@ -500,11 +455,9 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
       records.length,
       "Cart line items empty after polling — product may not have been added"
     ).toBeGreaterThan(0);
-
     childItems = records.flatMap((r) => r.lineItems?.records ?? []);
-    const childCount = childItems.length;
     console.log(
-      `Cart: ${records.length} root line item(s), ${childCount} child item(s)`
+      `Cart: ${records.length} root line item(s), ${childItems.length} child item(s)`
     );
   });
 
@@ -521,7 +474,6 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     for (const child of childItems) {
       const childId = extractId(child);
       const attrs = extractRandomAttributes(child);
-
       if (Object.keys(attrs).length === 0) continue;
 
       await sfRequest(
@@ -535,18 +487,13 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
           }
         }
       );
-      console.log(
-        `Randomized attrs on child ${childId}:`,
-        JSON.stringify(attrs)
-      );
       patched++;
     }
 
-    if (patched === 0) {
+    if (patched === 0)
       console.log(
         "Step 4a: No eligible dropdown attributes found on any child item"
       );
-    }
   });
 
   // ── STEP 4b — Override pricing on child line items ───────────────────────
@@ -581,11 +528,10 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
         request,
         "patch",
         `${instanceUrl}/services/data/v66.0/sobjects/QuoteLineItem/${childId}`,
-        { headers: hdrs(), data: payload }
-      );
-      console.log(
-        `Override pricing on child ${childId}:`,
-        JSON.stringify(payload)
+        {
+          headers: hdrs(),
+          data: payload
+        }
       );
     }
   });
@@ -606,7 +552,6 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
       });
       throw e;
     }
-    console.log("Pricing sync complete.");
   });
 
   // Verify Quote Line Items on Quote Record Page
@@ -614,33 +559,27 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
   createdQuoteId = quoteId;
   expect(quoteId, "cartId not found in runtime state").toBeTruthy();
 
-  const quoteUrl = `${loginUser.afterLoginUrl}lightning/r/Quote/${quoteId}/view`;
-  await page.goto(quoteUrl);
-
-  // Wait for the record page to load
+  await page.goto(
+    `${loginUser.afterLoginUrl}lightning/r/Quote/${quoteId}/view`
+  );
   await page.waitForURL("**/lightning/r/Quote/**", { timeout: 30_000 });
   await expect(
     page.getByRole("tab", { name: "Related" }),
     "Related tab should be visible on the Quote record page"
   ).toBeVisible({ timeout: 15_000 });
 
-  // Click the Related tab
   await page.getByRole("tab", { name: "Related" }).click();
   await page.waitForTimeout(3000);
 
-  // Wait for the Quote Line Items related list header to appear
   const qliLink = page.getByRole("link", { name: /Quote Line Items \(\d+\)/ });
   await expect(
     qliLink,
     "Quote Line Items should be visible on the Quote Related List"
   ).toBeVisible({ timeout: 15_000 });
 
-  // Extract the count from the link text, e.g. "Quote Line Items (3)" → 3
   const linkText = await qliLink.textContent();
   const match = linkText?.match(/\((\d+)\)/);
   const count = match ? parseInt(match[1], 10) : 0;
-
-  console.log(`Quote Line Items count: ${count}`);
   expect(count, "Expected at least 1 Quote Line Item").toBeGreaterThanOrEqual(
     1
   );
@@ -649,18 +588,15 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
 test("TC028: Upload file MLD", async () => {
   await allure.epic("Quote Management");
   await allure.feature("Enterprise Quote");
-
   await allure.story("Upload MLD file");
   await allure.severity("normal");
 
-  // ── Pre-req: Open the quote and navigate to Details tab ───────────────
   await page.getByRole("tab", { name: "Details" }).click();
   await page.waitForTimeout(3000);
 
-  // ── Pre-req: Change Quote Status → Solution Design ───────────
-  // Save status alone first. Changing the controlling picklist in the same
-  // edit as Sub Status triggers a dependency reset that clears Sub Status
-  // before the save reaches the server.
+  // Change Quote Status → Solution Design first.
+  // Changing Status and Sub Status in the same edit triggers a dependency reset
+  // that clears Sub Status before the save reaches the server — so we save separately.
   await page.getByText("Quote Status", { exact: true }).first().hover();
   await page.getByRole("button", { name: "Edit Quote Status" }).click();
   await page.getByRole("combobox", { name: "Quote Status" }).click();
@@ -671,9 +607,7 @@ test("TC028: Upload file MLD", async () => {
   await page.getByRole("button", { name: "Save", exact: true }).click();
   await page.waitForTimeout(2_000);
 
-  // ── Pre-req: Change Sub Status → Solution Document ────────────────────
-  // Separate inline edit opened after status is committed — no dependency
-  // reset occurs and Sub Status value is preserved on save.
+  // Change Sub Status → Solution Document in a separate inline edit
   await page.getByText("Sub Status", { exact: true }).first().hover();
   await page.locator('button[title="Edit Sub Status"]').click();
   await page.getByRole("combobox", { name: "Sub Status" }).click();
@@ -688,22 +622,17 @@ test("TC028: Upload file MLD", async () => {
     "Upload Document button should be visible on the Quote page"
   ).toBeVisible({ timeout: 15_000 });
 
-  // ── Step 1: Click Upload Document — modal should open ─────────────────
   await page.getByRole("button", { name: "Upload Document" }).click();
   await expect(
     page.getByText("Document Upload"),
     "Document Upload pop-up screen should be displayed"
   ).toBeVisible({ timeout: 15_000 });
 
-  // ── Step 2: Select Document Type = MLD ────────────────────────────────
   await page.locator("text=Select type").click();
   await page.locator('span[title="MLD"]').click();
 
-  // ── Step 3 & 4: Select file from local storage ───────────────────────
-  // "Upload Files" is a <span> inside a <label>, not a real <button>, and the
-  // <input type="file"> is already in the DOM (just hidden via slds-assistive-text).
-  // setInputFiles targets it directly and dispatches the change/input events
-  // the LWC component needs — no label click or filechooser event required.
+  // "Upload Files" is a hidden <input type="file"> inside the LWC component.
+  // setInputFiles targets it directly — no label click or filechooser event needed.
   const fileInput = page.locator('input[type="file"]');
   await fileInput.waitFor({ state: "attached", timeout: 10_000 });
   await fileInput.setInputFiles(
@@ -714,44 +643,29 @@ test("TC028: Upload file MLD", async () => {
     "MLD file should be attached to the uploader field"
   ).toBeVisible({ timeout: 10_000 });
 
-  // ── Step 5: Click Upload ───────────────────────────────────────────────
   await page.getByRole("button", { name: "Upload", exact: true }).click();
-  // Wait for the server response — error toasts appear almost immediately on
-  // failure. Without this pause, not.toBeVisible() passes on its first poll
-  // before the toast has had a chance to render.
+  // Wait for server response — error toasts appear almost immediately on failure.
+  // Without this pause, not.toBeVisible() passes before the toast has rendered.
   await page.waitForTimeout(5_000);
-
-  // Verify no upload error notification appears.
   await expect(
     page.locator("div").filter({ hasText: "Error notification." }).nth(3)
   ).not.toBeVisible();
 
-  // ── Step 6: Navigate to Related tab → Links section ───────────────────
   await page.getByRole("tab", { name: "Related" }).click();
   await page.waitForTimeout(3000);
 
-  const linksHeader = page.getByRole("link", { name: /Links \(\d+\)/ });
   await expect(
-    linksHeader,
+    page.getByRole("link", { name: /Links \(\d+\)/ }),
     "Links related list should be displayed"
   ).toBeVisible({ timeout: 15_000 });
-
-  // ── Step 7: Verify document link in Links section ─────────────────────
-  // const linksText = await linksHeader.textContent();
-  // const linksMatch = linksText?.match(/\((\d+)\)/);
-  // const linksCount = linksMatch ? parseInt(linksMatch[1], 10) : 0;
-  // console.log(`Links count: ${linksCount}`);
-  // expect(linksCount, 'Expected at least 1 document link in the Links section').toBeGreaterThanOrEqual(1);
 });
 
 test("TC029: Generate Business Case", async () => {
   await allure.epic("Quote Management");
   await allure.feature("Enterprise Quote");
-
   await allure.story("Generate Business Case");
   await allure.severity("normal");
 
-  // ── Pre-req: Open the quote and navigate to Details tab ───────────────
   await page.getByRole("tab", { name: "Details" }).click();
   await page.waitForTimeout(3000);
 
@@ -778,7 +692,6 @@ test("TC035: Quote Clossure", async ({ request }) => {
   await page.goto(
     `${loginUser.afterLoginUrl}lightning/r/Quote/${createdQuoteId}/view`
   );
-
   await expect(
     page.getByRole("button", { name: "Submit for Approval" })
   ).toBeVisible();
@@ -790,8 +703,6 @@ test("TC035: Quote Clossure", async ({ request }) => {
     .getByRole("textbox", { name: "Comments" })
     .fill("please approve");
   await submitModal.getByRole("button", { name: "Submit" }).click();
-  // await expect(page.locator('div').filter({ hasText: 'Success notification.Quote' }).nth(3)).toBeVisible();
-
   await page.waitForTimeout(3_000);
 
   const lastModifiedBy = await getQuoteLastModifiedBy(
@@ -809,6 +720,7 @@ test("TC035: Quote Clossure", async ({ request }) => {
   await expect(page.getByRole("button", { name: "Approve" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Reject" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Reassign" })).toBeVisible();
+
   await page.getByRole("button", { name: "Approve" }).click();
   const approvalModal = page.getByRole("dialog");
   await approvalModal.waitFor({ state: "visible" });
@@ -821,13 +733,9 @@ test("TC035: Quote Clossure", async ({ request }) => {
     `${loginUser.afterLoginUrl}lightning/r/Quote/${createdQuoteId}/view`
   );
 
-  // await expect(page.getByText('Approved')).toBeVisible();
-  // await page.locator('#brandBand_2').getByRole('link', { name: 'API Test Quote' }).click();
-  // await page.getByTitle('Closed').click();
   await page.getByRole("button", { name: "Show more actions" }).click();
   await page.getByRole("menuitem", { name: "Close Stage" }).click();
   await page.getByRole("combobox", { name: "Sub Status" }).click();
-
   await expect(
     page.getByRole("option", { name: "Closed/Win" }),
     "Closed/Win option should be visible"
@@ -835,8 +743,6 @@ test("TC035: Quote Clossure", async ({ request }) => {
   await page.getByRole("option", { name: "Closed/Win" }).click();
   await page.getByRole("combobox", { name: "Select Document Type" }).click();
   await page.getByRole("option", { name: "MLD" }).click();
-  // await page.getByText('Upload Files').click();
-  // await page.getByRole('button', { name: 'Select a file Upload Files Or' }).setInputFiles([]);
 
   const fileInput = page.locator('input[type="file"]');
   await fileInput.waitFor({ state: "attached", timeout: 10_000 });
@@ -848,7 +754,6 @@ test("TC035: Quote Clossure", async ({ request }) => {
     "MLD file should be attached to the uploader field"
   ).toBeVisible({ timeout: 10_000 });
 
-  // await page.getByRole('button', { name: 'Select a file Upload Files Or' }).setInputFiles('chat_transcript.pdf');
   await page.getByRole("button", { name: "Upload", exact: true }).click();
   await expect(
     page.locator("div").filter({ hasText: "Success notification." }).nth(3)
@@ -857,5 +762,4 @@ test("TC035: Quote Clossure", async ({ request }) => {
   await expect(
     page.locator("div").filter({ hasText: "Success notification." }).nth(3)
   ).toBeVisible();
-  // await page.getByTitle('Related').click();
 });
