@@ -10,12 +10,13 @@ import {
   updateRun,
   getSfEnvironment
 } from "../../utils/db.js";
-import { sfOAuthLogin } from "../../utils/sf-auth.js";
+import { sfOAuthLogin, sfBrowserLogin } from "../../utils/sf-auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const runId = process.env.TEST_RUN_ID ? Number(process.env.TEST_RUN_ID) : null;
 const userId = process.env.USER_ID ? Number(process.env.USER_ID) : null;
+const productCode = process.env.PRODUCT_CODE ?? null; // injected by run-server; overrides DB value
 let runError = null;
 
 // let counter;
@@ -52,17 +53,7 @@ test.beforeAll(async ({ request }) => {
   });
   page = await context.newPage();
 
-  await page.goto(loginUser.url);
-  await page
-    .getByRole("textbox", { name: "Username" })
-    .fill(loginUser.username);
-  await page.getByRole("textbox", { name: "Password" }).click();
-  await page
-    .getByRole("textbox", { name: "Password" })
-    .fill(loginUser.password);
-  await page.getByRole("button", { name: "Log In to Sandbox" }).click();
-
-  await page.waitForURL("**/lightning/**", { timeout: 60000 });
+  await sfBrowserLogin(page, loginUser);
   await context.storageState({ path: ".sf-profile/sf-state.json" });
 
   ({ accessToken, instanceUrl } = await sfOAuthLogin(request, sysadmin));
@@ -245,7 +236,7 @@ test("TC010_Managing my opportunity", async () => {
   await allure.severity("critical");
 
   await page.goto(
-    `${sysadmin.afterLoginUrl}lightning/r/Opportunity/${opportunityId}/view`
+    `${loginUser.afterLoginUrl}lightning/r/Opportunity/${opportunityId}/view`
   );
 
   await page.getByRole("button", { name: "Show actions for Products" }).click();
@@ -253,7 +244,7 @@ test("TC010_Managing my opportunity", async () => {
   await page.getByRole("combobox", { name: "Search Products Search" }).click();
   await page
     .getByRole("combobox", { name: "Search Products Search" })
-    .fill(tc010.productName);
+    .fill(productCode);
   await page
     .getByRole("combobox", { name: "Search Products Search" })
     .press("Enter");
@@ -302,11 +293,26 @@ test("TC012_Update Sales Scenario and Credit Scoring", async () => {
   await allure.story("Update Sales Scenario, Credit Scoring and Score Card");
   await allure.severity("critical");
 
-  await page.getByRole("button", { name: "Edit Sales Scenario" }).click();
-  await page.getByRole("combobox", { name: "Sales Scenario" }).click();
-  await page.waitForTimeout(3000);
+  // Ensure we're on the right page regardless of where TC010 left off
+  await page.goto(
+    `${loginUser.afterLoginUrl}lightning/r/Opportunity/${opportunityId}/view`
+  );
 
-  await page.getByRole("option", { name: "Non-BAU/Tender" }).click();
+  await page.getByRole("button", { name: "Edit Sales Scenario" }).click();
+
+  // Wait for the combobox to be ready after the inline-edit render cycle
+  const salesScenarioCombobox = page.getByRole("combobox", {
+    name: "Sales Scenario"
+  });
+  await expect(salesScenarioCombobox).toBeVisible({ timeout: 10_000 });
+  await expect(salesScenarioCombobox).toBeEnabled({ timeout: 5_000 });
+  // Click the inner trigger button, not the outer combobox container div
+  await salesScenarioCombobox.locator("button").click();
+
+  const nonBauOption = page.getByRole("option", { name: "Non-BAU/Tender" });
+  await nonBauOption.waitFor({ state: "visible", timeout: 10_000 });
+  await nonBauOption.click();
+
   await page.getByRole("button", { name: "Save" }).click();
   await page.waitForTimeout(3000);
 

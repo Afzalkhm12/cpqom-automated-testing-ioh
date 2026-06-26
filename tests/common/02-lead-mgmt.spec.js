@@ -10,9 +10,10 @@ import {
   closeDb,
   setRuntimeState,
   updateRun,
-  getSfEnvironment
+  getSfEnvironment,
+  getRuntimeState
 } from "../../utils/db.js";
-import { sfOAuthLogin } from "../../utils/sf-auth.js";
+import { sfOAuthLogin, sfBrowserLogin } from "../../utils/sf-auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -27,6 +28,8 @@ let instanceUrl;
 let accessToken;
 let leadId;
 let opportunityId;
+let primaryContactId;
+let primaryContactName;
 
 const userDataDirectory = path.resolve(__dirname, "../../.sf-profile");
 let context;
@@ -51,6 +54,7 @@ test.beforeAll(async ({ request }) => {
   counter = module.counter;
   tc001 = await getTestParams("lead_mgmt", "tc001", userId);
   tc002 = await getTestParams("lead_mgmt", "tc002", userId);
+  primaryContactId = await getRuntimeState("billingContactId", userId);
 
   context = await chromium.launchPersistentContext(userDataDirectory, {
     headless: process.env.HEADLESS === "true" || process.env.CI === "true",
@@ -58,20 +62,23 @@ test.beforeAll(async ({ request }) => {
   });
   page = await context.newPage();
 
-  await page.goto(loginUser.url);
-  await page
-    .getByRole("textbox", { name: "Username" })
-    .fill(loginUser.username);
-  await page.getByRole("textbox", { name: "Password" }).click();
-  await page
-    .getByRole("textbox", { name: "Password" })
-    .fill(loginUser.password);
-  await page.getByRole("button", { name: "Log In to Sandbox" }).click();
-
-  await page.waitForURL("**/lightning/**", { timeout: 60000 });
+  await sfBrowserLogin(page, loginUser);
   await context.storageState({ path: ".sf-profile/sf-state.json" });
 
   ({ accessToken, instanceUrl } = await sfOAuthLogin(request, sysadmin));
+
+  if (primaryContactId) {
+    const q = `SELECT+Name+FROM+Contact+WHERE+Id='${primaryContactId}'+LIMIT+1`;
+    const res = await request.get(
+      `${instanceUrl}/services/data/v65.0/query?q=${q}`,
+      {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      }
+    );
+    const body = await res.json();
+    primaryContactName = body.records?.[0]?.Name ?? null;
+    console.log("primaryContactName:", primaryContactName);
+  }
 });
 
 test.afterEach(async ({}, testInfo) => {
@@ -262,11 +269,8 @@ test("TC002_Create New Lead", async ({ request }) => {
     await page.getByRole("combobox", { name: "Primary Contact" }).click();
     await page
       .getByRole("combobox", { name: "Primary Contact" })
-      .fill(tc002.primaryContactSearch);
-    await page
-      .getByRole("option", { name: tc002.primaryContactOption })
-      .nth(1)
-      .click();
+      .fill(primaryContactName);
+    await page.getByRole("option", { name: primaryContactName }).nth(1).click();
 
     await page.getByRole("textbox", { name: "Last Name" }).click();
     await page

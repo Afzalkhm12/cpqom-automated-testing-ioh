@@ -8,7 +8,7 @@ import {
   updateRun,
   getSfEnvironment
 } from "../../utils/db.js";
-import { sfOAuthLogin } from "../../utils/sf-auth.js";
+import { sfOAuthLogin, sfBrowserLogin } from "../../utils/sf-auth.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,17 +45,7 @@ test.beforeAll(async ({ request }) => {
   });
   page = await context.newPage();
 
-  await page.goto(loginUser.url);
-  await page
-    .getByRole("textbox", { name: "Username" })
-    .fill(loginUser.username);
-  await page.getByRole("textbox", { name: "Password" }).click();
-  await page
-    .getByRole("textbox", { name: "Password" })
-    .fill(loginUser.password);
-  await page.getByRole("button", { name: "Log In to Sandbox" }).click();
-
-  await page.waitForURL("**/lightning/**", { timeout: 60000 });
+  await sfBrowserLogin(page, loginUser);
   await context.storageState({ path: ".sf-profile/sf-state.json" });
 
   ({ accessToken, instanceUrl } = await sfOAuthLogin(request, sysadmin));
