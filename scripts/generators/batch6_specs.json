@@ -1,0 +1,152 @@
+[
+  {
+    "id": "1089961985",
+    "group": "vas",
+    "title": "Query RBT Product Catalogue",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/rbt/searchrbt",
+    "payload": {
+      "Feature": "ListTonesAPK",
+      "ClientTxnId": "2322222225",
+      "ChannelId": "16",
+      "RequestTimestamp": "2019-09-18 12:12:11",
+      "ServiceId": "1",
+      "ActivityId": "4",
+      "Details": {
+        "APartyMsisdn": "85776981358",
+        "RbtMode": "1001"
+      }
+    }
+  },
+  {
+    "id": "968359973",
+    "group": "vas",
+    "title": "VAS RBT Provisioning/De-provisioning",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/rbt/activatedeactivaterbt",
+    "payload": {
+      "Feature": "Activate",
+      "ClientTxnId": "2322222225",
+      "ChannelId": "16",
+      "RequestTimestamp": "2019-09-18 12:12:11",
+      "ServiceId": "1",
+      "Details": {
+        "APartyMsisdn": "85776981358",
+        "Priority": "0",
+        "ToneId": "53096664",
+        "PackName": "CRBT",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1076985857",
+    "group": "vas",
+    "title": "Query SDP Product Catalogue",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/sdp/qureysubscriptionlist",
+    "payload": {
+      "transid": "62858196451232123087615454",
+      "servicedata": {
+        "channel": "IDCC",
+        "action": "1",
+        "lang": "EN"
+      },
+      "servicename": "QUERY SUBSCRIPTION LIST",
+      "msisdn": "6285692643834"
+    }
+  },
+  {
+    "id": "968359937",
+    "group": "vas",
+    "title": "VAS SDP Provisioning/De-provisioning",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/sdp/regunreg",
+    "payload": {
+      "transid": "62858196451232123087615454",
+      "servicename": "REG UNREG",
+      "msisdn": "6285692643834",
+      "servicedata": {
+        "sc": "97576.0",
+        "channelSDP": "99",
+        "channel": "IDCC",
+        "time": "20200718035857",
+        "lang": "EN",
+        "kw": "REG WAPIN",
+        "ifSendNotifySMS": "0"
+      }
+    }
+  },
+  {
+    "id": "723583003",
+    "group": "vfree",
+    "title": "Billing Invoice Delivery Provisioning",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/billingInvoiceDeliveryProvisioning",
+    "payload": {
+      "Input": {
+        "OpportunityNum": "20250115001",
+        "AccountNum": "BA1122"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1162969155",
+    "group": "vfree",
+    "title": "Re-Invoice Trigger",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/vfree/reinvoicetrigger",
+    "payload": {
+      "Input": {
+        "AccountNumber": "ACC123456789",
+        "PICBillingAccountName": "John Doe PIC",
+        "BillingAccountName": "ABC Telecom Pvt Ltd",
+        "Source": "MobileApp",
+        "MSISDN": "919876543210",
+        "InvoiceNumber": "INV20260513001",
+        "Email": " customer@example.com ",
+        "CustRef": "CUSTREF1001",
+        "BillDate": "2026-05-01",
+        "CustomerName": "John Doe",
+        "InvoiceDueDate": "2026-05-15",
+        "InvoiceAmount": "1250.75",
+        "Params": {
+          "Param": {
+            "NewAlternateEmailAddress1": " alternate1@example.com ",
+            "NewAlternateEmailAddress2": " alternate2@example.com "
+          }
+        }
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1162510475",
+    "group": "voucher-mgmt-system",
+    "title": "Voucher Refill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/vouchermgmt/voucherrefill",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "customerRef": "123456",
+        "accountNum": "BA1122",
+        "chargeFutureTermin": "Y",
+        "terminPurpose": "SERVICETERMINATION"
+      }
+    }
+  }
+]

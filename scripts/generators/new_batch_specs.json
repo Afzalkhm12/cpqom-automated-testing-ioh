@@ -1,0 +1,145 @@
+[
+  {
+    "id": "1065451521",
+    "group": "dukcapil",
+    "title": "Validate NIK NOKK",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/dukcapil/validatenik",
+    "payload": {
+      "NIK": "3274011807930010",
+      "NO_KK": "4321432143214321",
+      "msisdn": "6285659719088"
+    },
+    "payloadRaw": "{     \"NIK\": \"3274011807930010\",     \"NO_KK\": \"4321432143214321\",     \"msisdn\": \"6285659719088\" }"
+  },
+  {
+    "id": "913702913",
+    "group": "esim",
+    "title": "Send QR in Mail",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/esim/sendqrinmail",
+    "payload": {
+      "transid": "6285714000865202308161520040",
+      "msisdn": "6285714000865",
+      "servicename": "SendQR In Mail",
+      "channel": "IDCC",
+      "lang": "EN",
+      "iccid": "89620100001297887099",
+      "email": " sourav.chowdhury@ibm.com ",
+      "eid": "",
+      "templateID": "",
+      "operation": "RESENDMAIL",
+      "customerType": "Prepaid"
+    },
+    "payloadRaw": "{     \"transid\": \"6285714000865202308161520040\",     \"msisdn\": \"6285714000865\",     \"servicename\": \"SendQR In Mail\",     \"channel\": \"IDCC\",     \"lang\": \"EN\",     \"iccid\": \"89620100001297887099\",     \"email\": \" sourav.chowdhury@ibm.com \",     \"eid\": \"\",     \"templateID\": \"\",     \"operation\": \"RESENDMAIL\",     \"customerType\": \"Prepaid\" }"
+  },
+  {
+    "id": "954761217",
+    "group": "esim",
+    "title": "Update Profile State",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/esim/updateprofilestate",
+    "payload": {
+      "channel": "IDCC",
+      "iccid": "89620100002023515467",
+      "lang": "EN",
+      "msisdn": "628567875988",
+      "servicename": "Update eSIM Profile State",
+      "transid": "20260122110010235",
+      "eid": "",
+      "targetState": "RELEASED"
+    },
+    "payloadRaw": "{     \"channel\": \"IDCC\",     \"iccid\": \"89620100002023515467\",     \"lang\": \"EN\",     \"msisdn\": \"628567875988\",     \"servicename\": \"Update eSIM Profile State\",     \"transid\": \"20260122110010235\",     \"eid\": \"\",     \"targetState\": \"RELEASED\" }"
+  },
+  {
+    "id": "1074692097",
+    "group": "esim",
+    "title": "Query Profile State",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/esim/queryprofilestate",
+    "payload": {
+      "channel": "IDCC",
+      "iccid": "89620100002023515467",
+      "lang": "EN",
+      "msisdn": "628567875988",
+      "servicename": "Query eSIM Profile State",
+      "transid": "12345678"
+    },
+    "payloadRaw": "{     \"channel\": \"IDCC\",     \"iccid\": \"89620100002023515467\",     \"lang\": \"EN\",     \"msisdn\": \"628567875988\",     \"servicename\": \"Query eSIM Profile State\",     \"transid\": \"12345678\" }"
+  },
+  {
+    "id": "1064697857",
+    "group": "adm",
+    "title": "Get Device Info ADM",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/adm/bi-getdeviceinfo",
+    "payload": {
+      "Action": "GetDeviceInfo",
+      "NAME": "PHPSESSID",
+      "MSISDN": "6285711262619",
+      "VALUE": "adsSrAAbU85tSzB91zDT_S1MyfRKxIyk"
+    },
+    "payloadRaw": "{     \"Action\": \"GetDeviceInfo\",     \"NAME\": \"PHPSESSID\",     \"MSISDN\": \"6285711262619\",     \"VALUE\": \"adsSrAAbU85tSzB91zDT_S1MyfRKxIyk\" }"
+  },
+  {
+    "id": "1065025571",
+    "group": "adm",
+    "title": "Get Subscriber Device History ADM",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/adm/getsubscrierdevicehistory",
+    "payload": {
+      "Action": "GetSubscriberDeviceHistory",
+      "NAME": "PHPSESSID",
+      "MSISDN": "6285892441565",
+      "VALUE": "adtd-QAbU81D30A5OlfTmP3yLE6wUgVN",
+      "Order": "desc"
+    },
+    "payloadRaw": "{     \"Action\": \"GetSubscriberDeviceHistory\",     \"NAME\": \"PHPSESSID\",     \"MSISDN\": \"6285892441565\",     \"VALUE\": \"adtd-QAbU81D30A5OlfTmP3yLE6wUgVN\",     \"Order\": \"desc\" }"
+  },
+  {
+    "id": "1065025537",
+    "group": "adm",
+    "title": "Get Subscriber Settings History ADM",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/adm/getsubscribersettingshistory",
+    "payload": {
+      "Action": "GetSubscriberSettingsHistory",
+      "NAME": "PHPSESSID",
+      "MSISDN": "6285892441565",
+      "VALUE": "adtd-QAbU81D30A5OlfTmP3yLE6wUgVN",
+      "Order": "desc"
+    },
+    "payloadRaw": "{     \"Action\": \"GetSubscriberSettingsHistory\",     \"NAME\": \"PHPSESSID\",     \"MSISDN\": \"6285892441565\",     \"VALUE\": \"adtd-QAbU81D30A5OlfTmP3yLE6wUgVN\",     \"Order\": \"desc\" }"
+  },
+  {
+    "id": "1064960001",
+    "group": "adm",
+    "title": "Get Device Capabilities ADM",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/adm/get4gdevice",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285711262619",
+      "servicename": "GetDeviceCapabilities",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    },
+    "payloadRaw": "{   \"transid\": \"1234\",   \"msisdn\": \"6285711262619\",   \"servicename\": \"GetDeviceCapabilities\",   \"servicedata\": {     \"channel\": \"IDCC\",     \"lang\": \"EN\"   } }"
+  },
+  {
+    "id": "1065091073",
+    "group": "adm",
+    "title": "Get Subscriber Blacklist Status ADM",
+    "method": "GET",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/adm/bi-evppdmsgetblackliststatus",
+    "payload": {
+      "Action": "GetSubscriberBLStatus",
+      "NAME": "PHPSESSID",
+      "type": "MSISDN",
+      "id": "6285892441565"
+    },
+    "payloadRaw": "{     \"Action\": \"GetSubscriberBLStatus\",     \"NAME\": \"PHPSESSID\",     \"type\": \"MSISDN\",     \"id\": \"6285892441565\" }"
+  }
+]

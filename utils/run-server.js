@@ -22,6 +22,27 @@ const MODULE_FILES = {
   contract_order_sd: "tests/non-ida/06-contract-mgmt-sales.spec.js"
 };
 
+// Dynamically add API Readiness tests to MODULE_FILES
+function scanApiReadiness(dir) {
+  if (!fs.existsSync(dir)) return;
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const fullPath = path.join(dir, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      scanApiReadiness(fullPath);
+    } else if (fullPath.endsWith(".spec.js")) {
+      const content = fs.readFileSync(fullPath, "utf8");
+      const moduleKeyMatch = content.match(/getTestParams\(['"]([^'"]+)['"]/);
+      if (moduleKeyMatch) {
+        const moduleKey = moduleKeyMatch[1];
+        // Store relative path from ROOT_DIR
+        MODULE_FILES[moduleKey] = path.relative(ROOT_DIR, fullPath);
+      }
+    }
+  }
+}
+scanApiReadiness(path.resolve(ROOT_DIR, "tests/api-readiness"));
+
 // In-memory run store: runId → { runId, status, output, exitCode, startedAt, modules }
 const runs = new Map();
 let activeRunId = null;

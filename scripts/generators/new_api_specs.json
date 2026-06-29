@@ -1,0 +1,117 @@
+[
+  {
+    "id": "1009385510",
+    "group": "IN",
+    "title": "Reset VLR",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/in/resetvlr",
+    "type": "Synchronous",
+    "payload": {
+      "Input": {
+        "Brand": "MAT",
+        "IMSI": "404012345678901",
+        "MSISDN": "628576543210",
+        "ServiceOrderType": ""
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    },
+    "payloadFormat": "json"
+  },
+  {
+    "id": "993919112",
+    "group": "IN",
+    "title": "INQueryFaFNumber",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/in/inqueryfafnumber",
+    "type": "Synchronous",
+    "payload": {
+      "Input": {
+        "Brand": "MAT",
+        "IMSI": "404012345678901",
+        "MSISDN": "628576543210"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    },
+    "payloadFormat": "json"
+  },
+  {
+    "id": "994476093",
+    "group": "IN",
+    "title": "INQueryRemainingUsage",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/in/inqueryremainingusage",
+    "type": "Synchronous",
+    "payload": {
+      "Input": {
+        "Brand": "MAT",
+        "IMSI": "404012345678901",
+        "MSISDN": "628576543210",
+        "ServiceOrderType": ""
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    },
+    "payloadFormat": "json"
+  },
+  {
+    "id": "1103757313",
+    "group": "FMP",
+    "title": "Create New User/Activate New User",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/flexportal/",
+    "type": "Synchronous",
+    "payload": {
+      "username": "jdoe",
+      "fullName": "John Doe",
+      "role": "customer",
+      "walletId": "WALLET-001",
+      "caId": "CA-001",
+      "email": " jdoe@example.com ",
+      "isActive": 1,
+      "password": "StrongPass123!"
+    },
+    "payloadFormat": "json"
+  },
+  {
+    "id": "1130692609",
+    "group": "FMP",
+    "title": "Deactivate User",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/flexportal/deactivateuser",
+    "type": "Synchronous",
+    "payload": {
+      "user_id": "1"
+    },
+    "payloadFormat": "json"
+  },
+  {
+    "id": "1162510337",
+    "group": "FMP",
+    "title": "Query Transaction History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/flexportal/createandactivateuser",
+    "type": "Synchronous",
+    "payload": {
+      "username": "jdoe",
+      "fullName": "John Doe",
+      "role": "customer",
+      "walletId": "WALLET-001",
+      "caId": "CA-001",
+      "email": " jdoe@example.com ",
+      "isActive": 1,
+      "password": "StrongPass123!"
+    },
+    "payloadFormat": "json"
+  }
+]

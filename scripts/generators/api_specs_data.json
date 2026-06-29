@@ -1,0 +1,490 @@
+[
+  {
+    "id": "5680716",
+    "title": "Activity Code Closer",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/activityclosure?api_key=",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "628512364345324120717",
+      "msisdn": "62816800132",
+      "servicename": "ACTIVITY CLOSURE",
+      "siebelDataLocation": "ICARE",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "BOT",
+        "SessionId": "1111111",
+        "ActivityId": "2-JQNY5D"
+      }
+    }
+  },
+  {
+    "id": "5679120",
+    "title": "QUERY ASSET INFO",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/QueryAssetInfo?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5679577",
+    "title": "GetCustomerDetailsService",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/getCustomerDetails?api_key=tem8kf9uetwsje3c5jwa2sfa",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5674965",
+    "title": "CheckSiebelDataLoc",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/checkSiebelDataLocation",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5678704",
+    "title": "Query Customer Profile API",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/getCustomerProfile?api_key=k5p3g4csncr7bxnwa8mh5yds",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "0006285817086380202207242338",
+      "msisdn": "6285817086380",
+      "servicename": "GET CUSTOMER PROFILE",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "NEWPOS"
+      }
+    }
+  },
+  {
+    "id": "5680304",
+    "title": "Get PUK",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/getpuk?api_key=",
+    "payloadStr": "found",
+    "payload": {}
+  },
+  {
+    "id": "5678068",
+    "title": "QUERY SR STATUS",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/GetSRStatus?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5674748",
+    "title": "Query SR",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/ivr/querySR",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "123",
+      "msisdn": "6281690714",
+      "servicename": "GET SR",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "IVR"
+      }
+    }
+  },
+  {
+    "id": "5679212",
+    "title": "QUERY ACTIVITY CODES",
+    "url": "TBD",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5676234",
+    "title": "QueryOrderHistory",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/queryOrderHistory?api_key=nzcdtfx47c44r5zvg4uvzuuq",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "6285782735881201710102210",
+      "siebelDataLocation": "ICARE",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN"
+      },
+      "servicename": "QUERY ORDER HISTORY",
+      "msisdn": "6285710639953"
+    }
+  },
+  {
+    "id": "5679305",
+    "title": "Query Order Status",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/queryorderstatus",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "6285782735882201710102210",
+      "siebelDataLocation": "ICARE",
+      "servicedata": {
+        "orderType": "Change SIM Card Attributes",
+        "customerType": "Prepaid",
+        "epsOrderId": "EPS3251",
+        "channel": "NEWPOS",
+        "lang": "EN",
+        "sourceTransactionId": "23454565765"
+      },
+      "servicename": "QUERY ORDER HISTORY",
+      "msisdn": "6281510989042"
+    }
+  },
+  {
+    "id": "5679096",
+    "title": "QUERY SR LIST",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/QuerySRList-Portal?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5669821",
+    "title": "ListTroubleTicket",
+    "url": "TBD",
+    "payloadStr": "found",
+    "payload": {
+      "id": "a0N1s0000002XsQEAU",
+      "href": " https://mycsp.com:8080/tmf-api/troubleTicket/v4/troubleTicket/3180 ",
+      "creationDate": "2019-05-31T07:34:45.968Z",
+      "description": "Bill amount change",
+      "name": "Compliant over last bill",
+      "priority": "2-High",
+      "severity": "3-Moderate",
+      "status": "Open",
+      "type": "TroubleTicket"
+    }
+  },
+  {
+    "id": "5679340",
+    "title": "SIMReplacementValidation",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/SIMReplacementValidation",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5681082",
+    "title": "CreateTroubleTicket",
+    "url": "TBD",
+    "payloadStr": "found",
+    "payload": {}
+  },
+  {
+    "id": "45613263",
+    "title": "SubmitOrderActivation",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/SubmitOrderActivation?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "62858196454542121555815424",
+      "siebelDataLocation": "Catalist",
+      "servicedata": {
+        "ActivityChannel": "IDCC",
+        "ActivityDescription": "adfsdaf",
+        "ActivityCode": "1201010001",
+        "ActivityId": "",
+        "ActivityType": "12-Request",
+        "channel": "IDCC",
+        "ActivityGroup": "Galeri",
+        "ActivityCodeRowId": "",
+        "SRFlag": "N",
+        "SRDescription": "",
+        "lang": "EN",
+        "SessionId": "0001"
+      },
+      "servicename": "CREATE ACTIVITY CODE",
+      "msisdn": "628159603195",
+      "Context": {
+        "transactionId": "string",
+        "traceId": "string",
+        "orderId": "string",
+        "channel": "string",
+        "requestorId": {
+          "type": "string"
+        },
+        "scenario": "string",
+        "module": "BS"
+      }
+    }
+  },
+  {
+    "id": "5679473",
+    "title": "CREATE ACTIVITY CODE FROM SFDC TO SIEBEL (CATALIST, ICARE)",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/CreateUpdateIssueEntry",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "6281574207952202004072119041",
+      "siebelDataLocation": "ICARE",
+      "servicedata": {
+        "ActivityCode": "1201010001",
+        "channel": "IDCC",
+        "ActivityType": "Email",
+        "TroubleMobileNumber": "622130000002",
+        "CaseId": "5000TEST004VkUVAA0",
+        "SiebelActivityId": "",
+        "ComplaintReason": "Testing",
+        "CaseNumber": "DIGTEST000004",
+        "ActivityGroup": "Prepaid",
+        "ClientId": "SalesForce",
+        "lang": "EN",
+        "CreatedbySiebelUserId": "SADMIN",
+        "SFDCIssueEntryid": "a050TEST004u5ZjAAI",
+        "RequestType": "Complaint"
+      },
+      "servicename": "CreateIssueEntryFromSFDC",
+      "msisdn": "622130000002"
+    }
+  },
+  {
+    "id": "5679070",
+    "title": "CREATE, UPDATE SR FROM SFDC TO SIEBEL (ICARE, CATALIST)",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/CreateUpdateSR?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "1-1234",
+      "msisdn": "6281514101166",
+      "servicename": "CreateSRFromSFDC",
+      "SFDCIssueEntryid": "ABCD1234-1_SIT",
+      "SFDCSRID": "",
+      "SRNumber": "A12345_1",
+      "CaseNumber": "A0023",
+      "SIEBELSRID": "",
+      "SiebelDataLocation": "ICARE",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "IDCC",
+        "IDSRequestType": "IT",
+        "IssueCodeNumber": "1202020022",
+        "SFDCAccountId": "010220160918016285774009234",
+        "SFDCAccountNumber": "010220160918016285774009234",
+        "AdjustmentValue": "34343",
+        "AdjustorComments": "AdjustorComments",
+        "AgentComments": "AgentComments",
+        "Amount": "565",
+        "AmountOfCharging": "45",
+        "Area": "HYD",
+        "ATMCardNo": "1212121",
+        "APConfirmationCopy": "Y",
+        "APTrnsToAcctReg": "56565",
+        "ASToABARoutingNumber": "23232",
+        "ASTrnsFromAcctAssoc": "2323232",
+        "ASTrnsFromAcctReg": "2323232",
+        "ASTrnsToAcctAssocTIN": "23232",
+        "BankAccNo": "23232",
+        "BPCustomerNumber": "23232",
+        "BirthPlace": "HYD",
+        "BranchAddress": "HYD",
+        "CEMTimeUnit": "Copy Billing",
+        "CFTracking": "12121",
+        "COAccountReg": "Bali",
+        "COAddressLine2": "12121",
+        "COCity": "KKT",
+        "COIncldCover": "true",
+        "CONameLine2": "QWQWQ",
+        "COOther": "QWQWQ",
+        "COZipCode": "676",
+        "Comments": "UpdateSR Test",
+        "ComplaintDescription": "Complaint Desc",
+        "CreatedByName": "SADMIN",
+        "CreditCardNamber": "12121212",
+        "CrntMileage": "12121",
+        "DateOfTransfer": "2020-02-27",
+        "DetailBenefit": "WWWEERR",
+        "DisconnectEvery": "1212112",
+        "ErrorMessageBrowser": "ErrBrow",
+        "EventLocation": "HYDE",
+        "FTSendTo": "23232",
+        "GroupName": "Galeri",
+        "HandsetType": "12121",
+        "HandsetTypeNo": "12121",
+        "IDSAccount": "1-1232121",
+        "IDSAction": "Aktifasi/Registrasi",
+        "IDSAdjtAmount": "-1",
+        "IDSAdjtType": "Dispute",
+        "IDSCaseSIMCard": "23432432",
+        "IDSComments": "ererw",
+        "IDSCustomerType": "true",
+        "IDSDamageVchrSl": "12121",
+        "IDSDisputeType": "CN-Mobile Service",
+        "IDSErrMsg": "WEWE",
+        "IDSEventDate": "2020-02-27 07:52:20",
+        "IDSInvoice": "0197281991",
+        "IDSProductCatgry": "Y",
+        "IDSPulsaAkhir": "",
+        "IDSRegChannel": "UMB",
+        "IDSReInvoiceType": "CN-Mobile Service",
+        "IDSSrvcSts": "Open",
+        "IDSTerpotong": "234432423",
+        "IDSTypePgrm": "Harian",
+        "INSAgent": "QWERT",
+        "InstitutionName": "InsName",
+        "IssueCode": "1302040010",
+        "IssueEntry": "1-1234",
+        "LeadSRType": "SR TYpe",
+        "LostNotes": "wewe",
+        "NIAKAName": "NIAKA",
+        "NICommMtd": "NIAMe",
+        "NINickName": "BODES",
+        "NIPhoneSDate": "2020-02-27",
+        "NIPhoneEDate": "2020-02-27",
+        "NIPhoneFrgnNo": "232323",
+        "NIReason": "Reason",
+        "OpenedDate": "2020-02-27 14:10:20",
+        "OrgntionText": "OrgText",
+        "PaymentAmount": "45454",
+        "PaymentDate": "2020-02-27",
+        "PriorityStr": "2-High",
+        "ProgRegDate": "2020-02-27",
+        "Reason": "No",
+        "ReloadAmount ": "4454",
+        "ReloadDate": "02/27/2020",
+        "RoutingNo": "1212121",
+        "RowStatus": "true",
+        "RUIMBrand": "12121",
+        "SerialNumber": "6281646949757",
+        "Signal": "3",
+        "SignalInfrmtn": "23232",
+        "SmrtIssueId": "3232323",
+        "SRBillCode": "32443433",
+        "StartAmount": "4534",
+        "Status": "In Progress",
+        "Street": "12121",
+        "SubArea": "Area",
+        "SwiftCode": "12121",
+        "TellerTrnsAmt": "34343",
+        "ToAccountNo": "232323",
+        "Traceroute": "23232",
+        "TrnfAccountNo": "1212121",
+        "ViaCorp": "ATM",
+        "WebsiteList": "WWWW",
+        "SFDCCreatedByUserTeam": "SFDC",
+        "SFDCModifiedByUser": "SFDC",
+        "SFDCModifiedByUserTeam": "SFDC",
+        "SIEBELCreatedByUserTeam": "SADMIN-Group",
+        "SIEBELCreatedByUser": "SADMIN",
+        "SIEBELModifiedByUserTeam": "SADMIN-Group",
+        "SIEBELModifiedByUser": "SADMIN",
+        "AMNewSendLetter": "true",
+        "AMNewSupervisorRev": "true",
+        "AMOldSupervisorRev": "Y",
+        "APCopyCheckFile": "true",
+        "APThirdParyInd": "true",
+        "APTrnsfAgreement": "true",
+        "ASToAccNum": "3232",
+        "CFCommFlg": "true",
+        "COQuantityOrder": "22322",
+        "COSupervisorReview": "true",
+        "Clearing": "GFGF",
+        "ConfNeeded": "true",
+        "CorrSwiftNo": "1212121",
+        "DeliverAllSecurity": "true",
+        "EventLoc": "HYD",
+        "ISATAccCurr": "Rp",
+        "ISATAdjDate": "2020-02-19",
+        "ISATAdjType": "Internal",
+        "ISATContrPOS": "",
+        "ISATDisputeInvNo": "2412432121",
+        "ISATInvoiceNet": "1234",
+        "ISATInvoiceTax": "231",
+        "ISATSerIdDesc": "Test desc",
+        "IssueCert": "true",
+        "Method": "23",
+        "NISendTo": "QWQWQ",
+        "TransDate": "2020-02-27",
+        "DisputeAmount": "500",
+        "ServiceIDDescription": "6281646949757",
+        "DetailDescription": "Test Description",
+        "ComplaintAreaCity": "Badung",
+        "BankAccountNo": "3434343",
+        "AMOldSendLetter": "true",
+        "Account": "1-1234",
+        "CustomerName": "SREENIVASA RAO PATIBANDLA",
+        "ExpirationDate": "2020-02-27",
+        "SRNotes": [
+          {
+            "SRNoteCreatedByName": "JOHN",
+            "SRNNote": "Test Note1",
+            "SRNoteType": "Test",
+            "SRNoteCreatedDate": "2020-02-19 04:30:00"
+          },
+          {
+            "SRNoteCreatedByName": "JOHN",
+            "SRNNote": "Test Note2",
+            "SRNoteType": "Test",
+            "SRNoteCreatedDate": "2020-02-19 04:30:00"
+          },
+          {
+            "SRNoteCreatedByName": "JOHN",
+            "SRNNote": "Test Note3",
+            "SRNoteType": "Test",
+            "SRNoteCreatedDate": "2020-02-19 04:30:00"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "5682601",
+    "title": "evValidateCatSR",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/evValidateCatSR?api_key=tem8kf9uetwsje3c5jwa2sfa",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5675074",
+    "title": "ResumeApprovalRequest",
+    "url": "TBD",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "5682028",
+    "title": "DelayBlockBillingAddress",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/delayblockbillingaddress?api_key=",
+    "payloadStr": "found",
+    "payload": {
+      "transid": "628512364345435345120717",
+      "msisdn": "628559944768",
+      "servicename": "DELAY BLOCK BILLING ADDRESS",
+      "siebelDataLocation": "ICARE",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "BOT",
+        "ActivityCode": "1204010029"
+      }
+    }
+  },
+  {
+    "id": "5680627",
+    "title": "TroubleTicket Callback from Salesforce IDCC to Channel",
+    "url": "TBD",
+    "payloadStr": "found",
+    "payload": {}
+  },
+  {
+    "id": "9419670",
+    "title": "Create Update Opportunity Contact",
+    "url": "TBD",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "9405939",
+    "title": "Create Update Opportunity Header",
+    "url": "TBD",
+    "payloadStr": "not found",
+    "payload": {}
+  },
+  {
+    "id": "1009385510",
+    "title": "Reset VLR",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/in/resetvlr",
+    "payloadStr": "found",
+    "payload": {
+      "Input": {
+        "Brand": "MAT",
+        "IMSI": "404012345678901",
+        "MSISDN": "628576543210",
+        "ServiceOrderType": ""
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  }
+]

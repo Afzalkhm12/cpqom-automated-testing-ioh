@@ -1,0 +1,919 @@
+[
+  {
+    "id": "1103396898",
+    "group": "ocs",
+    "title": "Transaction History under 24 Hours",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ocs/transactionhistory",
+    "payload": {
+      "soapenv:Envelope": {
+        "@xmlns:evd": " http://indosat.ooredoo.com/cx/och/query/accounthistory ",
+        "@xmlns:soapenv": " http://schemas.xmlsoap.org/soap/envelope/ ",
+        "soapenv:Header": null,
+        "soapenv:Body": {
+          "transid": "628512364345324120717",
+          "msisdn": "6285669332265",
+          "servicename": "QueryTxnHistoryUnder24Hours",
+          "servicedata": {
+            "payload": {
+              "evd:inputAccHistory": {
+                "evd:msisdn": "6285669332265",
+                "evd:startDate": "02/09/2020 20:31:29",
+                "evd:endDate": "02/10/2020 20:31:29",
+                "evd:trafficType": "All",
+                "evd:numberOfRecords": "10"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "1103396872",
+    "group": "ocs",
+    "title": "Get Charging Usage/Call History under 24 Hours",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/och/callhistory",
+    "payload": {
+      "requestId": "1-TR9MEJE",
+      "msisdn": "6281586486778",
+      "startDate": "06/07/2026 02:46:05",
+      "endDate": "06/08/2026 14:46:05",
+      "trafficType": "ALL",
+      "numberOfRecords": "5",
+      "roamingType": "ROAMING"
+    }
+  },
+  {
+    "id": "709623809",
+    "group": "ows",
+    "title": "Cancel Reservation",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/cancelreservation",
+    "payload": {
+      "transid": "12345",
+      "servicedata": {
+        "sfaOperator": "operator123",
+        "orderId": "1000456",
+        "channel": "IDCC",
+        "action": "APPROVE",
+        "remark": "Validated and approved by supervisor",
+        "lang": "EN",
+        "sfaId": "789456"
+      },
+      "servicename": "CancelReservation"
+    }
+  },
+  {
+    "id": "709165135",
+    "group": "ows",
+    "title": "Create Forecast",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/",
+    "payload": {
+      "transid": "12345",
+      "servicedata": {
+        "manualInputHostnameB": " hostB.example.com ",
+        "manualInputHostnameA": " hostA.example.com ",
+        "sfaOperator": "operator123",
+        "channel": "IDCC",
+        "vlanB": "1002",
+        "bwVariants": "Variant-1",
+        "vlanA": "1001",
+        "revenue": "5000",
+        "remarksSubmitter": "Initial submission",
+        "rfsTargetDate": "2025-12-31",
+        "cidCreateOrder": "789456",
+        "serviceSfcor": "1",
+        "lang": "EN",
+        "protectionType": "PRIMARY",
+        "attachmentUrl": " http://attachments.example.com/doc1.pdf ",
+        "bandwidth": "100",
+        "attachmentCreate": [
+          {
+            "fileName": "network-design.pdf",
+            "base64": "JVBERi0xLjQKJcfs..."
+          }
+        ],
+        "forecastType": "INITIAL",
+        "transport": "Fiber",
+        "newForecastType": "REVISED",
+        "sfaId": "789456",
+        "distanceCpe": "10",
+        "dwdmSubseaA": "Subsea",
+        "customerName": "Customer ABC",
+        "portRequestA": "Port10",
+        "portRequestB": "Port20",
+        "newBandwith": "150"
+      },
+      "servicename": "CreateForecast"
+    }
+  },
+  {
+    "id": "710639617",
+    "group": "ows",
+    "title": "Extend Reservation",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/extendreservation",
+    "payload": {
+      "transid": "123456",
+      "servicedata": {
+        "manualInputHostnameB": " host-b.example.com ",
+        "manualInputHostnameA": " host-a.example.com ",
+        "sfaOperator": "OperatorA",
+        "channel": "IDCC",
+        "vlanB": "200",
+        "bwVariants": "50/100/200 Mbps",
+        "vlanA": "100",
+        "reforecastReason": "Customer bandwidth increase request",
+        "remarksSubmitter": "Priority customer, please expedite",
+        "revenue": "25000",
+        "rfsTargetDate": "2026-01-20",
+        "serviceSfcor": "YES",
+        "lang": "EN",
+        "protectionType": "PROTECTED",
+        "attachmentUrl": " https://example.com/attachments/forecast.pdf ",
+        "bandwidth": "100 Mbps",
+        "attachmentCreate": [
+          {
+            "fileName": "network-design.pdf",
+            "base64": "JVBERi0xLjQKJcfs..."
+          }
+        ],
+        "forecastType": "INITIAL",
+        "transport": "FIBER",
+        "sfaId": "SFA123456",
+        "distanceCpe": "15km",
+        "dwdmSubseaA": "NO",
+        "referenceExistingSfoId": "SFO-789012",
+        "portRequestA": "YES",
+        "portRequestB": "NO"
+      },
+      "servicename": "ExtendReservation"
+    }
+  },
+  {
+    "id": "714244101",
+    "group": "ows",
+    "title": "Get Devices",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/getdevices",
+    "payload": {
+      "transid": "123456",
+      "servicedata": {
+        "maxResults": 10,
+        "channel": "IDCC",
+        "siteId": "1234",
+        "lang": "EN",
+        "deviceName": "Router"
+      },
+      "servicename": "GetDeviceDetails"
+    }
+  },
+  {
+    "id": "710443009",
+    "group": "ows",
+    "title": "Get Forecast Details",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/getforcastdetails",
+    "payload": {
+      "transid": "12345",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "OrderId": "987654321"
+      },
+      "servicename": "GetForcastDetails"
+    }
+  },
+  {
+    "id": "709165066",
+    "group": "ows",
+    "title": "Get Nearest Sites",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/",
+    "payload": {
+      "transid": "12345",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "maxResults": 10,
+        "latitude": 28.24,
+        "radius": 5,
+        "longitude": 77.52,
+        "siteType": "RETAIL"
+      },
+      "servicename": "GetNearestSites"
+    }
+  },
+  {
+    "id": "726892545",
+    "group": "ows",
+    "title": "Get Power",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/getpower",
+    "payload": {
+      "transid": "123456",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "site_id": "B456"
+      },
+      "servicename": "GetPower"
+    }
+  },
+  {
+    "id": "726990864",
+    "group": "ows",
+    "title": "Get Tower Provider Details",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ows/",
+    "payload": {
+      "transid": "123456",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "id": "456"
+      },
+      "servicename": "GetTowerProviderDetails"
+    }
+  },
+  {
+    "id": "1164542038",
+    "group": "ows",
+    "title": "Create Ticket to Network",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "transid": "transid-20230511231100",
+      "servicedata": {
+        "channel": "B2BGSA",
+        "lang": "EN"
+      },
+      "servicename": "CreateTroubleTicketFromGSA",
+      "msisdn": "6281534253645",
+      "requestdata": {
+        "createIncidentRequest": {
+          "createIncident": {
+            "IncidentCategorizationTier2": "NOC",
+            "IncidentDescription": "Reported Summary Field value from GSA",
+            "UserCompany": "Indosat-OF-ID",
+            "IncidentCategorizationTier1": "Enterprise",
+            "Action": "CREATE",
+            "TransactionType": "Create Incident",
+            "IncidentImpact": "4-Minor/Localized",
+            "IncidentUrgency": "4-Low",
+            "IncidentDescriptionDetail": "Description field value from GSA",
+            "IncidentStatus": "Assigned",
+            "VendorTicketNumber": "GSA_Ticket_Number-20230511231100",
+            "AssignedGroup": "Enterprise-NOC",
+            "HPDCI": "GSA",
+            "Additional_StrParam1": "Customer Name field value from GSA",
+            "Additional_StrParam16": "Service/Circuit ID field value from GSA",
+            "Additional_StrParam22": "Product Type field value from GSA",
+            "Additional_StrParam10": "Customer Segment field value from GSA",
+            "SourceInitiator": "Indosat GSA"
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "1164542106",
+    "group": "ows",
+    "title": "Update Ticket to Network",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "transid": "test3355312435498845570",
+      "servicedata": {
+        "channel": "B2BGSA",
+        "lang": "EN"
+      },
+      "servicename": "UpdateTroubleTicketFromGSA",
+      "msisdn": "6281534253645",
+      "requestdata": {
+        "incUpdRequest": {
+          "updateIncident": {
+            "UserCompany": "Indosat-OF-ID",
+            "Action": "UPDATE",
+            "TransactionType": "Update Incident",
+            "WorkInfoNotes": "Update-Description XX",
+            "IncidentStatus": "In Progress",
+            "VendorTicketNumber": "GSA_Ticket_Number-1234",
+            "SourceInitiator": "Indosat GSA",
+            "IncidentId": "INC999912345",
+            "ResolutionCategoryTier1": "",
+            "ResolutionCategoryTier2": "",
+            "Resolution": ""
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "735805441",
+    "group": "sensum",
+    "title": "Submit Case Events",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/submitcaseevents",
+    "payload": {
+      "transid": "12345",
+      "sericedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "channelType": "Sms",
+        "surveyGuid": "b0549c67-2625-42c1-b765-c42deebb1e5c",
+        "shareId": "",
+        "contactInfo": [
+          {
+            "key": "vz_c_email",
+            "value": " test@gmail.com "
+          },
+          {
+            "key": "vz_c_name",
+            "value": "test"
+          },
+          {
+            "key": "vz_c_phone_number",
+            "value": "628561889946"
+          },
+          {
+            "key": "vz_c_msisdn",
+            "value": "628561889946"
+          },
+          {
+            "key": "vz_c_brand_name",
+            "value": "IM3"
+          },
+          {
+            "key": "vz_c_channel_source",
+            "value": "QMATIC"
+          },
+          {
+            "key": "vz_c_channel",
+            "value": "Gerai IM3"
+          },
+          {
+            "key": "vz_c_agent_id",
+            "value": "ID1234"
+          },
+          {
+            "key": "vz_c_agent_name",
+            "value": "Agent 1234"
+          },
+          {
+            "key": "vz_c_store_id",
+            "value": "TAPA"
+          },
+          {
+            "key": "vz_c_store_name",
+            "value": "Gerai Super Mall Karawaci"
+          },
+          {
+            "key": "vz_c_interaction_id",
+            "value": ""
+          },
+          {
+            "key": "vz_c_transaction_date",
+            "value": "2025-12-03 10:49:41"
+          },
+          {
+            "key": "vz_c_ticket_id_qmatic",
+            "value": "12345"
+          },
+          {
+            "key": "vz_c_service_type_qmatic",
+            "value": "Registrasi Baru Prabayar"
+          },
+          {
+            "key": "vz_c_handling_time_qmatic",
+            "value": "00:08:13"
+          },
+          {
+            "key": "vz_c_visit_time_qmatic",
+            "value": "2025-12-03 10:49:41"
+          },
+          {
+            "key": "vz_c_waiting_time",
+            "value": "00:03:02"
+          }
+        ],
+        "delayMinutes": 60,
+        "metadata": []
+      },
+      "servicename": "SubmitCaseEvents"
+    }
+  },
+  {
+    "id": "976879634",
+    "group": "smsc",
+    "title": "Send SMS Notification",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/sendNotif",
+    "payload": {
+      "transid": "628571748329920202008150020002324",
+      "msisdn": "6285717483299",
+      "servicename": "SEND NOTIFICATION",
+      "servicedata": {
+        "lang": "ID",
+        "channel": "IDCC",
+        "Message": "Sisa Kouta Utama: %%Quota%% GB, Nelp ke sesama: %%OnNet%% MNT, Nelp ke OprLain: %% OffNet%% MNT, Lebih mudah cek di myIM3 http://bit.ly/m3cpx ",
+        "Messages": [
+          {
+            "Text": "First message",
+            "Sequence": 1
+          },
+          {
+            "Text": "Second message",
+            "Sequence": 2
+          },
+          {
+            "Text": "Third message",
+            "Sequence": 3
+          }
+        ],
+        "NotifId": "001",
+        "DestParties": ["WAChatBot", "SMS"],
+        "Params": [
+          {
+            "Name": "Quota",
+            "Value": "1"
+          },
+          {
+            "Name": "OnNet",
+            "Value": "11"
+          },
+          {
+            "Name": "OffNet",
+            "Value": "0"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1139408933",
+    "group": "som",
+    "title": "Provisioning for IPHONE / FTTH - Create/Modify Order (TMF641)",
+    "method": "POST",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/provisioningorder",
+    "payload": {
+      "externalId": "BSS748",
+      "priority": "1",
+      "description": "Service order description",
+      "category": "TMF resource illustration",
+      "requestedStartDate": "2020-08-27T09:37:40.508Z",
+      "requestedCompletionDate": "2020-08-27T09:37:40.508Z",
+      "@type": "ServiceOrder",
+      "serviceOrderItem": [
+        {
+          "id": "1",
+          "action": "add",
+          "@type": "ServiceOrderItem",
+          "service": {
+            "serviceState": "active",
+            "type": "CFS",
+            "serviceCharacteristic": [
+              {
+                "name": "vCPE",
+                "valueType": "object",
+                "value": {
+                  "@type": "JSONSpecification",
+                  "@schemaLocation": " http://nbi/api/v4/serviceSpecification/ONAPvCPE_Spec/specificationInputSchema ",
+                  "vCPE_IP": "193.218.236.21",
+                  "MaxTxRate": 300,
+                  "TransmitPower": "11 dBm",
+                  "maxTream": "OFF"
+                }
+              }
+            ],
+            "serviceSpecification": {
+              "id": "ONAPvCPE_Spec",
+              "href": " http://...:serviceSpecification/ONAPvCPE_Spec ",
+              "name": "vCPE",
+              "version": "1",
+              "@type": "vCPE"
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "1076985909",
+    "group": "som",
+    "title": "Work Order Progress Update/Update Installation Evidence to SOM",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/som/workorderupdate",
+    "payload": {
+      "serviceOrderId": "SO-001",
+      "workOrderId": "WO-001",
+      "status": "completed",
+      "progressPercentage": 100,
+      "evidenceUrl": "https://storage.example.com/evidence/001.jpg",
+      "channel": "IDCC"
+    }
+  },
+  {
+    "id": "1144324099",
+    "group": "som",
+    "title": "Order Cancellation (TMF641)",
+    "method": "POST",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/ordercancellation",
+    "payload": {
+      "cancellationReason": "Duplicate service order",
+      "requestedCancellationDate": "2020-08-27T09:37:40.508Z",
+      "serviceOrder": {
+        "id": "45f-98f-ss45",
+        "@referredType": "ServiceOrder"
+      },
+      "@type": "CancelServiceOrder"
+    }
+  },
+  {
+    "id": "1144324322",
+    "group": "som",
+    "title": "Query IPhone Network Features (TMF638) - All Services",
+    "method": "GET",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/getallserviceinventory?fields=&state=",
+    "payload": {
+      "id": "5351",
+      "name": "vCPE serial 1355615",
+      "state": "active"
+    }
+  },
+  {
+    "id": "1144913921",
+    "group": "som",
+    "title": "SOM Service Delete (TMF641)",
+    "method": "DELETE",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/servicedelete/{id}",
+    "payload": {
+      "id": "SVC-001"
+    }
+  },
+  {
+    "id": "1145569420",
+    "group": "som",
+    "title": "SOM Service Inventory GET (TMF638) - All Services",
+    "method": "GET",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/getallserviceinventory?fields=&state=",
+    "payload": {
+      "id": "5351",
+      "name": "vCPE serial 1355615",
+      "state": "active"
+    }
+  },
+  {
+    "id": "1251442689",
+    "group": "som",
+    "title": "SOM Service Inventory Update",
+    "method": "GET",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/getallserviceinventory?fields=&state=",
+    "payload": {
+      "id": "5351",
+      "name": "vCPE serial 1355615",
+      "state": "active"
+    }
+  },
+  {
+    "id": "1144324241",
+    "group": "som",
+    "title": "SOM Service Order GET (TMF641) - All Service Orders",
+    "method": "GET",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/getallserviceorder?fields=&state=&category=&completionDate.gt=",
+    "payload": {
+      "id": "6987",
+      "href": ".../serviceOrdering/v4/serviceOrder/6987",
+      "expectedCompletionDate": "2020-12-14T14:52:21.823Z"
+    }
+  },
+  {
+    "id": "1148190800",
+    "group": "som",
+    "title": "Update Fallout Status",
+    "method": "POST",
+    "url": "https://dev-cgw.ioh.co.id/sit/cpq/som/updatefalloutstatus",
+    "payload": {
+      "workQueueName": "Fallout Management",
+      "orderIds": "a2e59e2c-2cf1-4b23-80f0-577557b792ad,d0da05cc-7722-4bf0-a37b-d496b0920d00",
+      "nextAction": "RETRY"
+    }
+  },
+  {
+    "id": "728858626",
+    "group": "tnm",
+    "title": "Query ICCID List",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/queryIccidList",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "quantity": 5,
+        "resourceState": "Available",
+        "start_iccid": "89620100000841500000",
+        "end_iccid": "89620100000841508615",
+        "filterParams": [
+          {
+            "name": "BRAND-CODE",
+            "value": "MAT",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "SERVICE-TYPE",
+            "value": "POSTPAID",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "DEALER-CODE",
+            "value": "NDS00",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "CARD-TYPE",
+            "value": "SIM",
+            "operator": "udoEqualTo"
+          }
+        ]
+      },
+      "servicename": "QueryICCIDList",
+      "msisdn": ""
+    }
+  },
+  {
+    "id": "728858687",
+    "group": "tnm",
+    "title": "Query MSISDN List",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/querymsisdnlist",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "quantity": 5,
+        "resourceState": "Reserved",
+        "customer": "POSTPAID_POOL",
+        "start_dn": "85811810000",
+        "end_dn": "85811815768",
+        "filterParams": [
+          {
+            "name": "BRAND-CODE",
+            "value": "MAT",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "SERVICE-TYPE",
+            "value": "POSTPAID",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "RESERVED-FOR",
+            "value": "NDS00",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "VANITY-TYPE",
+            "value": "Normal",
+            "operator": "udoEqualTo"
+          },
+          {
+            "name": "PREFIX",
+            "value": "0814",
+            "operator": "udoEqualTo"
+          }
+        ]
+      },
+      "servicename": "QueryMSISDNList",
+      "msisdn": ""
+    }
+  },
+  {
+    "id": "728858752",
+    "group": "tnm",
+    "title": "Reserve Unreserve ICCID",
+    "method": "POST",
+    "url": "http://bs-numbermanagement-sit.apps.ocpmwdev.ioh.co.id:80/reserveunreserveiccid",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "RESERVE ICCID",
+      "servicedata": {
+        "iccid": "89621100001234567890",
+        "action": "RESERVE",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "734101592",
+    "group": "tnm",
+    "title": "Reserve Unreserve MSISDN",
+    "method": "POST",
+    "url": "http://bs-numbermanagement-sit.apps.ocpmwdev.ioh.co.id:80/reserveunreservemsisdn",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "RESERVE MSISDN",
+      "servicedata": {
+        "action": "RESERVE",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "951484417",
+    "group": "tnm",
+    "title": "Activate Postpaid DSA SIM",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/activatepostpaiddsasim",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "imsi": "510012090004130",
+        "iccid": "89620180000001736306",
+        "serviceType": "POSTPAID",
+        "svcBrandCode": "MAT"
+      },
+      "servicename": "ActivatePostpaidDSA",
+      "msisdn": "6285716285761"
+    }
+  },
+  {
+    "id": "948666545",
+    "group": "tnm",
+    "title": "Get IMSI_D and KiK4 (Usim & Non-usim)",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/getkik4",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "Imsi": "510011312038671",
+        "Iccid": "89620180000001736306",
+        "isUsim": false
+      },
+      "servicename": "GetImsiDKIK4",
+      "msisdn": "6285716285761"
+    }
+  },
+  {
+    "id": "1037369345",
+    "group": "tnm",
+    "title": "Good Issue",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/goodsissued",
+    "payload": {
+      "requesttype": "GoodIssues",
+      "TransactionNumber": "14322694",
+      "GalleryCode": "FCEX",
+      "TransactionDate": "20251215",
+      "TotalQuantity": "1",
+      "resourceList": {
+        "resource": [
+          {
+            "resourceType": "C",
+            "resourceIDStart": "89620100001165740005",
+            "resourceIDEnd": "89620100001165740005",
+            "quantity": 1,
+            "pricePerItem": 0,
+            "shipCustCode": "",
+            "transactionIndicator": "SL"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "921239553",
+    "group": "tnm",
+    "title": "Pair MSISDN and SIM",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/pairmsisdntosim",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "dealerId": "BR020",
+        "iccid": "89620180000001736306"
+      },
+      "servicename": "PairMSISDNSIM",
+      "msisdn": "6285716285761"
+    }
+  },
+  {
+    "id": "1103134736",
+    "group": "tnm",
+    "title": "Port-in and Port-out EOC - Salesforce",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/tnm/portineoc",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "PORT-IN EOC",
+      "servicedata": {
+        "portInOrderId": "PO-001",
+        "action": "PORT-IN",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "921894913",
+    "group": "tnm",
+    "title": "Unpair MSISDN from SIM",
+    "method": "POST",
+    "url": "http://bi-tnmapi-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/unpairmsisdnfromsim",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "dealerId": "BR020",
+        "iccid": "89620180000001736306"
+      },
+      "servicename": "UnpairMSISDNSIM",
+      "msisdn": "6285716285761"
+    }
+  },
+  {
+    "id": "1167589378",
+    "group": "tnm",
+    "title": "Query ICCID Details",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/tnm/queryicciddetails_cpq",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "dealerId": "TEST"
+      },
+      "servicename": "QueryICCIDDetails",
+      "iccid": "89620180000001736306"
+    }
+  },
+  {
+    "id": "1167589437",
+    "group": "tnm",
+    "title": "Query MSISDN Details",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/tnm/querymsisdndetails",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN"
+      },
+      "servicename": "QueryMSISDNDetails",
+      "msisdn": "6281536747145"
+    }
+  },
+  {
+    "id": "1095499803",
+    "group": "tnm",
+    "title": "Update MSISDN Status IPhone",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "action": "Reserve",
+        "quantity": 8
+      },
+      "servicename": "UpdateIphoneMsisdnStatus",
+      "msisdn": "6281323123450"
+    }
+  },
+  {
+    "id": "1267139135",
+    "group": "tnm",
+    "title": "Deactivate SIM",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "dealerid": "BR020",
+        "iccid": "89620180000001736306"
+      },
+      "servicename": "DeactivateSIM",
+      "msisdn": "6285716285761"
+    }
+  }
+]

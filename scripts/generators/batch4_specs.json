@@ -1,0 +1,494 @@
+[
+  {
+    "id": "1028554812",
+    "group": "eoc",
+    "title": "PortOutCompletionNotification (B2B to B2C)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/eocportoutcompletionnotification",
+    "payload": {
+      "Status": "SUCCESS",
+      "DMPPortInOrderId": "DMP123456",
+      "SalesforceTransactionId": "CAT987654",
+      "iCarePortInOrderNum": "IOM072550",
+      "SalesforcePortOutSRNum": "SR12345",
+      "SalesforcePortOutOrderNum": "PO98765",
+      "SalesforcePortOutOrderStatus": "COMPLETED",
+      "SubsEndDate": "2026-03-31"
+    }
+  },
+  {
+    "id": "1028554753",
+    "group": "eoc",
+    "title": "ICareCreatePortOutOrder (B2C to B2B)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/icarecreateportoutorder",
+    "payload": {
+      "MSISDN": "6285711461620",
+      "MigrationType": "PreToPostCorp",
+      "PortInOrderNum": "2-538076578639",
+      "EventSource": "Salesforce"
+    }
+  },
+  {
+    "id": "1028620289",
+    "group": "eoc",
+    "title": "SalesforceCreatePortOutOrder (B2B to B2C)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/createportoutorder",
+    "payload": {
+      "MSISDN": "6285711461620",
+      "MigrationType": "PostCorpToPre",
+      "iCarePort-InOrderNumber": "2-538076578639",
+      "noRedirect": true
+    }
+  },
+  {
+    "id": "1031143456",
+    "group": "eoc",
+    "title": "ResponseIndiToCorpPortOutOrder (B2C to B2B)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/respinditocorpportoutorder",
+    "payload": {
+      "iCareReqTransactionId": "REQ123456",
+      "MSISDN": "6285711461620",
+      "SalesforcePortInOrderNumber": "2-538076578639",
+      "MigrationType": "PreToPostCorp",
+      "Status": "SUCCESS",
+      "ErrorCode": "",
+      "ErrorMessage": ""
+    }
+  },
+  {
+    "id": "984612865",
+    "group": "erp",
+    "title": "Create Project/Sync Project",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/erp/createproject",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "SourceTemplateName": "IOH_B2B Network Projects",
+        "ProjectName": "Test B2B NetworkREST",
+        "ProjectNumber": "IOH_REST_B2B10000001",
+        "ProjectStartDate": "2026-01-01",
+        "ProjectEndDate": "2029-12-30",
+        "ProjectManagerEmail": "xxx@xxx.x",
+        "ProjectCurrencyCode": "IDR",
+        "AllowCapitalizedInterestFlag": true,
+        "AssetAllocationMethodCode": "CE",
+        "BurdenScheduleName": "Cost Plus Costing-Fusion",
+        "BurdenScheduleFixedDate": "2003-03-23",
+        "CapitalEventProcessingMethodCode": "N",
+        "CIntRateSchName": "Operations Interest",
+        "CIntStopDate": "2020-03-24",
+        "CurrencyConvDate": "2019-04-22",
+        "CurrencyConvRateType": "100000013585009",
+        "CurrencyConvDateTypeCode": "F",
+        "IncludeNotesInKPINotificationsFlag": "true",
+        "KPINotificationEnabledFlag": "true",
+        "LegalEntityName": "Vision Leasing",
+        "OwningOrganizationId": "5186",
+        "PlanningProjectFlag": "false",
+        "contractName": null,
+        "contractNumber": "CNT-2026-0001",
+        "investmentProgram": null,
+        "approvalYear": null,
+        "positionProgramId": null,
+        "positionProgramName": null,
+        "programBudgetApproverChief": null,
+        "contractDescription": null,
+        "contractCustomerName": null,
+        "programBudgetAdjustmentDate": null,
+        "programBudgetApprovedDate": null,
+        "contractStartDate": null,
+        "contractEndDate": null,
+        "programBudget": null,
+        "programBudgetAvailability": null,
+        "programBudgetAdjustment": null,
+        "contractAmount": 1111,
+        "sapProjectOriginalEndDate": null
+      }
+    }
+  },
+  {
+    "id": "1179385951",
+    "group": "erp",
+    "title": "Create Product/Sync Product",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/erp/createproduct",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "SourceTemplateName": "IOH_B2B Network Projects",
+        "ProjectName": "Test B2B NetworkREST",
+        "ProjectNumber": "IOH_REST_B2B10000001",
+        "ProjectStartDate": "2026-01-01",
+        "ProjectEndDate": "2029-12-30",
+        "ProjectManagerEmail": "xxx@xxx.x",
+        "ProjectCurrencyCode": "IDR",
+        "AllowCapitalizedInterestFlag": true,
+        "AssetAllocationMethodCode": "CE",
+        "BurdenScheduleName": "Cost Plus Costing-Fusion",
+        "BurdenScheduleFixedDate": "2003-03-23",
+        "CapitalEventProcessingMethodCode": "N",
+        "CIntRateSchName": "Operations Interest",
+        "CIntStopDate": "2020-03-24",
+        "CurrencyConvDate": "2019-04-22",
+        "CurrencyConvRateType": "100000013585009",
+        "CurrencyConvDateTypeCode": "F",
+        "IncludeNotesInKPINotificationsFlag": "true",
+        "KPINotificationEnabledFlag": "true",
+        "LegalEntityName": "Vision Leasing",
+        "OwningOrganizationId": "5186",
+        "PlanningProjectFlag": "false",
+        "contractName": null,
+        "contractNumber": "CNT-2026-0001",
+        "investmentProgram": null,
+        "approvalYear": null,
+        "positionProgramId": null,
+        "positionProgramName": null,
+        "programBudgetApproverChief": null,
+        "contractDescription": null,
+        "contractCustomerName": null,
+        "programBudgetAdjustmentDate": null,
+        "programBudgetApprovedDate": null,
+        "contractStartDate": null,
+        "contractEndDate": null,
+        "programBudget": null,
+        "programBudgetAvailability": null,
+        "programBudgetAdjustment": null,
+        "contractAmount": 1111,
+        "sapProjectOriginalEndDate": null
+      }
+    }
+  },
+  {
+    "id": "1059291137",
+    "group": "hpm",
+    "title": "Reserve/Cancel Homepass",
+    "method": "POST",
+    "url": "http://dev-cgw.co.id/sit/cpq/hpm/managehomepass",
+    "payload": {
+      "transid": "12345",
+      "msisdn": "",
+      "servicename": "Reserve Homepass",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "customerName": "PT Telkom Indonesia",
+        "homepassObjectId": "9174786480213513743",
+        "customerId": "CUST-00123",
+        "homepassStatus": "Booked"
+      }
+    }
+  },
+  {
+    "id": "694943794",
+    "group": "hpm",
+    "title": "Get Cluster Name",
+    "method": "POST",
+    "url": "http://bi-hpm-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/getclustername",
+    "payload": {
+      "transid": "test1234455667",
+      "msisdn": "",
+      "servicename": "GET CLUSTER NAME",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "province": "DKI Jakarta",
+        "city": "Jakarta Pusat",
+        "district": "Gambir",
+        "ward": "Gambir",
+        "siteType": " HRB",
+        "businessSegment": "B2C",
+        "commercialName": "KALIBATA CITY"
+      }
+    }
+  },
+  {
+    "id": "694943745",
+    "group": "hpm",
+    "title": "Get Commercial Name",
+    "method": "POST",
+    "url": "http://bi-hpm-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/getcommercialname",
+    "payload": {
+      "transid": "test1234455667",
+      "msisdn": "",
+      "servicename": "GET COMMERCIAL NAME",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "province": "DKI Jakarta",
+        "city": "Jakarta Pusat",
+        "district": "Gambir",
+        "ward": "Gambir",
+        "siteType": " HRB",
+        "businessSegment": "B2C"
+      }
+    }
+  },
+  {
+    "id": "695042049",
+    "group": "hpm",
+    "title": "Validate Homepass",
+    "method": "POST",
+    "url": "http://bi-hpm-tibco-others-sit.apps.ocpmwdev.ioh.co.id:80/validatehomepass",
+    "payload": {
+      "transid": "test1234455667",
+      "msisdn": "",
+      "servicename": "VALIDATE HOMEPASS",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "province": "DKI Jakarta",
+        "city": "Jakarta Pusat",
+        "district": "Gambir",
+        "ward": "Gambir",
+        "siteType": " HRB",
+        "businessSegment": "B2C",
+        "commercialName": "KALIBATA CITY",
+        "clusterName": "TOWER LOTUS"
+      }
+    }
+  },
+  {
+    "id": "1161134507",
+    "group": "hpm",
+    "title": "Update Homepass",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/hpm/updatehomepassstatus",
+    "payload": {
+      "transid": "12345",
+      "msisdn": "6285882237362",
+      "servicename": "UPDATE HOMEPASS STATUS",
+      "servicedata": {
+        "channel": "IDCC",
+        "lang": "EN",
+        "homepassObjectId": "917478648021351",
+        "status": "RESERVED"
+      }
+    }
+  },
+  {
+    "id": "796852225",
+    "group": "ida",
+    "title": "Create Credential",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ida/createcredentials",
+    "payload": {
+      "email_address": " user@company.com ",
+      "password": "SecurePass123",
+      "first_name": "Rahul",
+      "last_name": "Sharma",
+      "phone_number": "+919876543210",
+      "company_name": "ABC Telecom Pvt Ltd",
+      "company_id": 123,
+      "parent_company_id": 134,
+      "company_address": "5th Floor, Tech Park, MG Road, Bengaluru, India",
+      "product_id": 1,
+      "package_id": 5,
+      "role_id": 3,
+      "start_date": "2026-02-01",
+      "end_date": "2026-12-31",
+      "payment_method": "prepaid",
+      "master_role_id": 4,
+      "sda_project_objectives": [
+        {
+          "project_objective_name": "Campaign 2026",
+          "channels": [
+            {
+              "channel_id": 1,
+              "terms_of_payment": "prepaid",
+              "contract_type_id": 1,
+              "topup_amount": 1000000,
+              "expired_date_in_days": 365,
+              "price_per_cpc": 100,
+              "price_per_cpd": 200,
+              "price_per_cpa": 300
+            }
+          ]
+        }
+      ],
+      "api_username": "api_user_cs",
+      "api_password": "generated_password",
+      "api_key": "generated_api_key",
+      "limit_per_month": 10000,
+      "detail": [
+        {
+          "sub_product_id": 1,
+          "initial_balance": 1000000,
+          "price": 100
+        }
+      ],
+      "alt_auth": "whatsapp",
+      "expiredDateInDays": 365,
+      "promotional_consent": "yes",
+      "api_access": true,
+      "sftp_access": false,
+      "price_per_sms": 100,
+      "client_id": "ins_client_123",
+      "client_secret": "ins_secret_456",
+      "sms_templates": [
+        {
+          "smsTemplateTitle": "Welcome SMS",
+          "senderOfSMS": "INDOSAT",
+          "typeOfSMS": "promotional",
+          "smsTemplate": "Welcome to our service!"
+        }
+      ],
+      "ipadress_list": ["10.99.99.98", "10.99.99.99"],
+      "hashkey_value": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08"
+    }
+  },
+  {
+    "id": "802062337",
+    "group": "ida",
+    "title": "Remove Credential",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ida/removecredentials",
+    "payload": {
+      "subscription_id": "5678"
+    }
+  },
+  {
+    "id": "975929346",
+    "group": "hbase",
+    "title": "Create Subscriber",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/hbase/createsubscriber",
+    "payload": {
+      "customer_type": "postpaid",
+      "imsi": "510011909936825",
+      "msisdn": "6281519439368",
+      "card_type": "02",
+      "sim_type": "USIM"
+    }
+  },
+  {
+    "id": "977469441",
+    "group": "hbase",
+    "title": "Delete Subscriber",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/hbase/deletesubscriber",
+    "payload": {
+      "msisdn": "6281519439368"
+    }
+  },
+  {
+    "id": "639303681",
+    "group": "ivs",
+    "title": "IVS Check Eligibility",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/ivsCheckEligibility",
+    "payload": {
+      "transid": "1234",
+      "servicedata": {
+        "Account": [
+          {
+            "CustType": "Corporate",
+            "PhoneNumber": "29238340",
+            "IDType": "SIUP",
+            "Name": "PT. TRADA TELECOM INDONESIA",
+            "IDNumber": "05220-05/PK/1.825.271",
+            "BirthDate": "08/13/1981",
+            "NPWP": "0032157281001000"
+          }
+        ],
+        "CheckType": "",
+        "channel": "IDCC",
+        "lang": "EN"
+      },
+      "servicename": "ivs_check_eligibility"
+    }
+  },
+  {
+    "id": "993296385",
+    "group": "jasper",
+    "title": "Change Ownership",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/jasper/updateMsisdn",
+    "payload": {
+      "ChannelId": "WEB_PORTAL",
+      "OrderNumber": "ORD-20260316-001",
+      "JasperAccountId": "789456",
+      "Iccid": "8914800000123456789",
+      "MSISDN": "6281402150623",
+      "Status": "PURGED",
+      "JasperStockAccountId": "ACCC-123456"
+    }
+  },
+  {
+    "id": "989495297",
+    "group": "jasper",
+    "title": "Status Change",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/jasper/statusChange",
+    "payload": {
+      "ChannelId": "WEB_PORTAL",
+      "OrderNumber": "ORD-20260316-001",
+      "JasperAccountId": "789456",
+      "Iccid": "8914800000123456789",
+      "MSISDN": "6281402150623",
+      "Status": "ACTIVATED",
+      "JasperStockAccountId": "ACCC-123456"
+    }
+  },
+  {
+    "id": "991264769",
+    "group": "jasper",
+    "title": "Deactivate Jasper",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/jasper/updateMsisdn",
+    "payload": {
+      "ChannelId": "WEB_PORTAL",
+      "OrderNumber": "ORD-20260316-001",
+      "JasperAccountId": "789456",
+      "Iccid": "8914800000123456789",
+      "MSISDN": "6281402150623",
+      "Status": "PURGED",
+      "JasperStockAccountId": "ACCC-123456"
+    }
+  },
+  {
+    "id": "969113904",
+    "group": "jasper",
+    "title": "New Activation",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/jasper/newActivation",
+    "payload": {
+      "ChannelId": "WEB_PORTAL",
+      "OrderNumber": "ORD-20260316-001",
+      "JasperAccountId": "789456",
+      "Iccid": "8914800000123456789",
+      "RatePlanName": "IoT_Standard_5GB",
+      "CommPlanName": "Global_IoT_Comm_Plan"
+    }
+  },
+  {
+    "id": "1251508285",
+    "group": "kafka",
+    "title": "Product Catalog Management (TMF620)",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "id": "urn:uuid:f3d5b0a0-1234-4567-89ab-cdef01234567",
+      "href": "https://example.com/tmf-api/productCatalogManagement/v4/catalog/1",
+      "name": "B2B Product Catalog",
+      "description": "Product catalog for B2B services",
+      "lifecycleStatus": "Active",
+      "validFor": {
+        "startDateTime": "2024-01-01T00:00:00Z",
+        "endDateTime": "2026-12-31T23:59:59Z"
+      },
+      "@type": "Catalog"
+    }
+  }
+]
