@@ -306,12 +306,13 @@ test("TC012_Update Sales Scenario and Credit Scoring", async () => {
   });
   await expect(salesScenarioCombobox).toBeVisible({ timeout: 10_000 });
   await expect(salesScenarioCombobox).toBeEnabled({ timeout: 5_000 });
-  // Click the inner trigger button, not the outer combobox container div
-  await salesScenarioCombobox.locator("button").click();
+  await salesScenarioCombobox.click();
 
-  const nonBauOption = page.getByRole("option", { name: "Non-BAU/Tender" });
-  await nonBauOption.waitFor({ state: "visible", timeout: 10_000 });
-  await nonBauOption.click();
+  // Scope the option to the listbox so it doesn't match stale options from other dropdowns
+  await page
+    .getByRole("listbox", { name: "Sales Scenario" })
+    .getByRole("option", { name: "Non-BAU/Tender" })
+    .click();
 
   await page.getByRole("button", { name: "Save" }).click();
   await page.waitForTimeout(3000);
