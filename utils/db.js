@@ -122,7 +122,16 @@ export async function updateRun(
 }
 
 export async function closeDb() {
-  await pool.end();
+  try {
+    // Jika dijalankan oleh Playwright worker, biarkan worker process yang menutup koneksi
+    // saat exit. Jika tidak, pool.end() akan mematikan pool untuk test selanjutnya
+    // yang kebetulan di-assign ke worker yang sama.
+    if (typeof process.env.TEST_WORKER_INDEX === "undefined") {
+      await pool.end();
+    }
+  } catch {
+    // Pool mungkin sudah di-close oleh spec lain — abaikan error ini
+  }
 }
 
 function laravelDecrypt(encryptedFromDb, appKey) {

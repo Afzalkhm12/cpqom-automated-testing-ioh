@@ -1,0 +1,2288 @@
+[
+  {
+    "id": "718897153",
+    "group": "mars",
+    "title": "Activate bill on email",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/activatebillonemail",
+    "payload": {
+      "Request": {
+        "requestId": "1234",
+        "timestamp": "2025-12-19 13:12:45",
+        "channel": "IDCC"
+      },
+      "Input": {
+        "CustRef": "10001",
+        "AccountNum": "BA1122",
+        "BomProductId": "12345",
+        "BomTariffId": "1456",
+        "EmailAddr": " customer@example.com ",
+        "EmailAlt1": " alt1@example.com ",
+        "EmailAlt2": " alt2@example.com ",
+        "ContactSeq": "1",
+        "BHCode": "3451",
+        "Currency": "USD",
+        "CpsID": "900123"
+      }
+    }
+  },
+  {
+    "id": "719126529",
+    "group": "mars",
+    "title": "Deactivate bill on email",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/deactivatebillonemail",
+    "payload": {
+      "Request": {
+        "requestId": "12345",
+        "timestamp": "2025-12-19 13:12:45",
+        "channel": "IDCC"
+      },
+      "Input": {
+        "CustRef": "10001",
+        "AccountNum": "BA1122",
+        "BomProductSeq": "1000456",
+        "BHCode": "123456"
+      }
+    }
+  },
+  {
+    "id": "755302406",
+    "group": "mars",
+    "title": "Get Bill On Email History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/getBillOnEmailHistory",
+    "payload": {
+      "RequestType": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "AccountNumber": "BA1122"
+    }
+  },
+  {
+    "id": "723845123",
+    "group": "mars",
+    "title": "Modify bill on email address",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/mars/modifybillonemail",
+    "payload": {
+      "Request": {
+        "TransId": "12345",
+        "Channel": "IDCC",
+        "Timestamp": "2025-12-22 13:12:45"
+      },
+      "Input": {
+        "AccountNum": "BA1122",
+        "EmailAlt1": " new.alt1@email.com ",
+        "EmailAlt2": " new.alt2@email.com ",
+        "CustomerRef": "789456",
+        "ContactSeq": "10",
+        "StartDate": "",
+        "NewDaytimeTel": "08012345678",
+        "NewDaytimeExt": "101",
+        "NewEveningTel": "08087654321",
+        "NewEveningExt": "202",
+        "NewFaxTel": "08011223344",
+        "NewMobileTel": "919812345678",
+        "NewEDI": " new.edi@email.com ",
+        "NewEmail": " new.primary@email.com ",
+        "NewPosition": "Manager",
+        "NewDepartment": "IT Operations",
+        "NewAddressSeq": "001",
+        "AllowHistoriedUpdateBoo": "true",
+        "SRNum": "456789",
+        "MSISDN": "9876543210",
+        "MessageId": "",
+        "CustomerName": "",
+        "Name": "",
+        "Action": "",
+        "Status": "",
+        "GenevaSeqId": ""
+      }
+    }
+  },
+  {
+    "id": "647495681",
+    "group": "nrm",
+    "title": "Activate Billing",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/activateBilling",
+    "payload": {
+      "relatedParty": [
+        {
+          "id": "CA987654321",
+          "href": "/account/CA987654321",
+          "role": "customer",
+          "name": "PT Indosat Enterprise",
+          "type": "RelatedParty"
+        }
+      ],
+      "note": [
+        {
+          "type": "USER_ID",
+          "id": "1",
+          "text": "user_12345"
+        },
+        {
+          "type": "IP_ADDRESS",
+          "id": "2",
+          "text": "192.168.1.10"
+        },
+        {
+          "type": "WORKSPACE",
+          "id": "3",
+          "text": "PRODUCTION"
+        }
+      ],
+      "channel": [
+        {
+          "role": "Used channel for order capture",
+          "type": "RelatedChannel",
+          "channel": {
+            "type": "ChannelRef",
+            "name": "IDCC",
+            "id": "1"
+          }
+        }
+      ],
+      "productOrderItem": [
+        {
+          "quantity": 1,
+          "billingAccount": {
+            "type": "BillingAccountRef",
+            "id": "BA123456789",
+            "href": "/account/BA123456789"
+          },
+          "productOffering": {
+            "name": "Managed Anti-DDoS - iWeb App Protection - NexusGuard",
+            "id": "01tMR000005htCrYAI"
+          },
+          "action": "add",
+          "product": {
+            "isBundle": true,
+            "productCharacteristic": [
+              {
+                "name": "ATT_T_BILLING_SUBS_ID",
+                "value": "SUB123456789"
+              },
+              {
+                "name": "ATT_T_START_DATE",
+                "value": "2024-01-15"
+              },
+              {
+                "name": "ATT_T_TARIFF_ID",
+                "value": "1234"
+              },
+              {
+                "name": "ATT_T_SUBSCRIPTION_LABEL",
+                "value": "John Doe Postpaid Line"
+              },
+              {
+                "name": "ATT_T_CPS_ID",
+                "value": "99887766"
+              },
+              {
+                "name": "ATT_T_HYBRID_FLAG",
+                "value": "N"
+              },
+              {
+                "name": "ATT_T_PERMANENT_FLAG",
+                "value": "Y"
+              },
+              {
+                "name": "ATT_T_TRIAL_END_DATE",
+                "value": "2024-02-14"
+              },
+              {
+                "name": "ATT_T_PACKAGE_CODE",
+                "value": "PKG_5G_PREMIUM"
+              },
+              {
+                "name": "ATT_T_PACKAGE_NAME",
+                "value": "5G Premium Unlimited"
+              },
+              {
+                "name": "ATT_T_ENTITY_ID",
+                "value": "ENT001"
+              },
+              {
+                "name": "ATT_T_BUNDLING_NAME",
+                "value": "Triple Play Bundle"
+              },
+              {
+                "name": "ATT_T_ORIGINAL_ACTIVATION_DATE",
+                "value": "2024-01-15"
+              },
+              {
+                "name": "ATT_T_AGREEMENT_NAME",
+                "value": "Postpaid 12 Month Contract"
+              },
+              {
+                "name": "ATT_T_AGREEMENT_START_DATE",
+                "value": "2024-01-15"
+              },
+              {
+                "name": "ATT_T_AGREEMENT_END_DATE",
+                "value": "2025-01-14"
+              },
+              {
+                "name": "ATT_T_NON_COMMERCIAL_FLAG",
+                "value": "N"
+              }
+            ]
+          },
+          "productOrderItemRelationship": [
+            {
+              "relationshipType": "bundles",
+              "type": "OrderItemRelationship",
+              "id": "0000000387"
+            },
+            {
+              "relationshipType": "bundles",
+              "type": "OrderItemRelationship",
+              "id": "0000000388"
+            },
+            {
+              "relationshipType": "bundles",
+              "type": "OrderItemRelationship",
+              "id": "0000000389"
+            }
+          ],
+          "id": "0000000386"
+        },
+        {
+          "product": {
+            "isBundle": true,
+            "productCharacteristic": [
+              {
+                "name": "ATT_T_BILLING_PRODUCT_ID",
+                "value": "PROD1211"
+              },
+              {
+                "name": "ATT_T_PRODUCT_LABEL",
+                "value": "5G_Premium_Postpaid"
+              },
+              {
+                "name": "ATT_T_MAIN_PROMO_CODE",
+                "value": "PROMO5G2025"
+              },
+              {
+                "name": "ATT_T_TARIFF_ID",
+                "value": "1234"
+              },
+              {
+                "name": "ATT_T_START_DATE",
+                "value": "2025-01-01"
+              },
+              {
+                "name": "ATT_T_END_DATE",
+                "value": "2025-12-31"
+              },
+              {
+                "name": "ATT_T_INIT_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_RECURRING_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_CPS_ID",
+                "value": "99887766"
+              },
+              {
+                "name": "ATT_T_OVERRIDE_RATE_NUM",
+                "value": "0"
+              },
+              {
+                "name": "ATT_T_ASSET_ID",
+                "value": "AST998877"
+              },
+              {
+                "name": "ATT_T_PROMO_NAME",
+                "value": "5G Welcome Promo"
+              },
+              {
+                "name": "ATT_T_DISPLAY_DESC",
+                "value": "5G Premium Plan with Discount"
+              },
+              {
+                "name": "ATT_T_DESCRIPTION",
+                "value": "Introductory offer|Only for 5G customers"
+              },
+              {
+                "name": "ATT_T_SERVICE_TYPE",
+                "value": "MOBILE_POSTPAID"
+              },
+              {
+                "name": "ATT_T_SERVICE_ID",
+                "value": "628511111111"
+              },
+              {
+                "name": "ATT_T_RATING_TARIFF_ID",
+                "value": "RATE_TARIF_5G_POSTPAID_100"
+              },
+              {
+                "name": "ATT_T_BILL_CREATE_DATE",
+                "value": "2025-01-31"
+              },
+              {
+                "name": "ATT_BILLING_TYPE",
+                "value": "Postpaid"
+              }
+            ]
+          },
+          "quantity": 1,
+          "billingAccount": {
+            "type": "BillingAccountRef",
+            "id": "BA123456789",
+            "href": "/account/BA123456789"
+          },
+          "productOffering": {
+            "name": "iWeb App Protection",
+            "id": "01tMR000005FwtdYAC"
+          },
+          "action": "add",
+          "itemPrice": [
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 300000
+                }
+              },
+              "pricingType": "nonRecurring"
+            },
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 300000
+                }
+              },
+              "pricingType": "recurring"
+            }
+          ],
+          "id": "0000000387"
+        },
+        {
+          "product": {
+            "isBundle": true,
+            "productCharacteristic": [
+              {
+                "name": "ATT_T_BILLING_PRODUCT_ID",
+                "value": "PROD1212"
+              },
+              {
+                "name": "ATT_T_PRODUCT_LABEL",
+                "value": "5G_Premium_Postpaid"
+              },
+              {
+                "name": "ATT_T_MAIN_PROMO_CODE",
+                "value": "PROMO5G2025"
+              },
+              {
+                "name": "ATT_T_TARIFF_ID",
+                "value": "1234"
+              },
+              {
+                "name": "ATT_T_START_DATE",
+                "value": "2025-01-01"
+              },
+              {
+                "name": "ATT_T_END_DATE",
+                "value": "2025-12-31"
+              },
+              {
+                "name": "ATT_T_INIT_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_RECURRING_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_CPS_ID",
+                "value": "99887766"
+              },
+              {
+                "name": "ATT_T_OVERRIDE_RATE_NUM",
+                "value": "0"
+              },
+              {
+                "name": "ATT_T_ASSET_ID",
+                "value": "AST998877"
+              },
+              {
+                "name": "ATT_T_PROMO_NAME",
+                "value": "5G Welcome Promo"
+              },
+              {
+                "name": "ATT_T_DISPLAY_DESC",
+                "value": "5G Premium Plan with Discount"
+              },
+              {
+                "name": "ATT_T_DESCRIPTION",
+                "value": "Introductory offer|Only for 5G customers"
+              },
+              {
+                "name": "ATT_T_SERVICE_TYPE",
+                "value": "MOBILE_POSTPAID"
+              },
+              {
+                "name": "ATT_T_SERVICE_ID",
+                "value": "628511111111"
+              },
+              {
+                "name": "ATT_T_RATING_TARIFF_ID",
+                "value": "RATE_TARIF_5G_POSTPAID_100"
+              },
+              {
+                "name": "ATT_T_BILL_CREATE_DATE",
+                "value": "2025-01-31"
+              },
+              {
+                "name": "ATT_BILLING_TYPE",
+                "value": "Postpaid"
+              }
+            ]
+          },
+          "quantity": 1,
+          "billingAccount": {
+            "type": "BillingAccountRef",
+            "id": "BA123456789",
+            "href": "/account/BA123456789"
+          },
+          "productOffering": {
+            "name": "Set Up and Installation",
+            "id": "01tMR000004xUvpYAE"
+          },
+          "action": "add",
+          "itemPrice": [
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 100000
+                }
+              },
+              "pricingType": "nonRecurring"
+            },
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 100000
+                }
+              },
+              "pricingType": "recurring"
+            }
+          ],
+          "id": "0000000388"
+        },
+        {
+          "product": {
+            "isBundle": true,
+            "productCharacteristic": [
+              {
+                "name": "ATT_T_BILLING_PRODUCT_ID",
+                "value": "PROD1213"
+              },
+              {
+                "name": "ATT_T_PRODUCT_LABEL",
+                "value": "5G_Premium_Postpaid"
+              },
+              {
+                "name": "ATT_T_MAIN_PROMO_CODE",
+                "value": "PROMO5G2025"
+              },
+              {
+                "name": "ATT_T_TARIFF_ID",
+                "value": "1234"
+              },
+              {
+                "name": "ATT_T_START_DATE",
+                "value": "2025-01-01"
+              },
+              {
+                "name": "ATT_T_END_DATE",
+                "value": "2025-12-31"
+              },
+              {
+                "name": "ATT_T_INIT_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_RECURRING_PRICE_MODE",
+                "value": "ABS"
+              },
+              {
+                "name": "ATT_T_CPS_ID",
+                "value": "99887766"
+              },
+              {
+                "name": "ATT_T_OVERRIDE_RATE_NUM",
+                "value": "0"
+              },
+              {
+                "name": "ATT_BILLING_TYPE",
+                "value": "Postpaid"
+              },
+              {
+                "name": "ATT_T_PRODUCT_TYPE",
+                "value": "MinimumCommitment"
+              }
+            ]
+          },
+          "quantity": 1,
+          "billingAccount": {
+            "type": "BillingAccountRef",
+            "id": "BA123456789",
+            "href": "/account/BA123456789"
+          },
+          "productOffering": {
+            "name": "Set Up and Installation",
+            "id": "01tMR000004xUvpYAG"
+          },
+          "action": "add",
+          "itemPrice": [
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 50000
+                }
+              },
+              "pricingType": "nonRecurring"
+            },
+            {
+              "price": {
+                "dutyFreeAmount": {
+                  "unit": "IDR",
+                  "value": 50000
+                }
+              },
+              "pricingType": "recurring"
+            }
+          ],
+          "id": "0000000389"
+        }
+      ],
+      "state": "Acknowledged",
+      "requestedStartDate": "2019-05-03 00:00:00",
+      "requestedCompletionDate": "2019-05-02 00:00:00",
+      "orderDate": "2025-05-19 08:48:59",
+      "externalId": "PO-456",
+      "id": "00000262",
+      "category": "New Connect",
+      "description": "Product Order illustration sample-updated"
+    }
+  },
+  {
+    "id": "704446506",
+    "group": "nrm",
+    "title": "Create Minimum Commitment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/createminimumcommitment",
+    "payload": {
+      "CreateMinimumCommitmentInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "CustomerRef": "CA987654321",
+          "CPSId": "99887766",
+          "Currency": "IDR",
+          "AccountNum": "BA1122",
+          "ProductID": "4566",
+          "TariffID": "1234",
+          "CommitmentPeriodMonth": 12
+        }
+      }
+    }
+  },
+  {
+    "id": "698580993",
+    "group": "nrm",
+    "title": "Create Adjustment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/createadjustmentrequest",
+    "payload": {
+      "CreateAdjustmentInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "AccountNum": "BA1122",
+          "AdjustmentSeq": "",
+          "AdjustmentDate": "2025-12-15",
+          "AdjustmentAmount": "150000",
+          "AdjustmentType": "CREDIT",
+          "ContractedPos": "POS01",
+          "Comment": "Installment creation for billing adjustment",
+          "InvoiceNum": "2025120101",
+          "TaxReceiptNum": "789456",
+          "TaxAmount": "15000",
+          "TaxDate": "2025-12-15",
+          "TaxReceiptBoo": "Y",
+          "MIDIFlag": "N",
+          "ServiceID": "SRV12345",
+          "UserId": "admin_user",
+          "ChannelName": "ONLINE",
+          "IPAddress": "192.168.1.1",
+          "Workspace": "PRODUCTION"
+        }
+      }
+    }
+  },
+  {
+    "id": "634945537",
+    "group": "nrm",
+    "title": "Create CCA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/createCCA",
+    "payload": {
+      "name": "ABC Corporation",
+      "description": "Corporate customer account for enterprise services",
+      "type": "Corporate",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2025-12-08 00:00:00"
+      },
+      "contactMedium": [
+        {
+          "type": "GeographicAddressContactMedium",
+          " contactType": "1000001",
+          "preferred": true,
+          "street1": "Indosat Plaza|Jl. Gatot Subroto No. 789",
+          "street2": "",
+          "city": "Jakarta",
+          "stateOrProvince": "DKI Jakarta",
+          "postCode": "67890",
+          "country": "Indonesia"
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "phone",
+          "phoneNumber": "62215551234"
+        },
+        {
+          "type": "FaxContactMedium",
+          "contactType": "fax",
+          "faxNumber": "62215551235"
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "ccaCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "billPeriod",
+          "value": "1"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "M"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-12-24 00:00:00"
+        },
+        {
+          "name": "ccaSumStmtFlag",
+          "value": "Y"
+        }
+      ]
+    }
+  },
+  {
+    "id": "697008308",
+    "group": "nrm",
+    "title": "Create Installment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/createinstallment",
+    "payload": {
+      "CreateInstallmentInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "CustomerRef": "445566",
+          "SubscriptionRef": "123456",
+          "AccountNum": "BA1122",
+          "cpsID": "CPS98765",
+          "SubscriptionRefFlag": "Y",
+          "CurrencyCode": "IDR",
+          "ProductInstallment": [
+            {
+              "productSeq": "5001",
+              "startInstallment": "1",
+              "totalInstallment": "12",
+              "terminationDate": "2026-12-31",
+              "deviceType": "HANDSET",
+              "actionCode": "ADD",
+              "ActionID": "ACT001",
+              "ProductID": "PRD1001",
+              "BilledInstallmentNum": "3"
+            }
+          ]
+        }
+      }
+    }
+  },
+  {
+    "id": "704610305",
+    "group": "nrm",
+    "title": "Create Termin Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/createterminbill",
+    "payload": {
+      "CreateTerminBillInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "customerRef": "CA1122",
+          "accountNum": "BA1122",
+          "chargeFutureTermin": "Y",
+          "terminType": "FULL",
+          "overrideBillDate": "2025-12-20",
+          "requestDate": "2025-12-16",
+          "currency": "IDR",
+          "otc": [
+            {
+              "otcId": 101,
+              "serviceId": "345",
+              "cpsId": 5001,
+              "price": 150000,
+              "rowId": "234",
+              "otcLabel": "Termination Fee",
+              "ppserviceId": "PPS001"
+            }
+          ],
+          "terminPurpose": "SERVICETERMINATION"
+        }
+      }
+    }
+  },
+  {
+    "id": "688816131",
+    "group": "nrm",
+    "title": "Get Adjustment History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryadjustmenthistory",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-10 13:12:45"
+      },
+      "Input": {
+        "AccountNum": "BA1122"
+      }
+    }
+  },
+  {
+    "id": "696352928",
+    "group": "nrm",
+    "title": "Get Billing Account Summary",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querysummary",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "accountNo": "BA1122"
+      }
+    }
+  },
+  {
+    "id": "677937153",
+    "group": "nrm",
+    "title": "Get Billing Detail",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querybilldetail",
+    "payload": {
+      "AccountNum": "BA1122",
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "677773485",
+    "group": "nrm",
+    "title": "Get Dunning Execution (CSP)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querydunningexecution",
+    "payload": {
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "AccountNum": "BA1122"
+    }
+  },
+  {
+    "id": "678592513",
+    "group": "nrm",
+    "title": "Get Dunning History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querydunninghistory",
+    "payload": {
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "AccountNo": "BA1122"
+    }
+  },
+  {
+    "id": "685244417",
+    "group": "nrm",
+    "title": "Get Failed Payment Allocation",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryfailedpaymentallocation",
+    "payload": {
+      "GetFailedPaymentAllocationInput": {
+        "Input": {
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-01-15 23:59:00",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "697696313",
+    "group": "nrm",
+    "title": "Get Hold Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryterminholdbill",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-16 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "AccountNo": "BA1122",
+        "CustomerRef": "445566"
+      }
+    }
+  },
+  {
+    "id": "684818433",
+    "group": "nrm",
+    "title": "Get Invoice Adjustment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoiceadjustment",
+    "payload": {
+      "QueryInvoiceAdjustmentInput": {
+        "Input": {
+          "BillVersion": "1",
+          "BillSeq": "20250115001",
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "677806086",
+    "group": "nrm",
+    "title": "Get Invoice Detail",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoicedetail",
+    "payload": {
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "AccountNo": "BA1122",
+      "BillSeq": "123456",
+      "BillVersion": "3",
+      "BillTypeID": ""
+    }
+  },
+  {
+    "id": "678101004",
+    "group": "nrm",
+    "title": "Get Invoice Product Charge",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoiceproductcharge",
+    "payload": {
+      "ViewProductChargeHistoryInput": {
+        "Input": {
+          "BillVersion": "1",
+          "BillSeq": "20250115001",
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "684294145",
+    "group": "nrm",
+    "title": "Get Invoice Revenue",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoicerevenue",
+    "payload": {
+      "GetInvoiceRevenueInput": {
+        "Input": {
+          "BillVersion": "1",
+          "BillSeq": "20250115001",
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "674988222",
+    "group": "nrm",
+    "title": "Get Ledger",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryledger",
+    "payload": {
+      "QueryLedgerInput": {
+        "Input": {
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "677773318",
+    "group": "nrm",
+    "title": "Get Invoice List",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoicelist",
+    "payload": {
+      "AccountNo": "BA1122",
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "677773425",
+    "group": "nrm",
+    "title": "Get Payment History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querypaymenthistory",
+    "payload": {
+      "QueryPaymentHistoryInput": {
+        "Input": {
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "705921093",
+    "group": "nrm",
+    "title": "Get Performance Invoice",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/getperformanceinvoice",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "CustomerRef": "1234",
+        "AccountNo": "BA1122"
+      }
+    }
+  },
+  {
+    "id": "1164541953",
+    "group": "nrm",
+    "title": "Get Summary Statement",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/",
+    "payload": {
+      "QuerySummaryStatementInput": {
+        "Input": {
+          "CCA_REF": "CCA1122",
+          "CA_REF": "CA1122",
+          "Account_Num": ""
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "686882931",
+    "group": "nrm",
+    "title": "Get Usage",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryusage",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "AccountNo": "BA1122",
+        "InvoiceNo": "INV20241230001",
+        "StartDate": "2025-12-10",
+        "EndDate": "2024-12-31",
+        "EventType": "VOLTE",
+        "MSISDN": "9876543210",
+        "IMSI": "404123456789012",
+        "SubscriptionRef": "SUB-99887766"
+      }
+    }
+  },
+  {
+    "id": "685015101",
+    "group": "nrm",
+    "title": "Get Virtual Account",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryvirtualaccount",
+    "payload": {
+      "GetVirtualAccountInput": {
+        "Input": {
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "705921025",
+    "group": "nrm",
+    "title": "Modify Termin Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/modifyterminbill",
+    "payload": {
+      "ModifyTerminBillInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "customerRef": "CA1122",
+          "accountNum": "BA1122",
+          "terminSeq": 12345,
+          "oldOverrideBillDate": "2025-12-20",
+          "newOverrideBillDate": "2025-12-21",
+          "oldRequestDate": "2025-12-20",
+          "newRequestDate": "2025-12-21",
+          "currency": "IDR",
+          "chargeFutureTermin": "Y",
+          "terminType": "FULL",
+          "otc": [
+            {
+              "otcSeq": 101,
+              "otcId": 1012,
+              "cpsId": 5001,
+              "serviceId": "345",
+              "oldPrice": 1500,
+              "newPrice": 1800,
+              "rowId": "234",
+              "newOtcLabel": "Termination Fee",
+              "ppserviceId": "PPS001"
+            }
+          ],
+          "terminPurpose": "SERVICETERMINATION"
+        }
+      }
+    }
+  },
+  {
+    "id": "697696373",
+    "group": "nrm",
+    "title": "Perform Delay Block",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/performdelayblock",
+    "payload": {
+      "PerformDelayBlockInput": {
+        "Request": {
+          "RequestDate": "2025-12-16 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        },
+        "Input": {
+          "AccountNum": "BA1122",
+          "ListOfInvoice": {
+            "InvoiceItem": [
+              {
+                "InvoiceNum": "001",
+                "NewDueDate": "2025-12-31"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": "706183174",
+    "group": "nrm",
+    "title": "Remove Minimum Commitment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/removeminimumcommitment",
+    "payload": {
+      "RemoveMinimumCommitmentInput": {
+        "Request": {
+          "RequestID": "1234",
+          "RequestSource": "IDCC",
+          "RequestDate": "2025-12-16 13:12:45"
+        },
+        "Input": {
+          "CustomerRef": "CA987654321",
+          "AccountNum": "BA1122",
+          "ProductSeq": "4566"
+        }
+      }
+    }
+  },
+  {
+    "id": "924647429",
+    "group": "nrm",
+    "title": "Request Hot Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/requesthotbill",
+    "payload": {
+      "Request": {
+        "Channel": "IDCC",
+        "TransId": "1234",
+        "Timestamp": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "AccountNum": "BA1122",
+        "InitiationFlag": "Y"
+      }
+    }
+  },
+  {
+    "id": "706215937",
+    "group": "nrm",
+    "title": "Request Performance Invoice",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/requestperformanceinvoice",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "terminSeq": "123456",
+        "reqDate": "2025-12-16",
+        "action": "Create"
+      }
+    }
+  },
+  {
+    "id": "789479683",
+    "group": "nrm",
+    "title": "Subscribe Dunning Order",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/subscribedunningorder",
+    "payload": {
+      "AccountNum": "ACC1234",
+      "RequestSeq": "5",
+      "RequestStatus": "6",
+      "Remarks": "Test Remarks"
+    }
+  },
+  {
+    "id": "783056897",
+    "group": "nrm",
+    "title": "Subscribe First Bill Payment",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/subscribefirstbillpayment",
+    "payload": {
+      "FBP_ID": "951234",
+      "Status": "5"
+    }
+  },
+  {
+    "id": "735510546",
+    "group": "nrm",
+    "title": "Update BA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/updateBA",
+    "payload": {
+      "id": "BA123456789",
+      "href": "/account/BA123456789",
+      "name": "John Doe",
+      "description": "Individual billing account for postpaid services",
+      "type": "Billing",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2024-12-01 00:00:00"
+      },
+      "creditLimit": {
+        "amount": 5000000,
+        "unit": "IDR"
+      },
+      "relatedParty": [
+        {
+          "type": "RelatedPartyRefOrPartyRoleRef",
+          "role": "customer",
+          "partyOrPartyRole": {
+            "id": "CA987654321",
+            "href": "/account/CA987654321",
+            "name": "John Doe",
+            "type": "PartyRef",
+            "referredType": "customer"
+          }
+        }
+      ],
+      "contact": [
+        {
+          "type": "Contact",
+          "contactType": "billing",
+          "contactMedium": [
+            {
+              "type": "GeographicAddressContactMedium",
+              "mediumType": "1000001",
+              "preferred": true,
+              "street1": "Indosat Plaza|Jl. Sudirman No. 123",
+              "street2": "",
+              "city": "Jakarta",
+              "stateOrProvince": "DKI Jakarta",
+              "postcode": "12345",
+              "country": "Indonesia"
+            },
+            {
+              "type": "EmailContactMedium",
+              "mediumType": "email",
+              "emailAddress": " john.doe@example.com "
+            },
+            {
+              "type": "PhoneContactMedium",
+              "mediumType": "mobile",
+              "phoneNumber": "628999999999"
+            },
+            {
+              "type": "FaxContactMedium",
+              "mediumType": "fax",
+              "faxNumber": "62215551235"
+            },
+            {
+              "type": "PhoneContactMedium",
+              "mediumType": "phone",
+              "phoneNumber": "62-215551234 111"
+            }
+          ]
+        },
+        {
+          "type": "Contact",
+          "contactType": "delivery",
+          "contactMedium": [
+            {
+              "type": "GeographicAddressContactMedium",
+              "mediumType": "1000001",
+              "preferred": true,
+              "street1": "Indosat Plaza|Jl. Sudirman No. 123",
+              "street2": "",
+              "city": "Jakarta",
+              "stateOrProvince": "DKI Jakarta",
+              "postcode": "12345",
+              "country": "Indonesia"
+            }
+          ]
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "name",
+          "value": "John Doe"
+        },
+        {
+          "name": "occupation",
+          "value": "Engineer"
+        },
+        {
+          "name": "division",
+          "value": "Corporate"
+        },
+        {
+          "name": "idType",
+          "value": "KTP"
+        },
+        {
+          "name": "idNumber",
+          "value": "9876543210987654"
+        },
+        {
+          "name": "idExpiryDate",
+          "value": "2035-10-22 00:00:00"
+        },
+        {
+          "name": "npwp",
+          "value": "56788901897"
+        },
+        {
+          "name": "companyNPWP",
+          "value": "56788901000"
+        },
+        {
+          "name": "virtualAccount",
+          "value": "VA1234567890"
+        },
+        {
+          "name": "virtualAccountBank",
+          "value": "BCA"
+        },
+        {
+          "name": "accountingMethod",
+          "value": "5"
+        },
+        {
+          "name": "invoicingCompany",
+          "value": "5"
+        },
+        {
+          "name": "contractedPos",
+          "value": "3"
+        },
+        {
+          "name": "taxInvoiceNumber",
+          "value": "TIN987654321"
+        },
+        {
+          "name": "birthDate",
+          "value": "1985-03-15 00:00:00"
+        },
+        {
+          "name": "gender",
+          "value": "male"
+        },
+        {
+          "name": "motherMaidenName",
+          "value": "Maria Doe"
+        },
+        {
+          "name": "hobby",
+          "value": "Reading"
+        },
+        {
+          "name": "maritalStatus",
+          "value": "Single"
+        },
+        {
+          "name": "religion",
+          "value": "Christian"
+        },
+        {
+          "name": "lastEducation",
+          "value": "Bachelor"
+        },
+        {
+          "name": "additionalIdType",
+          "value": "Passport"
+        },
+        {
+          "name": "businessLine",
+          "value": "Postpaid"
+        },
+        {
+          "name": "houseStatus",
+          "value": "Owned"
+        },
+        {
+          "name": "incomeRangeMonth",
+          "value": "5000000-10000000"
+        },
+        {
+          "name": "lengthOfTermEmployment",
+          "value": "5"
+        },
+        {
+          "name": "creditMonitoring",
+          "value": "3"
+        },
+        {
+          "name": "creditClass",
+          "value": "3"
+        },
+        {
+          "name": "lengthTermOfResidence",
+          "value": "3"
+        },
+        {
+          "name": "billHandlingCode",
+          "value": "BHC001"
+        },
+        {
+          "name": "billPeriod",
+          "value": "30"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "D"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-03-01 00:00:00"
+        },
+        {
+          "name": "billStyle",
+          "value": "2"
+        },
+        {
+          "name": "alternateEmailAddress1",
+          "value": " john.alt1@example.com "
+        },
+        {
+          "name": "alternateEmailAddress2",
+          "value": " john.alt2@example.com "
+        },
+        {
+          "name": "paymentMethod",
+          "value": "2"
+        },
+        {
+          "name": "deliveryName",
+          "value": "John Doe"
+        },
+        {
+          "name": "holdBillFlag",
+          "value": "T"
+        },
+        {
+          "name": "flagContractNumber",
+          "value": ""
+        },
+        {
+          "name": "flagContractTitle",
+          "value": ""
+        },
+        {
+          "name": "flagDetailPrice",
+          "value": ""
+        },
+        {
+          "name": "flagEmailAddress",
+          "value": ""
+        },
+        {
+          "name": "flagPO1",
+          "value": ""
+        },
+        {
+          "name": "flagPO2",
+          "value": ""
+        },
+        {
+          "name": "contractNumber",
+          "value": "CNT123456"
+        },
+        {
+          "name": "contractTitle",
+          "value": "Service Agreement"
+        },
+        {
+          "name": "accountClass",
+          "value": "Gold"
+        },
+        {
+          "name": "lob",
+          "value": "Consumer"
+        },
+        {
+          "name": "notificationFlag",
+          "value": "Y"
+        },
+        {
+          "name": "po1",
+          "value": "PO12345"
+        },
+        {
+          "name": "po2",
+          "value": "PO67890"
+        },
+        {
+          "name": "collectionAgentEmail",
+          "value": " collector@example.com "
+        },
+        {
+          "name": "collectionAgentSupervisor",
+          "value": "Supervisor Name"
+        },
+        {
+          "name": "communicationChannel",
+          "value": "Email"
+        },
+        {
+          "name": "thresholdSet",
+          "value": "5"
+        },
+        {
+          "name": "paymentProfileActiveDate",
+          "value": "2025-01-01 00:00:00"
+        },
+        {
+          "name": "cardNumber",
+          "value": "8888777766665555"
+        },
+        {
+          "name": "cardHolderName",
+          "value": "John Doe"
+        },
+        {
+          "name": "cardExpiryMonth",
+          "value": "09"
+        },
+        {
+          "name": "cardExpiryYear",
+          "value": "2035"
+        },
+        {
+          "name": "cardIssueDate",
+          "value": "2020-09-24 00:00:00"
+        },
+        {
+          "name": "cardIssueNum",
+          "value": "CC123456"
+        },
+        {
+          "name": "cardType",
+          "value": "VISA"
+        },
+        {
+          "name": "bankCode",
+          "value": "5678"
+        },
+        {
+          "name": "bankBranchCode",
+          "value": "BR1234"
+        },
+        {
+          "name": "accountType",
+          "value": "Savings"
+        },
+        {
+          "name": "bankName",
+          "value": "City Bank"
+        },
+        {
+          "name": "bankCoordinator",
+          "value": ""
+        },
+        {
+          "name": "bankAccountNo",
+          "value": "1111222233334444"
+        },
+        {
+          "name": "bankAccountHolderName",
+          "value": "John Doe"
+        },
+        {
+          "name": "requestId",
+          "value": "1234"
+        },
+        {
+          "name": "requestSource",
+          "value": "IDCC"
+        },
+        {
+          "name": "prMandateRef",
+          "value": "PAY1234"
+        },
+        {
+          "name": "prMandateSeq",
+          "value": "1"
+        },
+        {
+          "name": "addressSeq",
+          "value": "1"
+        },
+        {
+          "name": "contactSeq",
+          "value": "1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "735576065",
+    "group": "nrm",
+    "title": "Update CA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/updateCA",
+    "payload": {
+      "id": "CA987654321",
+      "href": "/account/CA987654321",
+      "name": "Jane Smith",
+      "description": "Premium customer account with VIP status",
+      "type": "Individual",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2024-12-01 00:00:00"
+      },
+      "engagedParty": {
+        "type": "PartyRef",
+        "role": "corporatepic",
+        "partyOrPartyRole": {
+          "name": "Jane Smith",
+          "birthDate": "1990-08-22 00:00:00",
+          "gender": "female",
+          "placeOfBirth": "Jakarta",
+          "nationality": "Indonesian",
+          "maritalStatus": "Married",
+          "individualIdentification": [
+            {
+              "type": "individualIdentification",
+              "identificationType": "KTP",
+              "identificationId": "9876543210987654",
+              "validFor": {
+                "endDateTime": "2035-10-22 00:00:00"
+              }
+            }
+          ]
+        }
+      },
+      "relatedParty": [
+        {
+          "type": "RelatedPartyRefOrPartyRoleRef",
+          "role": "corporate",
+          "partyOrPartyRole": {
+            "id": "CCA456789123",
+            "href": "/account/CCA456789123",
+            "name": "ABC Corporation",
+            "type": "PartyRef",
+            "referredType": "corporate"
+          }
+        }
+      ],
+      "contactMedium": [
+        {
+          "type": "GeographicAddressContactMedium",
+          "contactType": "1000001",
+          "preferred": true,
+          "street1": "Indosat Plaza|Jl. Thamrin No. 456",
+          "street2": "",
+          "city": "Jakarta",
+          "stateOrProvince": "DKI Jakarta",
+          "postCode": "54321",
+          "country": "Indonesia"
+        },
+        {
+          "type": "EmailContactMedium",
+          "contactType": "email",
+          "emailAddress": " jane.smith@example.com "
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "mobile",
+          "phoneNumber": "628999999999"
+        },
+        {
+          "type": "FaxContactMedium",
+          "contactType": "fax",
+          "faxNumber": "62215551235"
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "phone",
+          "phoneNumber": "62-215551234 111"
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "occupation",
+          "value": "Senior Execution"
+        },
+        {
+          "name": "division",
+          "value": "Human Resources"
+        },
+        {
+          "name": "vipType",
+          "value": "Gold"
+        },
+        {
+          "name": "vipCardNumber",
+          "value": "VIP123456"
+        },
+        {
+          "name": "ccaCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "caCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "caSumStmtFlag",
+          "value": "Y"
+        },
+        {
+          "name": "vipStartDate",
+          "value": "2025-08-10 00:00:00"
+        },
+        {
+          "name": "vipEndDate",
+          "value": "2026-08-09 00:00:00"
+        },
+        {
+          "name": "customerSegment",
+          "value": "Premium"
+        },
+        {
+          "name": "businessLine",
+          "value": "Telecommunications"
+        },
+        {
+          "name": "subBusinessLine",
+          "value": "Mobile Services"
+        },
+        {
+          "name": "npwp",
+          "value": "56788901082"
+        },
+        {
+          "name": "guranteeLetter",
+          "value": ""
+        },
+        {
+          "name": "billPeriod",
+          "value": "1"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "M"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-09-24 00:00:00"
+        },
+        {
+          "name": "requestID",
+          "value": "1234"
+        },
+        {
+          "name": "requestSource",
+          "value": "IDCC"
+        },
+        {
+          "name": "vipDescription",
+          "value": "Premium customer account with VIP status"
+        },
+        {
+          "name": "addressSeq",
+          "value": "1"
+        },
+        {
+          "name": "contactSeq",
+          "value": "1"
+        },
+        {
+          "name": "vipSeq",
+          "value": "1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "735117313",
+    "group": "nrm",
+    "title": "Update CCA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/updateCCA",
+    "payload": {
+      "id": "CCA456789123",
+      "href": "/account/CCA456789123",
+      "name": "ABC Corporation",
+      "description": "Corporate customer account for enterprise services",
+      "type": "Corporate",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2025-12-08 00:00:00"
+      },
+      "contactMedium": [
+        {
+          "type": "GeographicAddressContactMedium",
+          "contactType": "1000001",
+          "preferred": true,
+          "street1": "Indosat Plaza|Jl. Gatot Subroto No. 789",
+          "street2": "",
+          "city": "Jakarta",
+          "stateOrProvince": "DKI Jakarta",
+          "postCode": "67890",
+          "country": "Indonesia"
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "phone",
+          "phoneNumber": "62215551234"
+        },
+        {
+          "type": "FaxContactMedium",
+          "contactType": "fax",
+          "faxNumber": "62215551235"
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "ccaCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "billPeriod",
+          "value": "1"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "M"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-12-24 00:00:00"
+        },
+        {
+          "name": "ccaSumStmtFlag",
+          "value": "Y"
+        },
+        {
+          "name": "addressSeq",
+          "value": "1"
+        },
+        {
+          "name": "contactSeq",
+          "value": "1"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1251508355",
+    "group": "nrm",
+    "title": "Calculate Total Penalty/Add Penalty OTC Product",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Calculate Total Penalty",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1151860796",
+    "group": "nrm",
+    "title": "Break Termin Bill",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "customerRef": "123456",
+        "accountNum": "BA1122",
+        "chargeFutureTermin": "Y",
+        "terminPurpose": "SERVICETERMINATION"
+      }
+    }
+  },
+  {
+    "id": "1151860737",
+    "group": "nrm",
+    "title": "Cancel Termin Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/cancelterminbill",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Cancel Termin Bill",
+      "servicedata": {
+        "terminBillId": "TB001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1150615675",
+    "group": "nrm",
+    "title": "Get Usage Billed/Unbilled",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryusagebilledunbilled",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Get Usage Billed Unbilled",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "startDate": "2024-01-01",
+        "endDate": "2024-12-31",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1150648502",
+    "group": "nrm",
+    "title": "Modify Virtual Account",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/modifyvirtualaccount",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Modify Virtual Account",
+      "servicedata": {
+        "virtualAccountNumber": "VA123456",
+        "bankCode": "BCA",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1150681089",
+    "group": "nrm",
+    "title": "Query Hot Billing History",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "RequestType": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "AccountNo": "BA1122"
+    }
+  },
+  {
+    "id": "685015041",
+    "group": "nrm",
+    "title": "Get Invoice Dispute",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/queryinvoicedispute",
+    "payload": {
+      "QueryInvoiceDisputeInput": {
+        "Input": {
+          "BillSeq": "1",
+          "AccountNum": "BA1122"
+        },
+        "Request": {
+          "RequestDate": "2025-12-10 13:12:45",
+          "RequestID": "1234",
+          "RequestSource": "IDCC"
+        }
+      }
+    }
+  },
+  {
+    "id": "1109426648",
+    "group": "nrm",
+    "title": "Query SR Invoice Pick Applet Dispute",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querysrinvoicepickappletdispute",
+    "payload": {
+      "Input": {
+        "AccountNum": "BA1122"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1150615553",
+    "group": "nrm",
+    "title": "RBMAddBOMProduct",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/rbmaddbomproduct",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "RBMAddBOMProduct",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "productCode": "PROD001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1150615615",
+    "group": "nrm",
+    "title": "RBMModifyBOMProduct",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/rbmmodifybomproduct",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "RBMModifyBOMProduct",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "productCode": "PROD001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1116569601",
+    "group": "nrm",
+    "title": "RBM Modify Hold Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querysrinvoicepickappletreinvoice",
+    "payload": {
+      "Input": {
+        "AccountNum": "BA1122"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1150648381",
+    "group": "nrm",
+    "title": "RBMQueryInfoBOM",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "QueryInfoBomInput": {
+        "AccountNum": "BA1122",
+        "ProductID": "Prod-1234"
+      }
+    }
+  },
+  {
+    "id": "1150648321",
+    "group": "nrm",
+    "title": "RBMRemoveBOMProduct",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/rbmremovebomproduct",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "RBMRemoveBOMProduct",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "productCode": "PROD001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1151205377",
+    "group": "nrm",
+    "title": "Submit & Modify Tiering Discount",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "AccountNumber": "ACC123456",
+        "ProductID": "PROD001",
+        "TariffID": "TARIF1001",
+        "NumOfLastInvoice": "3",
+        "DiscountPeriodMonth": "12",
+        "ProductType": "POSTPAID",
+        "MinComProductSeq": "1",
+        "MinComProductID": "MINPROD100",
+        "MinComBillTariffID": "MINTARIF200"
+      }
+    }
+  },
+  {
+    "id": "1151697017",
+    "group": "nrm",
+    "title": "Submit Termin Hold Bill",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/submitterminholdbill",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Submit Termin Hold Bill",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "terminBillId": "TB001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1151664129",
+    "group": "nrm",
+    "title": "Cancel Tiering Discount",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "AccountNumber": "ACC123456",
+        "ProductSeq": "20001"
+      }
+    }
+  },
+  {
+    "id": "1151696897",
+    "group": "nrm",
+    "title": "Check Tiering Discount Eligibility",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "Request": {
+        "RequestID": "1234",
+        "RequestSource": "IDCC",
+        "RequestDate": "2025-12-16 13:12:45"
+      },
+      "Input": {
+        "AccountNumber": "ACC123456",
+        "ProductID": "PROD001",
+        "TariffID": "TARIF1001",
+        "NumOfLastInvoice": "3",
+        "DiscountPeriodMonth": "12"
+      }
+    }
+  },
+  {
+    "id": "731578374",
+    "group": "nrm",
+    "title": "TMF620 Product Catalog Management",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/tmf620productcatalog",
+    "payload": {
+      "id": "urn:uuid:1234",
+      "name": "NRM Product Catalog",
+      "lifecycleStatus": "Active",
+      "@type": "Catalog"
+    }
+  },
+  {
+    "id": "1109426709",
+    "group": "nrm",
+    "title": "Query SR Invoice Pick Applet Reinvoice",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querysrinvoicepickappletreinvoice",
+    "payload": {
+      "Input": {
+        "AccountNum": "BA1122"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "802160641",
+    "group": "nrm",
+    "title": "Query Tiering Discount History",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querytieringdiscounthistory",
+    "payload": {
+      "Input": {
+        "AccountNum": "BA1122",
+        "CAReference": "CA1122"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1173192717",
+    "group": "nrm",
+    "title": "Query Last Invoice History on tiering discount view",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/nrm/querylastinvoicehistory",
+    "payload": {
+      "transid": "1234",
+      "msisdn": "6285882237362",
+      "servicename": "Query Last Invoice History",
+      "servicedata": {
+        "billingAccountId": "BA001",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  }
+]

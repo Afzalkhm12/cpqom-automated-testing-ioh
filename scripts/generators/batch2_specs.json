@@ -1,0 +1,1055 @@
+[
+  {
+    "id": "979632129",
+    "group": "air",
+    "title": "Activate Charging",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/activateCharging",
+    "payload": {
+      "externalId": "1234",
+      "category": "NewConnect",
+      "description": "Activate Charging for New User",
+      "state": "Acknowledged",
+      "requestedStartDate": "2019-05-03 00:00:00",
+      "requestedCompletionDate": "2019-05-02 00:00:00",
+      "orderDate": "2025-05-19 08:48:59",
+      "relatedParty": [
+        {
+          "id": "628568906780",
+          "role": "subscriber",
+          "type": "RelatedParty"
+        }
+      ],
+      "productOrderItem": [
+        {
+          "id": "1",
+          "action": "add",
+          "product": {
+            "name": "InstallSubscriber",
+            "productCharacteristic": [
+              {
+                "name": "serviceClassNew",
+                "value": "5678"
+              },
+              {
+                "name": "temporaryBlockedFlag",
+                "value": "1"
+              },
+              {
+                "name": "ussdEndOfCallNotificationID",
+                "value": "132"
+              }
+            ]
+          }
+        },
+        {
+          "id": "2",
+          "action": "add",
+          "product": {
+            "name": "AddPeriodicAccountManagement",
+            "productCharacteristic": [
+              {
+                "name": "pamServiceID",
+                "value": "56"
+              },
+              {
+                "name": "pamClassID",
+                "value": "1234"
+              },
+              {
+                "name": "scheduleID",
+                "value": "1234"
+              }
+            ]
+          }
+        },
+        {
+          "id": "3",
+          "action": "change",
+          "product": {
+            "name": "UpdatePeriodicAccountManagement",
+            "productCharacteristic": [
+              {
+                "name": "pamServiceID",
+                "value": "56"
+              },
+              {
+                "name": "pamClassIdOld",
+                "value": "1234"
+              },
+              {
+                "name": "pamClassIdNew",
+                "value": "4231"
+              },
+              {
+                "name": "scheduleIdOld",
+                "value": "1234"
+              },
+              {
+                "name": "scheduleIdNew",
+                "value": "4231"
+              }
+            ]
+          }
+        },
+        {
+          "id": "4",
+          "action": "delete",
+          "product": {
+            "name": "DeleteSubscriber",
+            "productCharacteristic": [
+              {
+                "name": "originOperatorID",
+                "value": "idcc"
+              },
+              {
+                "name": "barring",
+                "value": "0"
+              }
+            ]
+          }
+        },
+        {
+          "id": "5",
+          "action": "delete",
+          "product": {
+            "name": "DeleteOffer",
+            "productCharacteristic": [
+              {
+                "name": "offerId",
+                "value": "1234567890"
+              }
+            ]
+          }
+        },
+        {
+          "id": "6",
+          "action": "delete",
+          "product": {
+            "name": "DeleteUsageThresholds",
+            "productCharacteristic": [
+              {
+                "name": "usageThresholdID",
+                "value": "1234567890"
+              },
+              {
+                "name": "associatedPartyID",
+                "value": "test"
+              },
+              {
+                "name": "originOperatorID",
+                "value": "idcc"
+              }
+            ]
+          }
+        },
+        {
+          "id": "7",
+          "action": "change",
+          "product": {
+            "name": "UpdateServiceClass",
+            "productCharacteristic": [
+              {
+                "name": "chargingId",
+                "value": "1234"
+              },
+              {
+                "name": "serviceClassCurrent",
+                "value": "5678"
+              },
+              {
+                "name": "serviceClassNew",
+                "value": "8765"
+              }
+            ]
+          }
+        },
+        {
+          "id": "8",
+          "action": "change",
+          "product": {
+            "name": "UsageThresholdUpdateInformation",
+            "productCharacteristic": [
+              {
+                "name": "usageThresholdId",
+                "value": "1234567890"
+              },
+              {
+                "name": "usageThresholdValueNew",
+                "value": "524"
+              },
+              {
+                "name": "associatedPartyID",
+                "value": "test"
+              },
+              {
+                "name": "ut_type",
+                "value": "usageThresholdValueNew"
+              }
+            ]
+          }
+        },
+        {
+          "id": "9",
+          "action": "change",
+          "product": {
+            "name": "UsageCounterUpdateInformation",
+            "productCharacteristic": [
+              {
+                "name": "usageCounterID",
+                "value": "1234567890"
+              },
+              {
+                "name": "usageCounterValueNew",
+                "value": "524"
+              },
+              {
+                "name": "associatedPartyID",
+                "value": "test"
+              },
+              {
+                "name": "productID",
+                "value": "1234"
+              },
+              {
+                "name": "uc_type",
+                "value": "usageCounterValueNew"
+              }
+            ]
+          }
+        },
+        {
+          "id": "10",
+          "action": "change",
+          "product": {
+            "name": "AccumulatorUpdateInformation",
+            "productCharacteristic": [
+              {
+                "name": "accumulatorValueAbsolute",
+                "value": "1234567890"
+              },
+              {
+                "name": "accumulatorId",
+                "value": "1234567890"
+              },
+              {
+                "name": "accumulatorStartDate",
+                "value": "2026-03-10"
+              }
+            ]
+          }
+        },
+        {
+          "id": "11",
+          "action": "change",
+          "product": {
+            "name": "DedicatedAccountUpdateInformation",
+            "productCharacteristic": [
+              {
+                "name": "dedicatedAccountID",
+                "value": "1234567890"
+              },
+              {
+                "name": "adjustmentAmountRelative",
+                "value": "9672"
+              },
+              {
+                "name": "dedicatedAccountValueNew",
+                "value": "987445"
+              },
+              {
+                "name": "adjustmentDateRelative",
+                "value": "5"
+              },
+              {
+                "name": "expiryDate",
+                "value": "2026-05-10"
+              },
+              {
+                "name": "dedicatedAccountUnitType",
+                "value": "1"
+              },
+              {
+                "name": "productID",
+                "value": "1234"
+              },
+              {
+                "name": "serviceId",
+                "value": "1234"
+              }
+            ]
+          }
+        },
+        {
+          "id": "12",
+          "action": "change",
+          "product": {
+            "name": "UpdateOffer",
+            "productCharacteristic": [
+              {
+                "name": "offerId",
+                "value": "1234567890"
+              },
+              {
+                "name": "startDateTimeRelative",
+                "value": "1"
+              },
+              {
+                "name": "expiryDate",
+                "value": "2026-05-10"
+              },
+              {
+                "name": "expiryDateTime",
+                "value": "2026-05-10 12:22:40"
+              },
+              {
+                "name": "offerUpdateAction",
+                "value": "EXPIRE"
+              },
+              {
+                "name": "offerProductID",
+                "value": "1234"
+              },
+              {
+                "name": "offerType",
+                "value": "5"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  {
+    "id": "1052475400",
+    "group": "air",
+    "title": "GeneralGet",
+    "method": "POST",
+    "url": "http://bi-air-query-sit.apps.ocpmwdev.ioh.co.id:80/generalgetapi",
+    "payload": {
+      "GeneralGetRequest": {
+        "transId": "1234",
+        "msisdn": "6285770002878",
+        "structure": "Templatized",
+        "SCReplace": "false"
+      }
+    }
+  },
+  {
+    "id": "1095041025",
+    "group": "air",
+    "title": "QueryOffers",
+    "method": "POST",
+    "url": "http://bi-air-query-sit.apps.ocpmwdev.ioh.co.id:80/generalgetapi",
+    "payload": {
+      "transId": "1234",
+      "msisdn": "628159412201"
+    }
+  },
+  {
+    "id": "1095499777",
+    "group": "air",
+    "title": "QueryPromotionalPlan",
+    "method": "POST",
+    "url": "http://bi-air-query-sit.apps.ocpmwdev.ioh.co.id:80/generalgetapi",
+    "payload": {
+      "GetPromotionPlans": {
+        "transID": "1234",
+        "msisdn": "628159412201"
+      }
+    }
+  },
+  {
+    "id": "1028554753",
+    "group": "b2c-icare",
+    "title": "ICareCreatePortOutOrder (B2C to B2B)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/icarecreateportoutorder",
+    "payload": {
+      "MSISDN": "6285711461620",
+      "MigrationType": "PreToPostCorp",
+      "PortInOrderNum": "2-538076578639",
+      "EventSource": "Salesforce"
+    }
+  },
+  {
+    "id": "636715009",
+    "group": "ctlst",
+    "title": "Create BA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/createBA",
+    "payload": {
+      "name": "John Doe",
+      "description": "Individual billing account for postpaid services",
+      "type": "Billing",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2024-12-01 00:00:00"
+      },
+      "creditLimit": {
+        "amount": 5000000,
+        "unit": "IDR"
+      },
+      "relatedParty": [
+        {
+          "type": "RelatedPartyRefOrPartyRoleRef",
+          "role": "customer",
+          "partyOrPartyRole": {
+            "id": "CA987654321",
+            "href": "/account/CA987654321",
+            "name": "John Doe",
+            "type": "PartyRef",
+            "referredType": "customer"
+          }
+        }
+      ],
+      "contact": [
+        {
+          "type": "Contact",
+          "contactType": "billing",
+          "contactMedium": [
+            {
+              "type": "GeographicAddressContactMedium",
+              "mediumType": "1000001",
+              "preferred": true,
+              "street1": "Indosat Plaza|Jl. Sudirman No. 123",
+              "street2": "",
+              "city": "Jakarta",
+              "stateOrProvince": "DKI Jakarta",
+              "postcode": "12345",
+              "country": "Indonesia"
+            },
+            {
+              "type": "EmailContactMedium",
+              "mediumType": "email",
+              "emailAddress": " john.doe@example.com "
+            },
+            {
+              "type": "PhoneContactMedium",
+              "mediumType": "mobile",
+              "phoneNumber": "628999999999"
+            },
+            {
+              "type": "FaxContactMedium",
+              "mediumType": "fax",
+              "faxNumber": "62215551235"
+            },
+            {
+              "type": "PhoneContactMedium",
+              "mediumType": "phone",
+              "phoneNumber": "62-215551234 111"
+            }
+          ]
+        },
+        {
+          "type": "Contact",
+          "contactType": "delivery",
+          "contactMedium": [
+            {
+              "type": "GeographicAddressContactMedium",
+              "mediumType": "1000001",
+              "preferred": true,
+              "street1": "Indosat Plaza|Jl. Sudirman No. 123",
+              "street2": "",
+              "city": "Jakarta",
+              "stateOrProvince": "DKI Jakarta",
+              "postcode": "12345",
+              "country": "Indonesia"
+            }
+          ]
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "name",
+          "value": "John Doe"
+        },
+        {
+          "name": "occupation",
+          "value": "Engineer"
+        },
+        {
+          "name": "division",
+          "value": "Corporate"
+        },
+        {
+          "name": "idType",
+          "value": "KTP"
+        },
+        {
+          "name": "idNumber",
+          "value": "9876543210987654"
+        },
+        {
+          "name": "idExpiryDate",
+          "value": "2035-10-22 00:00:00"
+        },
+        {
+          "name": "npwp",
+          "value": "56788901897"
+        },
+        {
+          "name": "companyNPWP",
+          "value": "56788901000"
+        },
+        {
+          "name": "virtualAccount",
+          "value": "VA1234567890"
+        },
+        {
+          "name": "virtualAccountBank",
+          "value": "BCA"
+        },
+        {
+          "name": "accountingMethod",
+          "value": "5"
+        },
+        {
+          "name": "invoicingCompany",
+          "value": "5"
+        },
+        {
+          "name": "contractedPos",
+          "value": "3"
+        },
+        {
+          "name": "taxInvoiceNumber",
+          "value": "TIN987654321"
+        },
+        {
+          "name": "birthDate",
+          "value": "1985-03-15 00:00:00"
+        },
+        {
+          "name": "gender",
+          "value": "male"
+        },
+        {
+          "name": "motherMaidenName",
+          "value": "Maria Doe"
+        },
+        {
+          "name": "hobby",
+          "value": "Reading"
+        },
+        {
+          "name": "maritalStatus",
+          "value": "Single"
+        },
+        {
+          "name": "religion",
+          "value": "Christian"
+        },
+        {
+          "name": "lastEducation",
+          "value": "Bachelor"
+        },
+        {
+          "name": "additionalIdType",
+          "value": "Passport"
+        },
+        {
+          "name": "businessLine",
+          "value": "Postpaid"
+        },
+        {
+          "name": "houseStatus",
+          "value": "Owned"
+        },
+        {
+          "name": "incomeRangeMonth",
+          "value": "5000000-10000000"
+        },
+        {
+          "name": "lengthOfTermEmployment",
+          "value": "5"
+        },
+        {
+          "name": "creditMonitoring",
+          "value": "3"
+        },
+        {
+          "name": "creditClass",
+          "value": "3"
+        },
+        {
+          "name": "lengthTermOfResidence",
+          "value": "3"
+        },
+        {
+          "name": "billHandlingCode",
+          "value": "BHC001"
+        },
+        {
+          "name": "billPeriod",
+          "value": "30"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "D"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-03-01 00:00:00"
+        },
+        {
+          "name": "billStyle",
+          "value": "2"
+        },
+        {
+          "name": "alternateEmailAddress1",
+          "value": " john.alt1@example.com "
+        },
+        {
+          "name": "alternateEmailAddress2",
+          "value": " john.alt2@example.com "
+        },
+        {
+          "name": "paymentMethod",
+          "value": "2"
+        },
+        {
+          "name": "deliveryName",
+          "value": "John Doe"
+        },
+        {
+          "name": "holdBillFlag",
+          "value": "T"
+        },
+        {
+          "name": "flagContractNumber",
+          "value": ""
+        },
+        {
+          "name": "flagContractTitle",
+          "value": ""
+        },
+        {
+          "name": "flagDetailPrice",
+          "value": ""
+        },
+        {
+          "name": "flagEmailAddress",
+          "value": ""
+        },
+        {
+          "name": "flagPO1",
+          "value": ""
+        },
+        {
+          "name": "flagPO2",
+          "value": ""
+        },
+        {
+          "name": "contractNumber",
+          "value": "CNT123456"
+        },
+        {
+          "name": "contractTitle",
+          "value": "Service Agreement"
+        },
+        {
+          "name": "accountClass",
+          "value": "Gold"
+        },
+        {
+          "name": "lob",
+          "value": "Consumer"
+        },
+        {
+          "name": "notificationFlag",
+          "value": "Y"
+        },
+        {
+          "name": "po1",
+          "value": "PO12345"
+        },
+        {
+          "name": "po2",
+          "value": "PO67890"
+        },
+        {
+          "name": "collectionAgentEmail",
+          "value": " collector@example.com "
+        },
+        {
+          "name": "collectionAgentSupervisor",
+          "value": "Supervisor Name"
+        },
+        {
+          "name": "communicationChannel",
+          "value": "Email"
+        },
+        {
+          "name": "thresholdSet",
+          "value": "5"
+        },
+        {
+          "name": "paymentProfileActiveDate",
+          "value": "2025-01-01 00:00:00"
+        },
+        {
+          "name": "cardNumber",
+          "value": "8888777766665555"
+        },
+        {
+          "name": "cardHolderName",
+          "value": "John Doe"
+        },
+        {
+          "name": "cardExpiryMonth",
+          "value": "09"
+        },
+        {
+          "name": "cardExpiryYear",
+          "value": "2035"
+        },
+        {
+          "name": "cardIssueDate",
+          "value": "2020-09-24 00:00:00"
+        },
+        {
+          "name": "cardIssueNum",
+          "value": "CC123456"
+        },
+        {
+          "name": "cardType",
+          "value": "VISA"
+        },
+        {
+          "name": "bankCode",
+          "value": "5678"
+        },
+        {
+          "name": "bankBranchCode",
+          "value": "BR1234"
+        },
+        {
+          "name": "accountType",
+          "value": "Savings"
+        },
+        {
+          "name": "bankName",
+          "value": "City Bank"
+        },
+        {
+          "name": "bankCoordinator",
+          "value": ""
+        },
+        {
+          "name": "bankAccountNo",
+          "value": "1111222233334444"
+        },
+        {
+          "name": "bankAccountHolderName",
+          "value": "John Doe"
+        },
+        {
+          "name": "requestId",
+          "value": "1234"
+        },
+        {
+          "name": "requestSource",
+          "value": "IDCC"
+        },
+        {
+          "name": "prMandateRef",
+          "value": "PAY1234"
+        },
+        {
+          "name": "catalystFlag",
+          "value": "Y"
+        }
+      ]
+    }
+  },
+  {
+    "id": "635011073",
+    "group": "ctlst",
+    "title": "Create CA",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/createCA",
+    "payload": {
+      "name": "Jane Smith",
+      "description": "Premium customer account with VIP status",
+      "type": "Individual",
+      "status": "Active",
+      "validFor": {
+        "startDateTime": "2024-12-01 00:00:00"
+      },
+      "engagedParty": {
+        "type": "PartyRef",
+        "role": "corporatepic",
+        "partyOrPartyRole": {
+          "name": "Jane Smith",
+          "birthDate": "1990-08-22 00:00:00",
+          "gender": "female",
+          "placeOfBirth": "Jakarta",
+          "nationality": "Indonesian",
+          "maritalStatus": "Married",
+          "individualIdentification": [
+            {
+              "type": "individualIdentification",
+              "identificationType": "KTP",
+              "identificationId": "9876543210987654",
+              "validFor": {
+                "endDateTime": "2035-10-22 00:00:00"
+              }
+            }
+          ]
+        }
+      },
+      "relatedParty": [
+        {
+          "type": "RelatedPartyRefOrPartyRoleRef",
+          "role": "corporate",
+          "partyOrPartyRole": {
+            "id": "CCA456789123",
+            "href": "/account/CCA456789123",
+            "name": "ABC Corporation",
+            "type": "PartyRef",
+            "referredType": "corporate"
+          }
+        }
+      ],
+      "contactMedium": [
+        {
+          "type": "GeographicAddressContactMedium",
+          "contactType": "1000001",
+          "preferred": true,
+          "street1": "Indosat Plaza|Jl. Thamrin No. 456",
+          "street2": "",
+          "city": "Jakarta",
+          "stateOrProvince": "DKI Jakarta",
+          "postCode": "54321",
+          "country": "Indonesia"
+        },
+        {
+          "type": "EmailContactMedium",
+          "contactType": "email",
+          "emailAddress": " jane.smith@example.com "
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "mobile",
+          "phoneNumber": "628999999999"
+        },
+        {
+          "type": "FaxContactMedium",
+          "contactType": "fax",
+          "faxNumber": "62215551235"
+        },
+        {
+          "type": "PhoneContactMedium",
+          "contactType": "phone",
+          "phoneNumber": "62-215551234 111"
+        }
+      ],
+      "characteristic": [
+        {
+          "name": "occupation",
+          "value": "Senior Execution"
+        },
+        {
+          "name": "division",
+          "value": "Human Resources"
+        },
+        {
+          "name": "vipType",
+          "value": "Gold"
+        },
+        {
+          "name": "vipCardNumber",
+          "value": "VIP123456"
+        },
+        {
+          "name": "ccaCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "caCustStatementFlag",
+          "value": "Y"
+        },
+        {
+          "name": "caSumStmtFlag",
+          "value": "Y"
+        },
+        {
+          "name": "vipStartDate",
+          "value": "2025-08-10 00:00:00"
+        },
+        {
+          "name": "vipEndDate",
+          "value": "2026-08-09 00:00:00"
+        },
+        {
+          "name": "customerSegment",
+          "value": "Premium"
+        },
+        {
+          "name": "businessLine",
+          "value": "Telecommunications"
+        },
+        {
+          "name": "subBusinessLine",
+          "value": "Mobile Services"
+        },
+        {
+          "name": "npwp",
+          "value": "56788901082"
+        },
+        {
+          "name": "guranteeLetter",
+          "value": ""
+        },
+        {
+          "name": "billPeriod",
+          "value": "1"
+        },
+        {
+          "name": "billPeriodUnit",
+          "value": "M"
+        },
+        {
+          "name": "nextBillDate",
+          "value": "2025-09-24 00:00:00"
+        },
+        {
+          "name": "requestID",
+          "value": "1234"
+        },
+        {
+          "name": "requestSource",
+          "value": "IDCC"
+        },
+        {
+          "name": "vipDescription",
+          "value": "Premium customer account with VIP status"
+        },
+        {
+          "name": "catalystFlag",
+          "value": "Y"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1018626120",
+    "group": "corp-portal",
+    "title": "Create User/Create New User (Webtools Add User)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/createuser",
+    "payload": {
+      "Input": {
+        "CustAccRefNum": "MTX07459938",
+        "Name": "UAT BULK WHITELISTED",
+        "PICEmail": " uattesterb2b3@gmail.com ",
+        "UserName": " uattesterb2b3@gmail.com ",
+        "Role": "CA"
+      },
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      }
+    }
+  },
+  {
+    "id": "1100709929",
+    "group": "corp-portal",
+    "title": "Activate User (Webtools Update User Status)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/updateuserstatus",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "UserId": "U10001",
+        "UserStatus": "TRUE"
+      }
+    }
+  },
+  {
+    "id": "1099333763",
+    "group": "corp-portal",
+    "title": "Deactivate User (Webtools Delete User Wallet)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/deleteuserwallet",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "UserId": "U10001",
+        "WalletId": "WALLET98765"
+      }
+    }
+  },
+  {
+    "id": "1096876092",
+    "group": "corp-portal",
+    "title": "Pair Wallet (Webtools Add User Wallet)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/adduserwallet",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "UserId": "U10001",
+        "WalletId": "WALLET98765",
+        "WalletType": "PREPAID",
+        "Quota": "1000",
+        "AvailableQty": "750",
+        "Unit": "POINTS",
+        "CreatedDate": "2026-04-01",
+        "ExpiryDate": "2026-12-31",
+        "Channel": "ONLINE",
+        "Description": "User reward wallet",
+        "SMSNotification": "Y",
+        "MinInjectionValue": "50"
+      }
+    }
+  },
+  {
+    "id": "1101856769",
+    "group": "corp-portal",
+    "title": "Query Active User/Query Corporate Users Details (Webtools Query User)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/queryuser",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "CustAccRefNum": "CUST123456"
+      }
+    }
+  },
+  {
+    "id": "1101987841",
+    "group": "corp-portal",
+    "title": "Query Pair Wallet Detail (Webtools Query User Wallet)",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/webtools/queryuserwallet",
+    "payload": {
+      "Request": {
+        "RequestDate": "2025-12-10 13:12:45",
+        "RequestID": "1234",
+        "RequestSource": "IDCC"
+      },
+      "Input": {
+        "UserId": "72245"
+      }
+    }
+  }
+]

@@ -1,0 +1,94 @@
+{
+  "Contact": {
+    "transid": "test123445566",
+    "servicedata": {
+      "channel": "B2BSFA",
+      "lang": "EN"
+    },
+    "servicename": "CREATE UPDATE OPPORTUNITY CONTACT",
+    "msisdn": "6281534253645",
+    "OpportunityContact_Input": {
+      "listOfIsatOsbInsertOpportunityContact": {
+        "opportunity": {
+          "opptyId": "2-KJQ7IU",
+          "SFDCopptyId": "SFDC_TEST_New",
+          "listOfisatOpportunityContact": {
+            "isatOpportunityContact": [
+              {
+                "contactId": "New_3",
+                "name": "NEW_OPP_CON_3",
+                "SFDCcontactId": "New_3",
+                "contactType": "Contact Person",
+                "primaryFlag": "Y",
+                "MobilePhoneNum": "8967890",
+                "email": "new@opp.com",
+                "position": "IT Staff",
+                "DayPhoneAreaCode": "789",
+                "dayPhoneNum": "789067",
+                "DayPhoneExtension": "890"
+              },
+              {
+                "contactId": "New_4",
+                "name": "NEW_OPP_CON_4",
+                "SFDCcontactId": "New_4",
+                "contactType": "Contact Person",
+                "primaryFlag": "N",
+                "MobilePhoneNum": "4567890",
+                "email": "New@Opp.com",
+                "position": "IT Staff",
+                "DayPhoneAreaCode": "989",
+                "dayPhoneNum": "8909067",
+                "DayPhoneExtension": "670"
+              }
+            ]
+          }
+        }
+      }
+    }
+  },
+  "Header": {
+    "transid": "test123445566",
+    "servicedata": {
+      "channel": "B2BSFA",
+      "lang": "EN"
+    },
+    "servicename": "CREATE UPDATE OPPORTUNITY HEADER",
+    "msisdn": "6281534253645",
+    "OpportunityHeader_Input": {
+      "ListOfOpportunity": {
+        "Opportunity": {
+          "oppId": "TEST_1",
+          "name": "TEST_API_New11245864",
+          "salesTeam": "SO_USER_001",
+          "accountId": "2-KJD6PQ",
+          "contractPeriod": "4",
+          "estimatedContractValue": "1000",
+          "estimationMonthlyFee": "0-5 Mn",
+          "description": "description",
+          "confidenceLevel": "0-25",
+          "expectedWinPeriod": "Long",
+          "leadSource": "Self Owned",
+          "picwhosent": "Hello",
+          "lessonLearn": "Technical",
+          "lessonLearnDescription": "LessonDesc",
+          "monthlyBudget": "&lt; 10 Mn",
+          "annuallyBudget": "&lt; 50 Mn",
+          "potentialRisk": "Risk Price",
+          "potentialRiskAmount": "1000",
+          "riskOvercome": "Free OTC",
+          "paymentHistory": "Y",
+          "npwp": "Y",
+          "accountExecutive": "SO_USER_001",
+          "siup": "Y",
+          "salesStage": "02 - Qualify",
+          "notes": "Notes",
+          "salesRemarks": "Remarks",
+          "SFDCOptyId": "SFDC_TEST_New",
+          "salesEntityId": "abc",
+          "currCode": "cur",
+          "parentAccountId": "123"
+        }
+      }
+    }
+  }
+}

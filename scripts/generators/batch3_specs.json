@@ -1,0 +1,182 @@
+[
+  {
+    "id": "1099399169",
+    "group": "com",
+    "title": "Update Asset Evidence API",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "ExternalEventId__c": "a8f3e2d1-9c4b-4f7a-8e2c-1b3d5f7a9c2e",
+      "SourceSystem__c": "ASIANET",
+      "EvidenceUrl__c": "https://storage.example.com/evidence/123.jpg",
+      "EvidenceType__c": "EVIDENCE",
+      "External_ID__c": "ExternalId"
+    }
+  },
+  {
+    "id": "1136689170",
+    "group": "com",
+    "title": "Update Service Order Item (TMF641)",
+    "method": "PATCH",
+    "url": "TBD",
+    "payload": {
+      "id": "SO1234",
+      "state": "completed"
+    }
+  },
+  {
+    "id": "1136295966",
+    "group": "com",
+    "title": "Update Milestone to Salesforce (TMF641)",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "id": "SO1234",
+      "@type": "ServiceOrderMilestone",
+      "name": "SBC Activation Started",
+      "milestoneDate": "2026-02-18T10:30:00.000Z",
+      "status": "inProgress",
+      "message": "OrchestrationItemId",
+      "serviceOrderItem": [
+        {
+          "itemId": "1",
+          "@type": "ServiceOrderItemRef"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1065025611",
+    "group": "crs",
+    "title": "MSISDN Per NIK",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/crs/crs_msisdncountpernik",
+    "payload": {
+      "MSISDNPerNIKReq": {
+        "TransId": "5-40000420101840",
+        "NIK": "3674052108600056",
+        "NOKK": "9911771399943847",
+        "MSISDN": "628970390650",
+        "OptionalAttributes": [
+          {
+            "Name": "Channel",
+            "Value": "USSD"
+          },
+          {
+            "Name": "CRM_OrderID",
+            "Value": "3_8069912060219328938697"
+          }
+        ]
+      }
+    }
+  },
+  {
+    "id": "1065353217",
+    "group": "crs",
+    "title": "Update to CRS",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/crs/insert_pcr_registration_main",
+    "payload": {
+      "Request": {
+        "MSISDN": "6285717179655",
+        "REG_ACTION": "Unreg",
+        "CRM_Order_ID": "1-16252HDJ",
+        "DMP_Trx_ID": "A9-63546834"
+      }
+    }
+  },
+  {
+    "id": "975929525",
+    "group": "dsa",
+    "title": "evDSA Request",
+    "method": "POST",
+    "url": "http://dev-cgw.ioh.co.id/sit/cpq/evDSAReq",
+    "payload": {
+      "TransactionId": "1234",
+      "WOID": 123456789,
+      "SIID": 987654321,
+      "OrderType": "SampleOrderType",
+      "OrderID": "ORD12345",
+      "ExternalID": "EXT67890",
+      "MSISDN": "628176543210",
+      "Key": [
+        {
+          "Name": "ICCID_NEW",
+          "Value": "89014103211118510720"
+        },
+        {
+          "Name": "ICCID_OLD",
+          "Value": "89014103211118510719"
+        },
+        {
+          "Name": "MSISDN",
+          "Value": "628176543210"
+        },
+        {
+          "Name": "IMSI",
+          "Value": "404012345678901"
+        }
+      ]
+    }
+  },
+  {
+    "id": "1001881601",
+    "group": "dwh",
+    "title": "Charging History/Call History more than 24 hours",
+    "method": "POST",
+    "url": "TBD",
+    "payload": {
+      "transid": "62858196451232123087615454",
+      "msisdn": "6285861539518",
+      "servicename": "CHARGING HISTORY",
+      "servicedata": {
+        "lang": "EN",
+        "channel": "IDCC",
+        "startDate": "2020-01-01",
+        "endDate": "2020-01-02",
+        "transactionTypes": "Charging",
+        "trafficType": "VOICE",
+        "directionType": "OUTGOING",
+        "roamingType": "ROAMING"
+      }
+    }
+  },
+  {
+    "id": "1161134477",
+    "group": "dwh",
+    "title": "Query Volte Status",
+    "method": "POST",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/queryvolte?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payload": {
+      "transid": "62858889767606285888976760009",
+      "servicename": "QUERY TRANSACTION HISTORY",
+      "msisdn": 6285888976760,
+      "servicedata": {
+        "transactionTypes": "Discount",
+        "startDate": "2020-01-31",
+        "endDate": "2021-12-20",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  },
+  {
+    "id": "1103527937",
+    "group": "dwh",
+    "title": "Transaction History more than 24 hours",
+    "method": "POST",
+    "url": "http://tm-route-tibco-mashery-dev.apps.ocpmwdev.ioh.co.id/sit/querytransactionhistory?api_key=3sekjsjugxmbb5nadxarw2nx",
+    "payload": {
+      "transid": "62858889767606285888976760009",
+      "servicename": "QUERY TRANSACTION HISTORY",
+      "msisdn": 6285888976760,
+      "servicedata": {
+        "transactionTypes": "Discount",
+        "startDate": "2020-01-31",
+        "endDate": "2021-12-20",
+        "channel": "IDCC",
+        "lang": "EN"
+      }
+    }
+  }
+]
