@@ -61,3 +61,23 @@ allure-results/
 allure-report/
 
 test-data/auth.json
+
+# Salesforce session state (contains active cookies — sensitive!)
+sf-sit-session.json
+
+# Debug scripts (temporary investigation files)
+debug-*.js
+inspect-*.js
+
+# Debug screenshots & HTML dumps generated during debugging sessions
+debug-*.png
+modal-*.png
+sync-seq-*.png
+omni-*.html
+modal-html.txt
+
+# Temporary CSV files at project root
+mvp3_scenario.csv
+
+# Generator helper scripts (one-off, not needed in repo)
+scripts/generators/fix_assertions.cjs
