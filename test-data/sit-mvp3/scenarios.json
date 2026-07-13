@@ -1,0 +1,1855 @@
+{
+  "IPH-NEWFIX-001": {
+    "id": "IPH-NEWFIX-001",
+    "scenario": "Opportunity Management",
+    "description": "Create Opportunity from New Customer",
+    "prerequisites": ["New customer has been created"],
+    "testData": "",
+    "steps": [
+      "Click ESM Opportunity and fill in all necessary fields in forms",
+      "Fill in all mandatory fields for Scoping and mark as complete"
+    ],
+    "expectedResults": [
+      "Opportunity created",
+      "Opportunity stage moved to Quoting"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-002": {
+    "id": "IPH-NEWFIX-002",
+    "scenario": "Quote Management",
+    "description": "Add product to Quote (non-surrogate)",
+    "prerequisites": [
+      "Opportunity has been created and in Quoting stage",
+      "Quote has been created and in Draft-Sales substatus",
+      "No product is added to the Quote",
+      "Scenarios are prepared for each IPHONE product",
+      "User has logged into Salesforce as Sales"
+    ],
+    "testData": "Expected product to test \n- DIOD\n- SIP Trunk Fixed Line\n- SIP Trunking",
+    "steps": [
+      "Click Configure Enterprise Quote",
+      "Click Add Product",
+      "Navigate to prduct category, locate, and click Communication and Collaboration",
+      "Select any of the sub-category of Voice Services, Unified Communication, or Voice API",
+      "Add the product",
+      "Click Add to Configuration Cart",
+      "Configure product based on the prepared scenario",
+      "Click Add Product"
+    ],
+    "expectedResults": [
+      "Enterprise Quote Configuration page is displayed.",
+      "Add Product dialog/catalog is displayed.",
+      "Sub-category under Communication and Collaboration should show up",
+      "Iphone product category is opened and the list of Iphone products is displayed.",
+      "Selected Iphone product is added to the catalog selection.",
+      "Selected product appears in the Configuration Cart.",
+      "Product attributes are configured according to the prepared scenario without validation errors.",
+      "Product is successfully added to the Quote and visible as a Quote Line Item under the Quote with the correct configuration, price, and cost."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-003": {
+    "id": "IPH-NEWFIX-003",
+    "scenario": "Quote Management",
+    "description": "No available fixed number",
+    "prerequisites": [
+      "Opportunity has been created and in Quoting stage",
+      "Quote has been created and in Draft-Sales substatus",
+      "Iphone product is added to the Quote",
+      "Scenarios are prepared for each Iphone product",
+      "No available Number test data in the TNM",
+      "User has logged into Salesforce as Sales"
+    ],
+    "testData": "",
+    "steps": [
+      "Click Configure Enterprise Quote",
+      "Click Number Management",
+      "Select the Iphone product",
+      "Click Reserve Number",
+      "Input number pattern",
+      "Click Reserve Numbers"
+    ],
+    "expectedResults": [
+      "Enterprise Quote Configuration page is displayed.",
+      "Number Reservation wizard is launched.",
+      "Iphone product accepted by the form",
+      "Query number form shows up",
+      "Prefix inputted in the query form",
+      "No available fixed number is returned and the system displays an appropriate 'no number available' message; user is not allowed to proceed to reservation."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Query MSISDN",
+    "downstream": "TNM"
+  },
+  "IPH-NEWFIX-004": {
+    "id": "IPH-NEWFIX-004",
+    "scenario": "Quote Management",
+    "description": "Reserve fixed number",
+    "prerequisites": [
+      "Opportunity has been created and in Quoting stage",
+      "Quote has been created and in Draft-Sales substatus",
+      "Iphone product is added to the Quote",
+      "Scenarios are prepared for each Iphone product",
+      "Prefix Number test data are prepared in the TNM",
+      "User has logged into Salesforce as Sales"
+    ],
+    "testData": "Available fixed number for Iphone in TNM",
+    "steps": [
+      "Click Configure Enterprise Quote",
+      "Click Number Management",
+      "Select the Iphone product",
+      "Click Reserve Number",
+      "Input number pattern",
+      "Click Reserve Numbers",
+      "Click Next"
+    ],
+    "expectedResults": [
+      "Enterprise Quote Configuration page is displayed.",
+      "Number Reservation wizard is launched.",
+      "Iphone product accepted by the form",
+      "Query number form shows up",
+      "Prefix inputted in the query form",
+      "List of available fixed numbers matching the prefix is returned and displayed",
+      "Numbers are reserved"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Reserve MSISDN",
+    "downstream": "TNM"
+  },
+  "IPH-NEWFIX-005": {
+    "id": "IPH-NEWFIX-005",
+    "scenario": "Quote Management",
+    "description": "Move quote to Negotiation stage",
+    "prerequisites": [
+      "Quote is in Draft stage",
+      "Iphone product is added to the Quote",
+      "Subscriber is created",
+      "Number is reserved",
+      "User has logged into Salesforce as Sales"
+    ],
+    "testData": "",
+    "steps": [
+      "From the Quote Record Detail page, click Negotiation in the ribbon stage",
+      "Click Mark This Stage as Current Stage"
+    ],
+    "expectedResults": [
+      "Negotiation stage is highlighted in the stage ribbon.",
+      "Quote stage is updated to Negotiation and the stage ribbon reflects Negotiation as the current stage; Quote remains editable for negotiation activities."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-006": {
+    "id": "IPH-NEWFIX-006",
+    "scenario": "Quote Management",
+    "description": "Generate quote document",
+    "prerequisites": [
+      "Quote is in Negotiation stage",
+      "User has logged into Salesforce as Sales"
+    ],
+    "testData": "",
+    "steps": [
+      "Click Generate Quote Document",
+      "Select IOH Quote Document as the template and click Next",
+      "Click Download PDF",
+      "Verify PDF and click the Download icon",
+      "Click Mark Quote Status as Complete"
+    ],
+    "expectedResults": [
+      "Document Generation wizard is launched.",
+      "IOH Quote Document template is selected and a preview is generated.",
+      "PDF preview is displayed.",
+      "Generated PDF reflects the Quote details (products, configuration, price) accurately and is downloaded successfully to the local machine.",
+      "Quote status is updated to indicate the document has been completed/generated and is stored under the Quote's related files."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-007": {
+    "id": "IPH-NEWFIX-007",
+    "scenario": "Quote Management",
+    "description": "Close quote as won",
+    "prerequisites": [
+      "User has logged into Salesforce as Sales profile",
+      "Initial Quote is in Negotiation Stage",
+      "Products are configured with the appropriate price and cost in the Quote"
+    ],
+    "testData": "",
+    "steps": [
+      "Click the Close Stage button",
+      "Click Close Status field and select Closed as the type",
+      "Click Document Type field and select Quote Acceptence Evidence",
+      "Click Upload Files",
+      "Select file from local storage",
+      "Click Upload",
+      "Navigate to Related tab and go to Links section",
+      "Verify the document by checking through the link"
+    ],
+    "expectedResults": [
+      "Close Stage dialog is displayed.",
+      "Closed status is selected.",
+      "Quote Acceptance Evidence is selected as Document Type.",
+      "File picker is opened.",
+      "File is selected from local storage.",
+      "File is uploaded successfully and Quote is closed as Won.",
+      "Related tab and Links section are displayed.",
+      "Uploaded Quote Acceptance Evidence is accessible via the link and shows the correct document; the parent Opportunity automatically progresses to the Contracting stage and a Contract is created/associated."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Upload document",
+    "downstream": "EFS"
+  },
+  "IPH-NEWFIX-008": {
+    "id": "IPH-NEWFIX-008",
+    "scenario": "Contract Management",
+    "description": "Create FAB new connect",
+    "prerequisites": [
+      "User has logged into Salesforce as Sales",
+      "Contract is Created with associated Quote",
+      "Products are added to the Quote"
+    ],
+    "testData": "",
+    "steps": [
+      "From the Contract Record Detail page, navigate to the Contract Documents section and click Generate",
+      "Click Select a Document Template dropdown",
+      "Select IOH FAB Document (version 1) [DocX]",
+      "Verify the document preview and click Download PDF under the Download Document section",
+      "Click Check In"
+    ],
+    "expectedResults": [
+      "Document Generation wizard is launched from the Contract.",
+      "Template dropdown is displayed with the available templates.",
+      "IOH FAB Document (version 1) [DocX] is selected.",
+      "FAB document preview shows correct customer, Quote, and product information; PDF is downloaded successfully.",
+      "Generated FAB is checked in and stored under the Contract's documents/files; Contract Document record is created."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-009": {
+    "id": "IPH-NEWFIX-009",
+    "scenario": "Contract Management",
+    "description": "Move contract to Negotiation stage",
+    "prerequisites": [
+      "User has logged into Salesforce as Sales",
+      "FAB is generated",
+      "Contract is in Draft stage"
+    ],
+    "testData": "",
+    "steps": [
+      "From Contract Record Detail page, click the stage button in the ribbon",
+      "Select Negotiation",
+      "Click Mark This Stage as Current Stage"
+    ],
+    "expectedResults": [
+      "Contract stage transitions from Draft to Negotiation.",
+      "Negotiation stage is selected.",
+      "The stage ribbon on the Contract Record Detail page reflects Negotiation as the current stage and the Contract remains editable for negotiation activities."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-010": {
+    "id": "IPH-NEWFIX-010",
+    "scenario": "Contract Management",
+    "description": "Upload related document including signed FAB",
+    "prerequisites": [
+      "User has logged into Salesforce as Sales",
+      "Opportunity is successfully updated to Contracting stage",
+      "Contract is in Negotiation stage"
+    ],
+    "testData": "",
+    "steps": [
+      "Within the Contract Record Detail page, navigate to the action button section in the top-right corner of the page and click Upload Document",
+      "Click the Select Document Type dropdown",
+      "Select FAB as the document type",
+      "Click Upload Files",
+      "Select the signed FAB file from the local machine",
+      "Click Upload",
+      "Navigate to the Related tab and Links section",
+      "Click the newest Link and verify the document uploaded",
+      "Navigate to Opportunity record detail page and Upload all required document which can be uploaded in the Opportunity",
+      "Navigate to Account record detail page and Upload all required document which can be uploaded in the Opportunity"
+    ],
+    "expectedResults": [
+      "Upload Document dialog is displayed.",
+      "Document Type dropdown is displayed.",
+      "FAB is selected as the document type.",
+      "File picker is opened.",
+      "Signed FAB file is selected.",
+      "File is uploaded successfully and confirmation is displayed.",
+      "Related tab and Links section are displayed.",
+      "The newest Link opens and shows the signed FAB document correctly.",
+      "All required Opportunity-level documents are uploaded successfully and visible under the Opportunity's Files/Links.",
+      "All required Account-level documents are uploaded successfully and visible under the Account's Files/Links."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Upload document",
+    "downstream": "EFS"
+  },
+  "IPH-NEWFIX-011": {
+    "id": "IPH-NEWFIX-011",
+    "scenario": "Contract Management",
+    "description": "Move contract to Customer Assessment stage",
+    "prerequisites": [
+      "User has logged into Salesforce as Sales",
+      "Opportunity is successfully updated to Contracting stage",
+      "Required documents are uploaded in the Opportunity",
+      "FAB is uploaded"
+    ],
+    "testData": "",
+    "steps": [
+      "Within the Contract Record Detail page, click the stage button and click Negotiation",
+      "Refresh the browser"
+    ],
+    "expectedResults": [
+      "Stage update is triggered.",
+      "After refresh, the Contract stage is updated to Customer Assessment and the stage ribbon reflects Customer Assessment as the current stage; the Contract is routed to the RCA queue for verification."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-012": {
+    "id": "IPH-NEWFIX-012",
+    "scenario": "Contract Management",
+    "description": "Verification of signed FAB",
+    "prerequisites": [
+      "User has logged into Salesforce as RCA profile",
+      "Opportunity is successfully updated to Contracting stage"
+    ],
+    "testData": "",
+    "steps": [
+      "Navigate to Related tab",
+      "Navigate to Links section",
+      "Click the FAB Signed link",
+      "Verify FAB",
+      "Mark RCA Validation field as true"
+    ],
+    "expectedResults": [
+      "Related tab is displayed.",
+      "Links section is displayed and includes the FAB Signed link.",
+      "Signed FAB document opens.",
+      "FAB content matches the Quote/Contract details and customer signature is visible.",
+      "RCA Validation field is updated to true and saved on the Contract."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-013": {
+    "id": "IPH-NEWFIX-013",
+    "scenario": "Contract Management",
+    "description": "RCA approval for spending <= 10K USD",
+    "prerequisites": [
+      "Login to Salesforce org with RCA User Profile",
+      "Total Quote Cost is <= 10K USD"
+    ],
+    "testData": "",
+    "steps": [
+      "Click Submit for Approval",
+      "Login as VP RCA",
+      "Navigate to approval notification and click it",
+      "Click Approve",
+      "Navigate to Contract related tab",
+      "Navigate to Approval History section",
+      "Verify Approval status"
+    ],
+    "expectedResults": [
+      "Contract is submitted into the approval process and routed to the VP RCA approver.",
+      "Login as VP RCA is successful.",
+      "Approval notification opens the pending approval record.",
+      "Approval is recorded successfully.",
+      "Related tab is displayed.",
+      "Approval History section is displayed.",
+      "Approval History shows the request as Approved by the VP RCA, with timestamp and approver, and the Contract proceeds to the next stage."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-014": {
+    "id": "IPH-NEWFIX-014",
+    "scenario": "Contract Management",
+    "description": "Move contract to Signed stage",
+    "prerequisites": [
+      "Login to Salesforce org with RCA User Profile",
+      "Opportunity is successfully updated to Contracting stage"
+    ],
+    "testData": "",
+    "steps": [
+      "Click Enterprise Quote",
+      "Select some products",
+      "Click Enrich Quote",
+      "Select an Account for association",
+      "Select some products not linked to an account",
+      "Select a different Account for association",
+      "Confirm association"
+    ],
+    "expectedResults": [
+      "Enterprise Quote page is displayed.",
+      "Products are selected.",
+      "Enrich Quote action is triggered.",
+      "Selected Account is associated to the chosen products.",
+      "Remaining unlinked products are selected.",
+      "The second Account is associated to the second set of products.",
+      "Associations are confirmed and saved; Contract stage is updated to Signed and the stage ribbon reflects Signed as the current stage."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-015": {
+    "id": "IPH-NEWFIX-015",
+    "scenario": "Contract Management",
+    "description": "FAB to Quote Verification",
+    "prerequisites": ["User has logged into Salesforce as BRC User profile"],
+    "testData": "",
+    "steps": [
+      "Navigate to Related tab",
+      "Navigate to Links section",
+      "Click the FAB Signed link",
+      "Verify FAB"
+    ],
+    "expectedResults": [
+      "Related tab is displayed.",
+      "Links section is displayed and includes the FAB Signed link.",
+      "Signed FAB document opens.",
+      "FAB content (customer, products, configuration, price) matches the associated Quote; verification can be marked as completed by BRC."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-016": {
+    "id": "IPH-NEWFIX-016",
+    "scenario": "Quote Management",
+    "description": "Link IPHONE product to existing BA",
+    "prerequisites": [
+      "User has logged into Salesforce as BRC profile",
+      "Contract is in Signed stage",
+      "Quote Line Item is available",
+      "Multiple Billing Account (BA) is available"
+    ],
+    "testData": "",
+    "steps": [
+      "Click Enterprise Quote",
+      "Select some products",
+      "Click Enrich Quote",
+      "Select an Account for association",
+      "Select some products not linked to an account",
+      "Select a different Account for association",
+      "Confirm association"
+    ],
+    "expectedResults": [
+      "Enterprise Quote page is displayed.",
+      "Iphone products/Quote Line Items are selected.",
+      "Enrich Quote action is triggered.",
+      "The first existing Billing Account is associated to the selected products.",
+      "Remaining unlinked products are selected.",
+      "A different existing Billing Account is associated to the second set of products.",
+      "Associations are saved successfully; each affected Quote Line Item now references the chosen Billing Account on the Quote."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-017": {
+    "id": "IPH-NEWFIX-017",
+    "scenario": "Contract Management",
+    "description": "Customer Eligibility Check",
+    "prerequisites": [
+      "User has logged into Salesforce as BRC profile",
+      "Opportunity is successfully updated to Contracting stage"
+    ],
+    "testData": "",
+    "steps": [
+      "Navigate to the associated Opportunity by clicking the Opportunity in the Detail tab within the Order Record Detail page",
+      "Click Check Eligibility",
+      "Once complete, verify the Eligibility Status and Eligibility Status Dt. Fields"
+    ],
+    "expectedResults": [
+      "Associated Opportunity Record Detail page is displayed.",
+      "Eligibility check is triggered against the customer.",
+      "Eligibility Status field is populated (e.g., Eligible) and Eligibility Status Dt. field is updated with the current date/time."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-018": {
+    "id": "IPH-NEWFIX-018",
+    "scenario": "Contract Management",
+    "description": "Activate contract",
+    "prerequisites": [
+      "User has logged into Salesforce as BRC profile",
+      "Opportunity is successfully updated to Contracting stage",
+      "Customer Eligibility St. Date is not more day a day behind",
+      "Contract is in Signed stage",
+      "Customer Eligibility Status is Set to Eligible"
+    ],
+    "testData": "",
+    "steps": ["From Contract Record Detail page, click Activate"],
+    "expectedResults": [
+      "Contract status is updated to Activated; the stage ribbon reflects Activated as the current stage and the Contract becomes ready for Order generation."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-019": {
+    "id": "IPH-NEWFIX-019",
+    "scenario": "Order Management",
+    "description": "Generate new connect order",
+    "prerequisites": [
+      "1. User has logged into Salesforce as BRC profile",
+      "2. Order has been generated successfully and is in Draft stage",
+      "3. Sub-orders have been generated successfully and is in Draft stage"
+    ],
+    "testData": "",
+    "steps": [
+      "From within Contract Record Detail page, click Create Order",
+      "Click Related in the tab menu",
+      "Navigate Order related list and verify the number of suborder generated by clicking View All"
+    ],
+    "expectedResults": [
+      "Master Order is created from the Contract in Draft stage.",
+      "Related tab is displayed.",
+      "Order related list shows the Master Order and the expected number of sub-orders (one per Account/Billing Account grouping) all in Draft stage, correctly linked to the parent Master Order."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-020": {
+    "id": "IPH-NEWFIX-020",
+    "scenario": "Order Management",
+    "description": "Submit sub-order for Iphone",
+    "prerequisites": [
+      "User has logged into Salesforce as BRC profile",
+      "Order has been generated successfully and is in Draft stage",
+      "Sub-orders have been generated successfully and is in Draft stage"
+    ],
+    "testData": "",
+    "steps": [
+      "From within, Master Order Record Detail page, click Submit Order",
+      "Navigate to Order related list and click each suborder",
+      "Click Related in the tab menu and navigate to Orchestration Plan Related List",
+      "Click the Orchestration Plan",
+      "Verify Orchestration Plan"
+    ],
+    "expectedResults": [
+      "Master Order and its sub-orders are submitted; status moves from Draft to In Progress.",
+      "Each sub-order opens successfully.",
+      "Orchestration Plan related list is displayed for each sub-order.",
+      "Orchestration Plan record opens.",
+      "Orchestration Plan contains the expected Orchestration Items for the Iphone product and they are in their initial executable state, with the appropriate sequence."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-021": {
+    "id": "IPH-NEWFIX-021",
+    "scenario": "Order Management",
+    "description": "Pre-Activation work order for Iphone",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Order has been generated successfully and is in In Progress stage",
+      "Sub-orders have been generated successfully and is in In Progress stage"
+    ],
+    "testData": "",
+    "steps": [
+      "From the Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Find Create FSL Work Order Orchestration Item",
+      "Click the Three Dots icon and click View Record",
+      "Navigate the Work Order and click the Work Order",
+      "Verify the Work Order",
+      "Repeat the process for every Suborder under the relevant Master Order which contain Iphone product"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Create FSL Work Order Orchestration Item is located and shows Completed.",
+      "Orchestration Item record opens.",
+      "Work Order is generated and accessible from the Orchestration Item.",
+      "Work Order details (account, products, address, work plans) are correctly populated and Work Order is in New status.",
+      "A Work Order is generated for each location sub-order with the same expected outcome."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-022": {
+    "id": "IPH-NEWFIX-022",
+    "scenario": "Work Order Management",
+    "description": "Conduct COM with Customer",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in New"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Conduct COM with Customer\" available as step",
+      "Check if \"Conduct COM with Customer\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Conduct COM with customer\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-023": {
+    "id": "IPH-NEWFIX-023",
+    "scenario": "Work Order Management",
+    "description": "Assess Necessity for Site Survey",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in New"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Assess Necessity for Site Survey\" available as step",
+      "Check if \"Assess Necessity for Site Survey\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Assess Necessity for Site Survey\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-024": {
+    "id": "IPH-NEWFIX-024",
+    "scenario": "Work Order Management",
+    "description": "Sourcing Process & Upload PO",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in New"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Sourcing Process & Upload PO\" available as step",
+      "Check if \"Sourcing Process & Upload PO\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Sourcing Process & Upload PO\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-025": {
+    "id": "IPH-NEWFIX-025",
+    "scenario": "Work Order Management",
+    "description": "Obtain Survey Permit",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Obtain Survey Permit\" available as step",
+      "Check if \"Obtain Survey Permit\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Obtain Survey Permit\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-026": {
+    "id": "IPH-NEWFIX-026",
+    "scenario": "Work Order Management",
+    "description": "Assign Outtask/Partner for Site Survey",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Assign Outtask/Partner for Site Survey\" available as step",
+      "Check if \"Assign Outtask/Partner for Site Survey\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete",
+      "Close the form"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Assign Outtask/Partner for Site Survey\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "A form should show up for SD to input assigned 3rd party",
+      "Filled information should be stored"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-027": {
+    "id": "IPH-NEWFIX-027",
+    "scenario": "Work Order Management",
+    "description": "Conduct Site Survey",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Conduct Site Survey\" available as step",
+      "Check if \"Conduct Site Survey\" have button to chance status as Complete or Not Applicable",
+      "Check generate SPK button",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Conduct Site Survey\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "SPK for Site Survey should be generated",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-028": {
+    "id": "IPH-NEWFIX-028",
+    "scenario": "Work Order Management",
+    "description": "Upload Site Survey Result",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Upload Site Survey Result\" available as step",
+      "Check if \"Upload Site Survey Result\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete",
+      "Upload site survey result",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Upload Site Survey Result\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Error message should show up indicating Site Survey result should be uploaded",
+      "Site survey result should be uploaded",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-029": {
+    "id": "IPH-NEWFIX-029",
+    "scenario": "Work Order Management",
+    "description": "Input Additional Technical Requirements",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Input Additional Customer Information\" available as step",
+      "Check if \"Input Additional Customer Information\" have button to chance status as Complete or Not Applicable",
+      "Check field related to technical requirements, such as IP Address, VLAN, and AS Number",
+      "Edit work order and fill in IP Address, VLAN, and AS Number and click Save",
+      "Choose status Complete in work step"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Input Additional Customer Information\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "All three fields should be available in work order and editable",
+      "Fields should be edited",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-030": {
+    "id": "IPH-NEWFIX-030",
+    "scenario": "Work Order Management",
+    "description": "Customer Preparation",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Pre-Activation work order",
+      "Check if \"Customer Preparation\" available as step",
+      "Check if \"Customer Preparation\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Customer Preparation\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and Work Order should be Completed as well"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-031": {
+    "id": "IPH-NEWFIX-031",
+    "scenario": "Order Management",
+    "description": "SIP Trunk Fixed Number Activation for new customer with Block Status - Success",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Service Activation Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Service Activation is Running and Service Order should be created to SOM"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Provisioning for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-032": {
+    "id": "IPH-NEWFIX-032",
+    "scenario": "Order Management",
+    "description": "SIP Trunk Fixed Number Activation for new customer with Block Status - Failed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Service Activation Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Service Activation is Failed"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Provisioning for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-033": {
+    "id": "IPH-NEWFIX-033",
+    "scenario": "Order Management",
+    "description": "SIP Trunk Fixed Number Activation for new customer with Block Status - Retry",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation Failed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Service Activation Orchestration Items",
+      "Click Retry"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Service Activation is Failed",
+      "Service Activation is Running and Service Order should be created to SOM"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Alternate",
+    "integration": "Provisioning for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-034": {
+    "id": "IPH-NEWFIX-034",
+    "scenario": "Order Management",
+    "description": "Milestone status update from SOM",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation in progress",
+      ". Service Order created in SOM"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Service Activation Orchestration Items",
+      "Locate the activation milestones inside the orchestration item"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Service Activation is Running and Service Order should be created to SOM",
+      "Milestones are updated until activation completed with block status"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Update Service Order Item (TMF641)",
+    "downstream": "SOM to SF"
+  },
+  "IPH-NEWFIX-035": {
+    "id": "IPH-NEWFIX-035",
+    "scenario": "Order Management",
+    "description": "Update Number Status - Success",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Update Number and Number Updated Orchestration Items",
+      "Verify both items show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Update Number Orchestration Item is in Completed status.",
+      "Number Updated Orchestration Item is in Completed status; Fixed number status is updated in TNM; orchestration proceeds to next step."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Update MSISDN Status IPHONE",
+    "downstream": "TNM"
+  },
+  "IPH-NEWFIX-036": {
+    "id": "IPH-NEWFIX-036",
+    "scenario": "Order Management",
+    "description": "Update Number Status - Failed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Update Number and Number Updated Orchestration Items",
+      "Verify both items show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Update Number Orchestration Item is in Failed status.",
+      "Number Updated Orchestration Item iremain not started"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Update MSISDN Status IPHONE",
+    "downstream": "TNM"
+  },
+  "IPH-NEWFIX-037": {
+    "id": "IPH-NEWFIX-037",
+    "scenario": "Order Management",
+    "description": "Update Number Status - Retry",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status",
+      ". Update Number Status is Failed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Update Number and Number Updated Orchestration Items",
+      "Click on Retry"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Update Number Orchestration Item is in Failed status.",
+      "Update Number and Number Updated Orchestration Item is in Completed status; Fixed number status is updated in TNM; orchestration proceeds to next step."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Alternate",
+    "integration": "Update MSISDN Status IPHONE",
+    "downstream": "TNM"
+  },
+  "IPH-NEWFIX-038": {
+    "id": "IPH-NEWFIX-038",
+    "scenario": "Order Management",
+    "description": "Billing activation - Success",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status",
+      ". Update Number Status is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Billing Order Activation and Billing Activated Orchestration Items",
+      "Verify both items show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Billing Order Activation Orchestration Item is in Completed status.",
+      "Billing Activated Orchestration Item is in Completed status; sub-order moves into Billing Activated stage; subscription and product are created in Billing system."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Activate Billing (TMF622)",
+    "downstream": "NRM"
+  },
+  "IPH-NEWFIX-039": {
+    "id": "IPH-NEWFIX-039",
+    "scenario": "Order Management",
+    "description": "Billing activation - Failed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status",
+      ". Update Number Status is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Billing Order Activation and Billing Activated Orchestration Items",
+      "Verify Billing Order Activation shows Failed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Billing Order Activation Orchestration Item is in Failed status.",
+      "Billing Activated Orchestration Item remains not started; orchestration is paused at this step pending retry."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Activate Billing (TMF622)",
+    "downstream": "NRM"
+  },
+  "IPH-NEWFIX-040": {
+    "id": "IPH-NEWFIX-040",
+    "scenario": "Order Management",
+    "description": "Billing activation - Retry",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status",
+      ". Update Number Status is Completed",
+      "Billing Order Activation Orchestration Item is Failed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Billing Order Activation and Billing Activated Orchestration Items",
+      "Click the three dot icon in the Billing Order Activation Orchestration Item and click Retry Item",
+      "Verify both items now show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Billing Order Activation Orchestration Item is in Failed status.",
+      "Retry action is triggered.",
+      "Billing Order Activation Orchestration Item is re-executed and updated to Completed; Billing Activated Orchestration Item also becomes Completed; orchestration proceeds to next step."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Alternate",
+    "integration": "Activate Billing (TMF622)",
+    "downstream": "NRM"
+  },
+  "IPH-NEWFIX-041": {
+    "id": "IPH-NEWFIX-041",
+    "scenario": "Order Management",
+    "description": "Modify SIP Trunk Fixed Number with Unblock Status - Success",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Unblock Service Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Unblock Service is Running and Service Order should be created to SOM"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Modify for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-042": {
+    "id": "IPH-NEWFIX-042",
+    "scenario": "Order Management",
+    "description": "Modify SIP Trunk Fixed Number with Unblock Status - Failed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Unblock Service Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Unblock Service is Failed"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Modify for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-043": {
+    "id": "IPH-NEWFIX-043",
+    "scenario": "Order Management",
+    "description": "Modify SIP Trunk Fixed Number with Unblock Status - Retry",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed",
+      "Service Activation Failed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Unblock Service Orchestration Items",
+      "Click Retry"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed",
+      "Unblock Service is Failed",
+      "Unblock Service is Running and Service Order should be created to SOM"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Alternate",
+    "integration": "Modify for IPHONE (TMF641)",
+    "downstream": "SOM"
+  },
+  "IPH-NEWFIX-044": {
+    "id": "IPH-NEWFIX-044",
+    "scenario": "Order Management",
+    "description": "Testing work order for Iphone",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Pre-Activation Work Order completed",
+      "Service Activation completed with Block Status",
+      ". Update Number Status is Completed",
+      "Billing Order Activation Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Find Create FSL Work Order Orchestration Item",
+      "Click the Three Dots icon and click View Record",
+      "Navigate the Work Order and click the Work Order",
+      "Verify the Work Order",
+      "Repeat the process for every Suborder under the relevant Master Order which contain Iphone product"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Create FSL Work Order Orchestration Item is located and shows Completed.",
+      "Orchestration Item record opens.",
+      "Work Order is generated and accessible from the Orchestration Item.",
+      "Work Order details (account, products, address, work plans) are correctly populated and Work Order is in New status.",
+      "A Work Order is generated for each location sub-order with the same expected outcome."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-045": {
+    "id": "IPH-NEWFIX-045",
+    "scenario": "Work Order Management",
+    "description": "Assign Outtask/Partner for Installation",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed",
+      "Testing Work Order has been generated successfully and is in New"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Assign Outtask/Partner for Installation\" available as step",
+      "Check if \"Assign Outtask/Partner for Installation\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete",
+      "Close the form"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Assign Outtask/Partner for Installation\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "A form should show up for SD to input assigned 3rd party",
+      "Filled information should be stored"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-046": {
+    "id": "IPH-NEWFIX-046",
+    "scenario": "Work Order Management",
+    "description": "Conduct Installation",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Conduct Installation\" available as step",
+      "Check if \"Conduct Installation\" have button to chance status as Complete or Not Applicable",
+      "Check generate SPK button",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Conduct Installation\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "SPK for Installation should be generated",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-047": {
+    "id": "IPH-NEWFIX-047",
+    "scenario": "Work Order Management",
+    "description": "Conduct Internal Testing",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Conduct Internal Testing\" available as step",
+      "Check if \"Conduct Internal Testing\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Conduct Internal Testing\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-048": {
+    "id": "IPH-NEWFIX-048",
+    "scenario": "Work Order Management",
+    "description": "Integration to CPE",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Billing Order Activation Completed",
+      "Work Order has been generated successfully and is in In Progress"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Integration to CPE\" available as step",
+      "Check if \"Integration to CPE\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Integration to CPE\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-049": {
+    "id": "IPH-NEWFIX-049",
+    "scenario": "Work Order Management",
+    "description": "Generate BAST for IPHONE",
+    "prerequisites": [
+      "1,1 User has logged into Salesforce as Service Delivery (SD)",
+      "Billing Order Activation Completed",
+      "Send BAST Work Plan is not completed",
+      "Work Order is in 'Service Acceptance' status"
+    ],
+    "testData": "",
+    "steps": [
+      "From the Work Order Record Detail page, navigate to the Work Plan Related List",
+      "Click Generate BAST",
+      "Select BAST Document Template and click Next",
+      "Click Download under PDF option",
+      "Verify BAST Document and click Download icon",
+      "From Work Order Related List, under Work Plan, click Complete for Send BAST"
+    ],
+    "expectedResults": [
+      "Work Plan related list is displayed.",
+      "Document Generation wizard is launched.",
+      "BAST template is selected and preview is generated.",
+      "BAST PDF preview is displayed.",
+      "BAST content reflects the Work Order/sub-order data and PDF is downloaded successfully.",
+      "Send BAST Work Plan is marked Complete and proceed to next Work Plan."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-050": {
+    "id": "IPH-NEWFIX-050",
+    "scenario": "Work Order Management",
+    "description": "Upload LLD for IPHONE",
+    "prerequisites": [
+      "1,1 User has logged into Salesforce as Service Delivery (SD)",
+      "Billing Order Activation Completed",
+      "Send BAST Work Plan is completed",
+      "Work Order is in 'Service Acceptance' status"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Upload LLD\" available as step",
+      "Check if \"Upload LLD\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete without uploading LLD",
+      "Choose status Complete after uploading LLD"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Upload LLD\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Error message should show up informing user to upload LLD",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-051": {
+    "id": "IPH-NEWFIX-051",
+    "scenario": "Work Order Management",
+    "description": "Upload Signed BAST for IPHONE",
+    "prerequisites": [
+      "1,1 User has logged into Salesforce as Service Delivery (SD)",
+      "Billing Order Activation Completed",
+      "Upload LLD Work Plan is completed",
+      "Work Order is in 'Service Acceptance' status"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Upload Signed BAST\" available as step",
+      "Check if \"Upload Signed BAST\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete without uploading Signed BAST",
+      "Choose status Complete after uploading Signed BAST"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Upload Signed BAST\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Error message should show up informing user to upload Signed BAST",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-052": {
+    "id": "IPH-NEWFIX-052",
+    "scenario": "Work Order Management",
+    "description": "Upload Installation Report for IPHONE",
+    "prerequisites": [
+      "1,1 User has logged into Salesforce as Service Delivery (SD)",
+      "Billing Order Activation Completed",
+      "Upload Signed BAST Work Plan is completed",
+      "Work Order is in 'Service Acceptance' status"
+    ],
+    "testData": "",
+    "steps": [
+      "Check work plan under Testing work order",
+      "Check if \"Upload Installation Report\" available as step",
+      "Check if \"Upload Installation Report\" have button to chance status as Complete or Not Applicable",
+      "Choose status Complete without uploading Installation Report",
+      "Choose status Complete after uploading Installation Report"
+    ],
+    "expectedResults": [
+      "Work plan should be available",
+      "\"Upload Installation Report\" should be available as step",
+      "Option to change status as Complete or Not Applicable should be available",
+      "Error message should show up informing user to upload Installation Report",
+      "Work step status should be changed to Complete and proceed to next step"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-053": {
+    "id": "IPH-NEWFIX-053",
+    "scenario": "Work Order Management",
+    "description": "Update RFS Date and Bill Date for IPHONE",
+    "prerequisites": [
+      "1,1 User has logged into Salesforce as Service Delivery (SD)",
+      "Billing Order Activation Completed",
+      "Upload Signed BAST Work Plan is completed",
+      "Work Order is in 'Service Acceptance' status"
+    ],
+    "testData": "",
+    "steps": [
+      "From Work Order Record Detail page, click the pen icon beside one of the fields",
+      "Update the 'Actual RFS Date' & 'Start Billing Date' fields",
+      "Click Save",
+      "From Work Order Related List, under Work Plan, click Complete for 'Update Actual RFS Date & Start Billing Date' Work Plan"
+    ],
+    "expectedResults": [
+      "Field becomes editable.",
+      "Actual RFS Date and Start Billing Date fields are populated with valid values.",
+      "Field values are saved successfully on the Work Order.",
+      "Update Actual RFS Date & Start Billing Date Work Plan is marked Complete and order is completed"
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-054": {
+    "id": "IPH-NEWFIX-054",
+    "scenario": "Order Management",
+    "description": "Bill On Email registration - Success",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Service Activated stage",
+      "Work Order Testing is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Bill on Email Orchestration Items",
+      "Verify both items show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Bill on Email Orchestration Item is in Completed status; customer's email is registered for Bill on Email delivery in NRM; orchestration proceeds to next step."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Activate Bill On Email",
+    "downstream": "MARS"
+  },
+  "IPH-NEWFIX-055": {
+    "id": "IPH-NEWFIX-055",
+    "scenario": "Order Management",
+    "description": "Bill On Email registration - Failed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Service Activated stage",
+      "Work Order Testing is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Bill on Email Orchestration Items",
+      "Verify Bill on Email shows Failed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Bill on Email Orchestration Item is in Failed status; orchestration is paused at this step pending retry."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Negative",
+    "integration": "Activate Bill On Email",
+    "downstream": "MARS"
+  },
+  "IPH-NEWFIX-056": {
+    "id": "IPH-NEWFIX-056",
+    "scenario": "Order Management",
+    "description": "Retry Bill On Email registration",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Service Activated stage",
+      "Work Order Testing is Completed",
+      "Bill on Email Orchestration Item is failed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Bill on Email Orchestration Items",
+      "Click the three dot icon in the Bill on Email Orchestration Item and click Retry Item",
+      "Verify both items now show Completed status"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Bill on Email Orchestration Item is in Failed status.",
+      "Retry action is triggered.",
+      "Bill on Email Orchestration Item is re-executed and updated to Completed; orchestration proceeds to next step."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Alternate",
+    "integration": "Activate Bill On Email",
+    "downstream": "MARS"
+  },
+  "IPH-NEWFIX-057": {
+    "id": "IPH-NEWFIX-057",
+    "scenario": "Order Management",
+    "description": "Asset created",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Billing Activated stage",
+      "Bill on Email Orchestration Item is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the Assetize Order Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "Assetize Order Orchestration Item is in Completed status; corresponding Assets are created against the Account for each IPHONE Order Line Item."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-058": {
+    "id": "IPH-NEWFIX-058",
+    "scenario": "Order Management",
+    "description": "Order completed",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Closed stage",
+      "Assetized Order Orchestration Item is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Orchestration Plan Record Detail page, navigate to Orchestration Plan section",
+      "Locate the End Order (Asset Created) Orchestration Items"
+    ],
+    "expectedResults": [
+      "Orchestration Plan section is displayed.",
+      "End Order (Asset Created) Orchestration Item is in Completed status; the sub-order is moved to Closed/Activated, the Orchestration Plan is fully completed, and the Master Order is updated accordingly once all sub-orders are completed."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "None",
+    "downstream": ""
+  },
+  "IPH-NEWFIX-059": {
+    "id": "IPH-NEWFIX-059",
+    "scenario": "Opportunity Management",
+    "description": "Receive first bill payment",
+    "prerequisites": [
+      "User has logged into Salesforce as Service Delivery (SD) profile",
+      "Sub-orders have been submitted and is in Closed stage",
+      "End Order (Asset Created) Orchestration Item is Completed"
+    ],
+    "testData": "",
+    "steps": [
+      "From the relevant Opportunity Record Detail page, locate the Stages Ribbon",
+      "Verify Opportunity Stage Ribbon and Status field"
+    ],
+    "expectedResults": [
+      "Opportunity Stages Ribbon is displayed.",
+      "Opportunity stage is updated to Closed Won and the Status field reflects that the first bill payment has been received; the end-to-end Opportunity to Cash flow is completed."
+    ],
+    "startDate": "2-Jun",
+    "dueDate": "10-Jun",
+    "environment": "SIT",
+    "epic": "New Connect Fixed Line IPHONE",
+    "status": "",
+    "category": "Positive",
+    "integration": "Publish first bill payment",
+    "downstream": "NRM"
+  }
+}

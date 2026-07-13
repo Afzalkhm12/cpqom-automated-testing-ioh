@@ -8,7 +8,10 @@ dotenv.config();
 const { Pool } = pg;
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const TESTS_DIR = path.resolve(__dirname, "../tests/api-readiness");
+const SYNC_DIRS = [
+  path.resolve(__dirname, "../tests/api-readiness"),
+  path.resolve(__dirname, "../tests/sit-mvp3")
+];
 
 const pool = new Pool({
   host: process.env.DB_HOST ?? "127.0.0.1",
@@ -43,20 +46,38 @@ async function syncToDb() {
     );
     const defaultUserId = userRes.rows[0]?.id || 1;
 
-    const files = scanDirectory(TESTS_DIR);
+    let files = [];
+    for (const dir of SYNC_DIRS) {
+      if (fs.existsSync(dir)) {
+        files = files.concat(scanDirectory(dir));
+      }
+    }
     let specsCreated = 0;
     let modulesUpdated = 0;
 
-    console.log(`Found ${files.length} API Readiness specs.`);
+    console.log(`Found ${files.length} specs to sync.`);
 
     for (const filePath of files) {
       const content = fs.readFileSync(filePath, "utf8");
 
-      // Extract group from folder name
-      const relativePath = path.relative(TESTS_DIR, filePath);
-      const groupName = path.dirname(relativePath).split(path.sep)[0];
-      const specDisplayName = `API Readiness - ${groupName.toUpperCase()}`;
-      const specRunnerKey = `api_readiness_${groupName.toLowerCase()}`;
+      // Identify base directory to determine group name
+      const baseDir =
+        SYNC_DIRS.find((dir) => filePath.startsWith(dir)) || SYNC_DIRS[0];
+      const relativePath = path.relative(baseDir, filePath);
+
+      let baseFolderName = path.basename(baseDir); // e.g. "api-readiness" or "sit-mvp3"
+      let groupName = path.dirname(relativePath).split(path.sep)[0];
+      if (groupName === ".") groupName = path.basename(filePath, ".spec.js");
+
+      // For display logic
+      const categoryPrefix =
+        baseFolderName === "sit-mvp3" ? "SIT MVP3" : "API Readiness";
+      const specDisplayName = `${categoryPrefix} - ${groupName.toUpperCase()}`;
+      const specRunnerKey =
+        `${baseFolderName.replace("-", "_")}_${groupName.toLowerCase()}`.replace(
+          /[^a-z0-9_]/g,
+          "_"
+        );
 
       // Ensure TestSpec exists
       let specId;
@@ -108,9 +129,9 @@ async function syncToDb() {
         const insMod = await client.query(
           `
           INSERT INTO test_modules (module_key, display_name, category, salesforce_module, spec_id, created_at, updated_at)
-          VALUES ($1, $2, 'API Readiness', $3, $4, NOW(), NOW()) RETURNING id
+          VALUES ($1, $2, $3, $4, $5, NOW(), NOW()) RETURNING id
         `,
-          [moduleKey, title, groupName.toUpperCase(), specId]
+          [moduleKey, title, categoryPrefix, groupName.toUpperCase(), specId]
         );
         moduleId = insMod.rows[0].id;
       }

@@ -23,13 +23,13 @@ const MODULE_FILES = {
 };
 
 // Dynamically add API Readiness tests to MODULE_FILES
-function scanApiReadiness(dir) {
+function scanTestDirs(dir) {
   if (!fs.existsSync(dir)) return;
   const files = fs.readdirSync(dir);
   for (const file of files) {
     const fullPath = path.join(dir, file);
     if (fs.statSync(fullPath).isDirectory()) {
-      scanApiReadiness(fullPath);
+      scanTestDirs(fullPath);
     } else if (fullPath.endsWith(".spec.js")) {
       const content = fs.readFileSync(fullPath, "utf8");
       const moduleKeyMatch = content.match(/getTestParams\(['"]([^'"]+)['"]/);
@@ -41,7 +41,8 @@ function scanApiReadiness(dir) {
     }
   }
 }
-scanApiReadiness(path.resolve(ROOT_DIR, "tests/api-readiness"));
+scanTestDirs(path.resolve(ROOT_DIR, "tests/api-readiness"));
+scanTestDirs(path.resolve(ROOT_DIR, "tests/sit-mvp3"));
 
 // In-memory run store: runId → { runId, status, output, exitCode, startedAt, modules }
 const runs = new Map();
