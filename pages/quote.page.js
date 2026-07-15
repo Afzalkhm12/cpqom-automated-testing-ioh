@@ -456,8 +456,7 @@ export async function closeQuoteAsWon(page, filePath) {
         await wonOption.click();
         console.log("✅ Sub Status selected: Closed/Win");
 
-        // Wait a bit to see if Document Upload section appears
-        await activePage.waitForTimeout(1000);
+        await activePage.waitForTimeout(800);
         const docTypeCombo = activePage.getByRole("combobox", {
           name: /Select Document Type/i
         });
@@ -484,6 +483,7 @@ export async function closeQuoteAsWon(page, filePath) {
             }
             await docTypeCombo.press("Enter");
             console.log("✅ Document Type PO selected via keyboard.");
+            await activePage.waitForTimeout(500);
           }
 
           if (filePath) {
@@ -553,6 +553,26 @@ export async function closeQuoteAsWon(page, filePath) {
     }
 
     await activePage.waitForTimeout(500);
+
+    // Ensure no dropdown overlay is blocking the Done button
+    const subStatusListbox = activePage.locator(
+      "[role='listbox'][aria-label='Sub Status']"
+    );
+    if (
+      await subStatusListbox.isVisible({ timeout: 1000 }).catch(() => false)
+    ) {
+      console.log(
+        "ℹ️ Listbox is still visible, let's try clicking the modal header to dismiss it."
+      );
+      const modalHeader = activePage
+        .locator("h2")
+        .filter({ hasText: /Validation/i })
+        .first();
+      if (await modalHeader.isVisible().catch(() => false)) {
+        await modalHeader.click();
+      }
+      await activePage.waitForTimeout(500);
+    }
 
     // Click Done
     const doneBtn = activePage.getByRole("button", {
