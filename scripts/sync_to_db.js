@@ -10,7 +10,9 @@ const { Pool } = pg;
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SYNC_DIRS = [
   path.resolve(__dirname, "../tests/api-readiness"),
-  path.resolve(__dirname, "../tests/sit-mvp3")
+  path.resolve(__dirname, "../tests/sit-mvp3"),
+  path.resolve(__dirname, "../tests/common"),
+  path.resolve(__dirname, "../tests/non-ida")
 ];
 
 const pool = new Pool({
