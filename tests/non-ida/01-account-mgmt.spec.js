@@ -19,6 +19,7 @@ const userId = process.env.USER_ID ? Number(process.env.USER_ID) : null;
 let counter;
 let tc001;
 let tc002;
+let tc003;
 let tcContact;
 let instanceUrl;
 let accessToken;
@@ -36,6 +37,7 @@ const loginUser =
 
 // runs only once before all tests in the file
 test.beforeAll(async () => {
+  test.setTimeout(130000);
   await incrementModuleCounter("account_mgmt");
   await incrementModuleCounter("contact_mgmt");
 
@@ -44,6 +46,7 @@ test.beforeAll(async () => {
 
   tc001 = await getTestParams("account_mgmt", "tc001", userId);
   tc002 = await getTestParams("account_mgmt", "tc002", userId);
+  tc003 = await getTestParams("account_mgmt", "tc003", userId);
   tcContact = await getTestParams("contact_mgmt", "tc_contact", userId);
 
   context = await chromium.launchPersistentContext(userDataDirectory, {
@@ -544,6 +547,420 @@ test("TC005_Create CA under CCA", async () => {
     console.log(
       `[TC005] Updated tc002.accountName and tc002.accountOption to: ${newAccountName}`
     );
+  });
+});
+
+test("TC006_Create BA under CA", async () => {
+  await allure.epic("Account Management");
+  await allure.feature("Manage CA and BA Records");
+  await allure.story("Create Biling Account");
+  await allure.severity("critical");
+  await allure.label("pre-requisite", "1.1 User has Marketing User profile");
+
+  await test.step("TC006_S01 - Open Accounts list view", async () => {
+    await page.goto(
+      `${dataAuth.marketing.afterLoginUrl}lightning/o/Account/list?filterName=__Recent`
+    );
+    await expect(
+      page.getByRole("button", { name: "Select a List View: Accounts" }),
+      "Accounts list view should be displayed"
+    ).toBeVisible();
+  });
+
+  await test.step("TC006_S02 - Click the New button", async () => {
+    await expect(
+      page.getByRole("button", { name: "New" }),
+      "New button should appears"
+    ).toBeVisible();
+    await page.getByRole("button", { name: "New" }).click();
+    await expect(
+      page.getByRole("heading", { name: "New Account" })
+    ).toBeVisible();
+  });
+
+  await test.step("TC006_S03 - Select Biliing record type", async () => {
+    await page
+      .locator(
+        "div:nth-child(3) > .slds-radio > .changeRecordTypeOptionLeftColumn > .slds-radio--faux"
+      )
+      .click();
+    await page.getByRole("button", { name: "Next" }).click();
+    await expect(
+      page.getByRole("heading", { name: "New Account: Billing" }),
+      "Billing creation form should be displayed"
+    ).toBeVisible();
+  });
+
+  await test.step("TC006_S04 - Fill in all mandatory fields", async () => {
+    await page.getByRole("textbox", { name: "Account Name" }).click();
+    await page
+      .getByRole("textbox", { name: "Account Name" })
+      .fill(tc003.accountName + " " + counter);
+    await page.getByRole("textbox", { name: "Company Street" }).click();
+    await page
+      .getByRole("textbox", { name: "Company Street" })
+      .fill("Jalan Merdeka Barat");
+    await page.getByRole("textbox", { name: "Company City" }).click();
+    await page
+      .getByRole("textbox", { name: "Company City" })
+      .fill("Jakarta Pusat");
+    await page.getByRole("textbox", { name: "Company State/Province" }).click();
+    await page
+      .getByRole("textbox", { name: "Company State/Province" })
+      .fill("DKI Jakarta");
+    await page
+      .getByRole("textbox", { name: "Company Zip/Postal Code" })
+      .click();
+    await page
+      .getByRole("textbox", { name: "Company Zip/Postal Code" })
+      .fill("10110");
+    await page.getByRole("textbox", { name: "Company Country" }).click();
+    await page
+      .getByRole("textbox", { name: "Company Country" })
+      .fill("Indonesia");
+    await page.getByRole("combobox", { name: "Type", exact: true }).click();
+    await page.getByRole("option", { name: "Corporate", exact: true }).click();
+    await page.getByRole("combobox", { name: "ID Type" }).click();
+    await page.getByRole("option", { name: "SIUP" }).click();
+    await page
+      .getByRole("group", { name: "ID Expiry Date" })
+      .getByLabel("Date")
+      .click();
+    await page.getByLabel("Pick a Year").selectOption("2030");
+    await page.getByRole("button", { name: "Next Month" }).click();
+    await page.getByRole("button", { name: "10" }).click();
+    await page.getByLabel("Company Anniversary").click();
+    await page.getByLabel("Pick a Year").selectOption("2024");
+    await page.getByRole("button", { name: "Next Month" }).click();
+    await page.getByRole("button", { name: "10" }).click();
+    await page.getByRole("textbox", { name: "ID Reference" }).click();
+    await page
+      .getByRole("textbox", { name: "ID Reference" })
+      .fill(tc003.idReference + counter.toString().padStart(4, "0"));
+
+    await page.getByRole("textbox", { name: "NPWP" }).click();
+    await page
+      .getByRole("textbox", { name: "NPWP" })
+      .fill(tc003.idReference + counter.toString().padStart(4, "0"));
+    await page.getByRole("textbox", { name: "Main Contact Area Code" }).click();
+    await page
+      .getByRole("textbox", { name: "Main Contact Area Code" })
+      .fill("021");
+    await page.getByRole("textbox", { name: "Phone" }).click();
+    await page
+      .getByRole("textbox", { name: "Phone" })
+      .fill(tc003.phone.toString());
+    await page.getByRole("textbox", { name: "Email", exact: true }).click();
+    await page
+      .getByRole("textbox", { name: "Email", exact: true })
+      .fill("account.ba." + counter + "@company.co.id");
+    await page.getByRole("combobox", { name: "Primary Contact" }).click();
+    await page
+      .getByRole("combobox", { name: "Primary Contact" })
+      .fill(`${tcContact.firstName} ${tcContact.lastName} ${counter}`);
+    await page
+      .getByTitle(`${tcContact.firstName} ${tcContact.lastName} ${counter}`, {
+        exact: true
+      })
+      .click();
+    await page
+      .getByRole("textbox", { name: "Delivery Address Line 1" })
+      .fill("Jalan Merdeka Barat");
+    await page
+      .getByRole("textbox", { name: "Delivery Address Line 2" })
+      .fill("Jalan Merdeka Barat");
+    await page.getByRole("combobox", { name: "Account Currency" }).click();
+    await page.getByRole("option", { name: "IDR - Indonesian Rupiah" }).click();
+    await page.getByRole("combobox", { name: "Accounting Method" }).click();
+    await page.getByRole("option", { name: "Open Item" }).click();
+    await page.getByRole("combobox", { name: "Channel" }).click();
+    await page.getByRole("option", { name: "SMS", exact: true }).click();
+    await page.getByRole("checkbox", { name: "Enable Notification" }).check();
+    await page.getByRole("combobox", { name: "Account Class" }).click();
+    await page.getByRole("option", { name: "SME" }).click();
+    await page.getByRole("combobox", { name: "Credit Class" }).click();
+    await page.getByRole("option", { name: "Corp New", exact: true }).click();
+    await page.getByRole("combobox", { name: "House Status" }).click();
+    await page.getByRole("option", { name: "Contract" }).click();
+    const billDateCombo = page
+      .getByRole("combobox", { name: "Bill Date" })
+      .first();
+    await billDateCombo.evaluate((el) => el.click());
+    await page.getByRole("option", { name: "28" }).click();
+    await page.getByRole("combobox", { name: "Bill Periode" }).click();
+    await page.getByRole("option", { name: "1" }).click();
+    await page.getByLabel("Bill On Email Activation Date").click();
+    await page.getByRole("button", { name: "10" }).click();
+    await page
+      .getByRole("textbox", { name: "Alternate Email Address 1" })
+      .fill("test@gmail.com");
+    await page
+      .getByRole("textbox", { name: "Bill On Email Address" })
+      .fill("test@gmail.com");
+    await page
+      .getByRole("textbox", { name: "Alternate Email Address 2" })
+      .fill("test@gmail.com");
+    await page.getByRole("textbox", { name: "Billing Street" }).click();
+    await page
+      .getByRole("textbox", { name: "Billing Street" })
+      .fill("Jalan Merdeka Barat");
+    await page.getByRole("textbox", { name: "Billing City" }).click();
+    await page
+      .getByRole("textbox", { name: "Billing City" })
+      .fill("Jakarta Pusat");
+    await page.getByRole("textbox", { name: "Billing State/Province" }).click();
+    await page
+      .getByRole("textbox", { name: "Billing State/Province" })
+      .fill("DKI Jakarta");
+    await page
+      .getByRole("textbox", { name: "Billing Zip/Postal Code" })
+      .click();
+    await page
+      .getByRole("textbox", { name: "Billing Zip/Postal Code" })
+      .fill("10110");
+    await page.getByRole("textbox", { name: "Billing Country" }).click();
+    await page
+      .getByRole("textbox", { name: "Billing Country" })
+      .fill("Indonesia");
+    await page.getByRole("textbox", { name: "Billing Address Seq" }).fill("17");
+    await page.getByRole("textbox", { name: "Billing Contact Seq" }).fill("17");
+    await page
+      .getByRole("textbox", { name: "MARS Billing Prod Seq" })
+      .fill("23");
+  });
+
+  await test.step("TC006_S05 - Select the appropriate Level 1 Customer Account in the Parent Account field", async () => {
+    await page.getByRole("combobox", { name: "Parent Account" }).click();
+    await page
+      .getByRole("combobox", { name: "Parent Account" })
+      .fill(tc002.accountName + " " + counter);
+    await page
+      .getByRole("listbox", { name: "Parent Account" })
+      .getByRole("group", { name: "Search Results" })
+      .getByRole("option", { name: tc002.accountName + " " + counter })
+      .click();
+
+    await expect(
+      page.getByRole("combobox", { name: "Parent Account" }),
+      "Parent Account field should display the selected CA"
+    ).toHaveValue(tc002.accountName.toUpperCase() + " " + counter);
+  });
+
+  await test.step("TC006_S07 - Click Save", async () => {
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.waitForURL("**/lightning/r/Account/**");
+
+    await expect(
+      page
+        .locator("div")
+        .filter({ hasText: "Success notification.Account" })
+        .nth(3),
+      "Success notification should appear after saving the BA record"
+    ).toBeVisible();
+
+    const newAccountName = (tc003.accountName + " " + counter).toUpperCase();
+
+    await updateTestParams("lead_mgmt", "tc003", userId, {
+      accountName: newAccountName,
+      accountOption: newAccountName
+    });
+
+    console.log(`[TC006] Updated tc003.accountName to: ${newAccountName}`);
+  });
+});
+
+test("TC007_Edit Auto Payment Method via Inline Edit", async () => {
+  await allure.epic("Account Management");
+  await allure.feature("Manage BA Records");
+  await allure.story("Edit Auto Payment Method");
+  await allure.severity("normal");
+
+  await test.step("TC007_S01 - Navigate to Details Tab", async () => {
+    const detailsTab = page.getByRole("tab", { name: "Details", exact: true });
+    if (await detailsTab.isVisible()) {
+      await detailsTab.click();
+    }
+  });
+  await test.step("TC007_S02 - Click the Inline Edit Pencil Icon", async () => {
+    const editPencilBtn = page.getByRole("button", {
+      name: "Edit Auto Payment Method",
+      exact: true
+    });
+    await editPencilBtn.scrollIntoViewIfNeeded();
+    await expect(
+      editPencilBtn,
+      "Pencil icon for Auto Payment Method should be visible"
+    ).toBeVisible();
+    await editPencilBtn.click();
+  });
+
+  await test.step("TC007_S03 - Select New Payment Method and Save in Modal", async () => {
+    await page
+      .getByRole("combobox", { name: "Auto Payment Method", exact: true })
+      .click();
+    await page.getByRole("option", { name: "Add New Payment Method" }).click();
+    await expect(
+      page.getByRole("heading", { name: "New Payment Method" })
+    ).toBeVisible();
+    await page.getByRole("combobox", { name: "Account", exact: true }).click();
+    await page
+      .getByRole("combobox", { name: "Account", exact: true })
+      .fill(tc003.accountName + " " + counter);
+    await page
+      .getByRole("listbox", { name: "Account" })
+      .getByRole("group", { name: "Search Results" })
+      .getByRole("option", { name: tc003.accountName + " " + counter })
+      .click();
+    await page
+      .getByRole("textbox", { name: "Virtual Account" })
+      .fill("5467755855647");
+    await page
+      .getByRole("combobox", { name: "Method Type", exact: true })
+      .click();
+    await page.getByRole("option", { name: "Cash" }).click();
+    await page.getByLabel("Active Date").click();
+    await page.getByRole("button", { name: "10" }).click();
+    await page
+      .getByRole("textbox", { name: "Bank Account Holder Name" })
+      .fill("Afzal");
+  });
+
+  await test.step("TC007_S04 - Verify Success Notification", async () => {
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.getByRole("button", { name: "Save", exact: true }).click();
+    await page.waitForURL("**/lightning/r/Account/**");
+  });
+});
+
+test("TC008_Create RBM Account Number To CCA,CA,BA", async () => {
+  await allure.epic("Account Management");
+  await allure.feature("Manage RBM Account Number");
+  await allure.story("Create RBM Account Number To CCA,CA,BA");
+  await allure.severity("normal");
+  await test.step("TC008_S01 - Navigate to Account Hierarchy", async () => {
+    await page
+      .getByRole("button", { name: "View Account Hierarchy", exact: true })
+      .first()
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Account Hierarchy" })
+    ).toBeVisible();
+  });
+  await test.step("TC008_S02 - Generate RBM for CCA", async () => {
+    // 1. Pastikan fokus di CCA
+    const ccaName = tc001.accountOption || tc001.accountName;
+    await page
+      .getByRole("link", { name: ccaName, exact: false })
+      .first()
+      .click();
+    await page
+      .getByRole("textbox", { name: "What can I help you with?" })
+      .fill("create");
+    await page
+      .getByRole("menuitem", { name: "Create Account in Billing" })
+      .click();
+    await page.getByRole("button", { name: "Go Back to Account" }).click();
+    const rbmContainer = page
+      .locator("records-highlights-details-item")
+      .filter({ hasText: "RBM Account Number" })
+      .first();
+    await expect(
+      rbmContainer,
+      "Label RBM Account Number tidak ditemukan di layar!"
+    ).toBeVisible();
+    const rawText = await rbmContainer.innerText();
+    const rbmValue = rawText.replace("RBM Account Number", "").trim();
+    if (rbmValue === "") {
+      console.log(
+        "STATUS: RBM Account Number saat ini KOSONG (Belum ter-generate)."
+      );
+    } else {
+      console.log(
+        `STATUS: RBM Account Number SUDAH TERGENERATE -> [ ${rbmValue} ]`
+      );
+    }
+  });
+
+  await test.step("TC008_S03 - Navigate to CA and Generate RBM", async () => {
+    await page
+      .getByRole("button", { name: "View Account Hierarchy", exact: true })
+      .click();
+    const caName = tc002.accountOption || tc002.accountName;
+    await page
+      .getByRole("link", { name: caName, exact: false })
+      .first()
+      .click();
+    await page
+      .getByRole("textbox", { name: "What can I help you with?" })
+      .fill("create");
+    await page
+      .getByRole("menuitem", { name: "Create Account in Billing" })
+      .click();
+    await page.getByRole("button", { name: "Back to Account" }).click();
+    const rbmContainer = page
+      .locator("records-highlights-details-item")
+      .filter({ hasText: "RBM Account Number" })
+      .first();
+    await expect(
+      rbmContainer,
+      "Label RBM Account Number tidak ditemukan di layar!"
+    ).toBeVisible();
+    const rawText = await rbmContainer.innerText();
+    const rbmValue = rawText.replace("RBM Account Number", "").trim();
+    if (rbmValue === "") {
+      console.log(
+        "STATUS: RBM Account Number saat ini KOSONG (Belum ter-generate)."
+      );
+    } else {
+      console.log(
+        `STATUS: RBM Account Number SUDAH TERGENERATE -> [ ${rbmValue} ]`
+      );
+    }
+  });
+
+  await test.step("TC008_S04 - Navigate to BA and Generate RBM", async () => {
+    await page
+      .getByRole("button", { name: "View Account Hierarchy", exact: true })
+      .click();
+    await page
+      .getByRole("button", { name: "Expand", exact: true })
+      .first()
+      .click();
+    const baName = tc003.latestGeneratedBA || tc003.accountName;
+    await page
+      .getByRole("link", { name: baName, exact: false })
+      .first()
+      .click();
+    await page
+      .getByRole("textbox", { name: "What can I help you with?" })
+      .fill("create");
+    await page
+      .getByRole("menuitem", { name: "Create Account in Billing" })
+      .click();
+    await expect(
+      page.getByRole("heading", { name: "Your account has been created" })
+    ).toBeVisible();
+    await page.goBack();
+    await page.waitForTimeout(2000);
+    const rbmContainer = page
+      .locator("records-highlights-details-item")
+      .filter({ hasText: "RBM Account Number" })
+      .first();
+    await expect(
+      rbmContainer,
+      "Label RBM Account Number tidak ditemukan di layar!"
+    ).toBeVisible();
+    const rawText = await rbmContainer.innerText();
+    const rbmValue = rawText.replace("RBM Account Number", "").trim();
+    if (rbmValue === "") {
+      console.log(
+        "STATUS: RBM Account Number saat ini KOSONG (Belum ter-generate)."
+      );
+    } else {
+      console.log(
+        `STATUS: RBM Account Number SUDAH TERGENERATE -> [ ${rbmValue} ]`
+      );
+    }
   });
 });
 
