@@ -36,6 +36,22 @@ test.describe("SIT MVP3 — Quote Finalization", () => {
     });
 
     await test.step("Move to Negotiation stage (if not already)", async () => {
+      // Check if already in Closed stage (must be current/won, not just visible)
+      const alreadyClosed = await sfPage
+        .locator(
+          ".slds-path__item.slds-is-current, .slds-path__item.slds-is-won"
+        )
+        .filter({ hasText: /^Closed$/i })
+        .first()
+        .waitFor({ state: "visible", timeout: 5000 })
+        .then(() => true)
+        .catch(() => false);
+
+      if (alreadyClosed) {
+        console.log("✅ Quote already Closed, skipping Move to Negotiation.");
+        return;
+      }
+
       // Check if already in Negotiation
       const alreadyNegotiation = await sfPage
         .locator(
@@ -140,9 +156,11 @@ test.describe("SIT MVP3 — Quote Finalization", () => {
       await sfPage.goto(quoteUrl);
       await lightning.waitForLightningReady(sfPage);
 
-      // Verify Quote status is Closed
+      // Verify Quote status is Closed (must be active or won)
       const closedStage = sfPage
-        .locator(".slds-path__item, .slds-progress__item, li, button, span")
+        .locator(
+          ".slds-path__item.slds-is-current, .slds-path__item.slds-is-won"
+        )
         .filter({ hasText: /^Closed$/i })
         .first();
       await expect(closedStage).toBeVisible({ timeout: 15000 });

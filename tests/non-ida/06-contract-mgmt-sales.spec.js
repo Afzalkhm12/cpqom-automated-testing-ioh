@@ -473,6 +473,20 @@ test("TC023: CPQ Enterprise Quote Flow — API", async ({
     `${loginUser.afterLoginUrl}lightning/r/Quote/${quoteId}/view`
   );
 
+  // Step 1: Click Start Sync and confirm the dialog
+  await expect(page.getByRole("button", { name: "Start Sync" })).toBeVisible();
+  await page.getByRole("button", { name: "Start Sync" }).click();
+
+  // Confirm the "Sync Quote" dialog
+  const continueBtn = page.getByRole("button", { name: "Continue" });
+  await expect(continueBtn).toBeVisible({ timeout: 10000 });
+  await continueBtn.click();
+  console.log("✅ Start Sync confirmed.");
+
+  // Wait for sync to finish before proceeding
+  await page.waitForTimeout(8000);
+
+  // Step 2: Create Contract
   await expect(
     page.getByRole("button", { name: "Create Contract" })
   ).toBeVisible();
