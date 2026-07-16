@@ -74,7 +74,7 @@ test.afterAll(async () => {
   if (context) await context.close();
 });
 
-test.skip("API Connection Test", async ({ request }) => {
+test("API Connection Test", async ({ request }) => {
   const loginUrl = dataAuth.sysadmin.url + "/services/oauth2/token";
 
   const grantType = "client_credentials";
